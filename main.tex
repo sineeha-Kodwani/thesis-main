@@ -6,6 +6,9 @@
 % Language setting
 \usepackage[english]{babel}
 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
 \usepackage{alltt}
 \usepackage{holindex}
 
@@ -241,9 +244,9 @@ One of the key properties of AVL trees is their ability to maintain balance afte
 
 In this section, we define two core balancing operations, \texttt{balanceL} and \texttt{balanceR}, which handle cases where the left or right subtree becomes too tall, respectively. We also describe the \texttt{insert\_avl} function, which is responsible for inserting elements into the tree while ensuring that the AVL property is preserved through rebalancing.
 
-\begin{description}
+\begin{itemize}
 
-  \item[\textbf{balanceL}] \\
+  \item \textbf{balanceL} \\
   The function \texttt{balanceL} is responsible for rebalancing the tree when the left subtree is taller than the right subtree by more than one level. This situation can occur after an insertion into the left subtree. If the left subtree becomes imbalanced, \texttt{balanceL} performs a rotation to restore balance. The formal definition in HOL4 is:
 
 \begin{alltt}
@@ -253,7 +256,7 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
   
   This operation works by comparing the heights of the left and right subtrees of the current node. If the left subtree is too tall (i.e., the height difference is greater than one), a rotation is performed. The precise rotation depends on whether the imbalance is caused by the left or right child of the left subtree. The function handles both single and double rotations to restore balance. The balancing of the left subtree is critical for maintaining the AVL property and ensuring that the tree remains balanced after an insertion on the left side.
 
-  \item[\textbf{balanceR}] \\
+  \item \textbf{balanceR} \\
   Similarly, the \texttt{balanceR} function rebalances the tree when the right subtree becomes too tall compared to the left subtree. This can occur after an insertion into the right subtree. If the right subtree becomes imbalanced, \texttt{balanceR} restores balance by performing a rotation. The formal definition in HOL4 is:
 
 \begin{alltt}
@@ -263,7 +266,7 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
 
   The logic for \texttt{balanceR} is analogous to \texttt{balanceL}, but it handles the case where the right subtree is imbalanced. Similar to \texttt{balanceL}, this function performs either a single or double rotation depending on the structure of the right subtree. Rebalancing the right subtree is essential for maintaining the AVL property after an insertion into the right child of the tree.
 
-  \item[\textbf{insert\_avl}] \\
+  \item \textbf{insert\_avl} \\
   The function \texttt{insert\_avl} is responsible for inserting a new key-value pair into an AVL tree while preserving the AVL property. After inserting the new element, the tree may become unbalanced, so rebalancing operations such as \texttt{balanceL} or \texttt{balanceR} are invoked as necessary. The formal definition in HOL4 is:
 
 \begin{alltt}
@@ -275,7 +278,7 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
 
   The key feature of the \texttt{insert\_avl} function is that it ensures the AVL property is maintained at all levels of the tree. By performing rebalancing operations as needed, the function guarantees that the height of the tree remains logarithmic with respect to the number of nodes. This is crucial for ensuring that search, insertion, and deletion operations can be performed efficiently in \( O(\log n) \) time.
 
-\end{description}
+\end{itemize}
 
 The \texttt{balanceL} and \texttt{balanceR} operations are vital for maintaining the AVL property after modifications to the tree. Without these operations, the tree could become unbalanced, leading to poor performance in subsequent operations. The \texttt{insert\_avl} function ensures that new elements can be added to the tree while keeping it balanced. The careful handling of rotations in both the left and right subtrees allows AVL trees to maintain their optimal height and performance.
 
@@ -385,10 +388,12 @@ Another important result in the formalization of AVL trees is the recursive natu
 \begin{itemize}
   \item \textbf{Theorem: Fibonacci\_thm} \\
   This theorem states that the Fibonacci sequence satisfies the following recursive relationship:
-  \begin{verbatim}
-  ∀k. Fibonacci (k + 2) = Fibonacci (k + 1) + Fibonacci k
-  \end{verbatim}
-  
+
+\begin{alltt}
+[Fibonacci_thm]
+\HOLthm{AVL_trees.Fibonacci_thm}
+\end{alltt}
+
   The proof of this theorem follows directly from the definition of the Fibonacci sequence. This recursive relationship is central to many of the inductive proofs involving AVL trees, as it provides a framework for reasoning about the growth of the tree as nodes are added or removed. By leveraging the recursive nature of the Fibonacci sequence, we can prove that AVL trees maintain their logarithmic height across all operations.
 
 \end{itemize}
@@ -398,8 +403,6 @@ Another important result in the formalization of AVL trees is the recursive natu
 The recursive relationship between the number of nodes in an AVL tree and the Fibonacci sequence is fundamental to understanding the efficiency of AVL trees. Since the Fibonacci sequence grows exponentially, while the height of an AVL tree grows logarithmically with respect to the number of nodes, this ensures that AVL trees are highly efficient in terms of both time and space complexity.
 
 The Fibonacci sequence helps to establish that minimal AVL trees are optimally balanced, with the smallest possible number of nodes for a given height. This balance is what allows AVL trees to maintain their logarithmic height, ensuring that operations such as search, insertion, and deletion can be performed in \( O(\log n) \) time. By formally proving the relationship between the Fibonacci sequence and AVL trees in HOL4, we can guarantee the correctness and efficiency of AVL tree algorithms.
-
-\end{description}
 
 \section{Design and Integration in HOL4}
 
@@ -438,10 +441,10 @@ A key design consideration was ensuring that the AVL tree formalization could re
 
 For example, the existing list and set libraries in HOL4 were leveraged for defining and proving properties about the keys in an AVL tree. The `keys` function, which retrieves the set of keys in an AVL tree, is integrated with HOL4’s existing set theory library:
 
-\begin{verbatim}
-keys Tip = {} ∧  
-keys (Bin _ k v l r) = {k} ∪ keys l ∪ keys r
-\end{verbatim}
+\begin{alltt}
+[keys_def]
+\HOLthm[def]{AVL_trees.keys_def}
+\end{alltt}
 
 This integration allows us to make use of HOL4’s extensive set-theoretic reasoning capabilities, enabling efficient proofs about the contents of the tree, such as proving that a key exists in the tree after an insertion \(keys_insert\) or that the set of keys is updated correctly after an operation.
 
@@ -453,16 +456,10 @@ Recursive functions are essential for formalizing AVL tree operations, such as h
 
 For example, the function \(insert_avl\) is defined recursively to ensure that it can insert a new element into an AVL tree while preserving the AVL property. This function must handle both the base case (inserting into an empty tree) and the recursive case (inserting into a non-empty tree). To integrate this recursive function with HOL4’s framework, termination must be guaranteed:
 
-\begin{verbatim}
-insert_avl x v Tip = singleton_avl x v ∧  
-insert_avl x v (Bin bf k kv l r) =
-  if x = k then
-    Bin bf k kv l r  
-  else if x < k then
-    balanceL k kv (insert_avl x v l) r  
-  else
-    balanceR k kv l (insert_avl x v r)
-\end{verbatim}
+\begin{alltt}
+[insert_avl_def]
+\HOLthm{AVL_trees.insert_avl_def}
+\end{alltt}
 
 In this recursive definition, the height of the tree decreases with each recursive call, which ensures that the recursion terminates. HOL4’s support for reasoning about recursive functions allows us to prove that \(insert_avl\) correctly maintains the AVL property and terminates for all inputs. This recursive approach is also extended to other operations, such as \(balanceL\) and \(balanceR\), which are used to restore the AVL property after an insertion.
 
@@ -477,8 +474,6 @@ Another challenge was proving that the \(balanceL\) and \(balanceR\) functions c
 \subsection{Exporting the Formalization}
 
 Once the formalization was completed, it was exported as part of HOL4’s growing library of verified data structures. The export process ensures that the formalization can be easily reused and extended by other developers working within the HOL4 framework. By integrating the AVL tree formalization into HOL4’s existing libraries, we ensure that future work can build upon this foundation, whether for educational purposes, research, or practical applications involving verified data structures.
-
-\end{description}
 
 \subsection{Summary of Design Adaptations}
 
