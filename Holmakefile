@@ -1,0 +1,27 @@
+INCLUDES = $(HOLDIR)/examples/balanced_bst
+
+OPTIONS = QUIT_ON_FAILURE
+MUNGE = ./munge.exe
+MUNGE_DEPS = paperTheory
+
+EXTRA_CLEANS = $(MUNGE) heap
+
+all: $(MUNGE) thesis.tex
+
+ifdef POLY
+HOLHEAP = heap
+
+all: $(HOLHEAP)
+
+$(HOLHEAP): $(HOLDIR)/bin/hol.state
+	$(protect $(HOLDIR)/bin/buildheap) $(DEBUG_FLAG) -o $@ \
+		$(HOLDIR)/examples/balanced_bst/AVL_treesTheory
+endif
+
+$(MUNGE): $(patsubst %,%.uo,$(MUNGE_DEPS))
+	$(HOLDIR)/bin/mkmunge.exe $(MUNGE_DEPS)
+
+thesis.tex: $(MUNGE) main.tex
+	$(MUNGE) < main.tex > thesis.tex
+
+.PHONY: all

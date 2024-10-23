@@ -1,0 +1,593 @@
+\newcommand{\HOLAVLXXtreesDate}{23 Ottobre 2024}
+\newcommand{\HOLAVLXXtreesTime}{11:01}
+\begin{SaveVerbatim}{HOLAVLXXtreesDatatypesavlXXtree}
+\HOLFreeVar{avl\HOLTokenUnderscore{}tree} = \HOLConst{Tip} \HOLTokenBar{} \HOLConst{Bin} \HOLTyOp{int} \HOLTyOp{num} \alpha{} (\alpha{} \HOLTyOp{avl_tree}) (\alpha{} \HOLTyOp{avl_tree})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDatatypesavlXXtree}{\UseVerbatim{HOLAVLXXtreesDatatypesavlXXtree}}
+\newcommand{\HOLAVLXXtreesDatatypes}{
+\HOLAVLXXtreesDatatypesavlXXtree}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsavlXXdef}
+\HOLTokenTurnstile{} (\HOLConst{avl} \HOLConst{Tip} \HOLSymConst{\HOLTokenEquiv{}} \HOLConst{T}) \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{avl} (\HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{\HOLTokenEquiv{}}
+     (\HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+      \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\HOLTokenConj{}} \HOLBoundVar{bf} \HOLSymConst{=} \HOLSymConst{\&}\HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{-}} \HOLSymConst{\&}\HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}}
+     \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsavlXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsavlXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsbalanceLXXdef}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r} \HOLSymConst{=}
+     \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLKeyword{then}
+       \HOLKeyword{case} \HOLBoundVar{l} \HOLKeyword{of}
+         \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}
+       \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} \HOLBoundVar{lr} \HOLTokenImp{}
+         \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{ll} \HOLSymConst{\HOLTokenLt{}} \HOLConst{height} \HOLBoundVar{lr} \HOLKeyword{then}
+           \HOLKeyword{case} \HOLBoundVar{lr} \HOLKeyword{of}
+             \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} (\HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{lr} \HOLBoundVar{r})
+           \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{6}}} \HOLBoundVar{lrn} \HOLBoundVar{lrv} \HOLBoundVar{lrl} \HOLBoundVar{lrr} \HOLTokenImp{}
+             \HOLConst{tree} \HOLBoundVar{lrn} \HOLBoundVar{lrv} (\HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} \HOLBoundVar{lrl}) (\HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{lrr} \HOLBoundVar{r})
+         \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} (\HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{lr} \HOLBoundVar{r})
+     \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsbalanceLXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsbalanceLXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsbalanceRXXdef}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r} \HOLSymConst{=}
+     \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLKeyword{then}
+       \HOLKeyword{case} \HOLBoundVar{r} \HOLKeyword{of}
+         \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}
+       \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{rk} \HOLBoundVar{rv} \HOLBoundVar{rl} \HOLBoundVar{rr} \HOLTokenImp{}
+         \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{rl} \HOLSymConst{\HOLTokenGt{}} \HOLConst{height} \HOLBoundVar{rr} \HOLKeyword{then}
+           \HOLKeyword{case} \HOLBoundVar{rl} \HOLKeyword{of}
+             \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} (\HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{rl}) \HOLBoundVar{rr}
+           \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{6}}} \HOLBoundVar{rln} \HOLBoundVar{rlv} \HOLBoundVar{rll} \HOLBoundVar{rlr} \HOLTokenImp{}
+             \HOLConst{tree} \HOLBoundVar{rln} \HOLBoundVar{rlv} (\HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{rll}) (\HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} \HOLBoundVar{rlr} \HOLBoundVar{rr})
+         \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} (\HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{rl}) \HOLBoundVar{rr}
+     \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsbalanceRXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsbalanceRXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionscompleteXXavlXXdef}
+\HOLTokenTurnstile{} \HOLConst{complete_avl} \HOLNumLit{0} \HOLSymConst{=} \HOLConst{Tip} \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{n}. \HOLConst{complete_avl} (\HOLConst{SUC} \HOLBoundVar{n}) \HOLSymConst{=}
+       \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{0} \HOLConst{ARB} (\HOLConst{complete_avl} \HOLBoundVar{n}) (\HOLConst{complete_avl} \HOLBoundVar{n})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionscompleteXXavlXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionscompleteXXavlXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsdeleteXXavlXXdef}
+\HOLTokenTurnstile{} (\HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x}. \HOLConst{delete_avl} \HOLBoundVar{x} \HOLConst{Tip} \HOLSymConst{=} \HOLConst{Tip}) \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{delete_avl} \HOLBoundVar{x} (\HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=}
+     \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{=} \HOLBoundVar{k} \HOLKeyword{then}
+       \HOLKeyword{case} (\HOLBoundVar{l}\HOLSymConst{,}\HOLBoundVar{r}) \HOLKeyword{of}
+         (\HOLConst{Tip}\HOLSymConst{,}\HOLConst{Tip}) \HOLTokenImp{} \HOLConst{Tip}
+       \HOLTokenBar{} (\HOLConst{Tip}\HOLSymConst{,}\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{27}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{28}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{29}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{30}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{31}}}) \HOLTokenImp{} \HOLBoundVar{r}
+       \HOLTokenBar{} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{12}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{13}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{14}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{15}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{16}}}\HOLSymConst{,}\HOLConst{Tip}) \HOLTokenImp{} \HOLBoundVar{l}
+       \HOLTokenBar{} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{12}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{13}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{14}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{15}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{16}}}\HOLSymConst{,}\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{37}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{38}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{39}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{40}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{41}}}) \HOLTokenImp{}
+         (\HOLKeyword{let}
+            (\HOLBoundVar{pred\HOLTokenUnderscore{}k}\HOLSymConst{,}\HOLBoundVar{pred\HOLTokenUnderscore{}v}\HOLSymConst{,}\ensuremath{\HOLBoundVar{l}\sp{\prime{}}}) = \HOLConst{remove_max} \HOLBoundVar{l}
+          \HOLKeyword{in}
+            \HOLConst{balanceR} \HOLBoundVar{pred\HOLTokenUnderscore{}k} \HOLBoundVar{pred\HOLTokenUnderscore{}v} \ensuremath{\HOLBoundVar{l}\sp{\prime{}}} \HOLBoundVar{r})
+     \HOLKeyword{else} \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{\HOLTokenLt{}} \HOLBoundVar{k} \HOLKeyword{then} \HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{kv} (\HOLConst{delete_avl} \HOLBoundVar{x} \HOLBoundVar{l}) \HOLBoundVar{r}
+     \HOLKeyword{else} \HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} (\HOLConst{delete_avl} \HOLBoundVar{x} \HOLBoundVar{r})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsdeleteXXavlXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsdeleteXXavlXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsheightXXdef}
+\HOLTokenTurnstile{} \HOLConst{height} \HOLConst{Tip} \HOLSymConst{=} \HOLNumLit{0} \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{h} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{height} (\HOLConst{Bin} \HOLBoundVar{h} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLConst{MAX} (\HOLConst{height} \HOLBoundVar{l}) (\HOLConst{height} \HOLBoundVar{r}) \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsheightXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsheightXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsinsertXXavlXXdef}
+\HOLTokenTurnstile{} (\HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \HOLBoundVar{v}. \HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLConst{Tip} \HOLSymConst{=} \HOLConst{singleton_avl} \HOLBoundVar{x} \HOLBoundVar{v}) \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} (\HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=}
+     \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{=} \HOLBoundVar{k} \HOLKeyword{then} \HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}
+     \HOLKeyword{else} \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{\HOLTokenLt{}} \HOLBoundVar{k} \HOLKeyword{then} \HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{kv} (\HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{l}) \HOLBoundVar{r}
+     \HOLKeyword{else} \HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} (\HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{r})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsinsertXXavlXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsinsertXXavlXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionskeysXXdef}
+\HOLTokenTurnstile{} \HOLConst{keys} \HOLConst{Tip} \HOLSymConst{=} \HOLTokenLeftbrace{}\HOLTokenRightbrace{} \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}. \HOLConst{keys} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLTokenLeftbrace{}\HOLBoundVar{k}\HOLTokenRightbrace{} \HOLConst{\HOLTokenUnion{}} \HOLConst{keys} \HOLBoundVar{l} \HOLConst{\HOLTokenUnion{}} \HOLConst{keys} \HOLBoundVar{r}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionskeysXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionskeysXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionslookupXXavlXXdef}
+\HOLTokenTurnstile{} (\HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x}. \HOLConst{lookup_avl} \HOLBoundVar{x} \HOLConst{Tip} \HOLSymConst{=} \HOLConst{NONE}) \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{lookup_avl} \HOLBoundVar{x} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=}
+     \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{=} \HOLBoundVar{k} \HOLKeyword{then} \HOLConst{SOME} \HOLBoundVar{kv}
+     \HOLKeyword{else} \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{\HOLTokenLt{}} \HOLBoundVar{k} \HOLKeyword{then} \HOLConst{lookup_avl} \HOLBoundVar{x} \HOLBoundVar{l}
+     \HOLKeyword{else} \HOLConst{lookup_avl} \HOLBoundVar{x} \HOLBoundVar{r}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionslookupXXavlXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionslookupXXavlXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsminimalXXavlXXdef}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{t}. \HOLConst{minimal_avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenEquiv{}}
+       \HOLConst{avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenConj{}}
+       \HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{t}\sp{\prime{}}}.
+         \HOLConst{avl} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{\HOLTokenImp{}}
+         \HOLConst{node_count} \HOLBoundVar{t} \HOLSymConst{\HOLTokenLeq{}} \HOLConst{node_count} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsminimalXXavlXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsminimalXXavlXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsNXXdef}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLConst{N} \HOLBoundVar{k} \HOLSymConst{=}
+       \HOLConst{MIN_SET} (\HOLConst{IMAGE} \HOLConst{node_count} \HOLTokenLeftbrace{}\HOLBoundVar{x} \HOLTokenBar{} \HOLConst{height} \HOLBoundVar{x} \HOLSymConst{=} \HOLBoundVar{k} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{x}\HOLTokenRightbrace{})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsNXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsNXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionsnodeXXcountXXdef}
+\HOLTokenTurnstile{} \HOLConst{node_count} \HOLConst{Tip} \HOLSymConst{=} \HOLNumLit{0} \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{node_count} (\HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=}
+     \HOLConst{node_count} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLConst{node_count} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionsnodeXXcountXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionsnodeXXcountXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionssingletonXXavlXXdef}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v}. \HOLConst{singleton_avl} \HOLBoundVar{k} \HOLBoundVar{v} \HOLSymConst{=} \HOLConst{Bin} \HOLNumLit{0} \HOLBoundVar{k} \HOLBoundVar{v} \HOLConst{Tip} \HOLConst{Tip}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionssingletonXXavlXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionssingletonXXavlXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesDefinitionstreeXXdef}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}. \HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{Bin} (\HOLSymConst{\&}\HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{-}} \HOLSymConst{\&}\HOLConst{height} \HOLBoundVar{l}) \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesDefinitionstreeXXdef}{\UseVerbatim{HOLAVLXXtreesDefinitionstreeXXdef}}
+\newcommand{\HOLAVLXXtreesDefinitions}{
+\HOLDfnTag{AVL_trees}{avl_def}\HOLAVLXXtreesDefinitionsavlXXdef
+\HOLDfnTag{AVL_trees}{balanceL_def}\HOLAVLXXtreesDefinitionsbalanceLXXdef
+\HOLDfnTag{AVL_trees}{balanceR_def}\HOLAVLXXtreesDefinitionsbalanceRXXdef
+\HOLDfnTag{AVL_trees}{complete_avl_def}\HOLAVLXXtreesDefinitionscompleteXXavlXXdef
+\HOLDfnTag{AVL_trees}{delete_avl_def}\HOLAVLXXtreesDefinitionsdeleteXXavlXXdef
+\HOLDfnTag{AVL_trees}{height_def}\HOLAVLXXtreesDefinitionsheightXXdef
+\HOLDfnTag{AVL_trees}{insert_avl_def}\HOLAVLXXtreesDefinitionsinsertXXavlXXdef
+\HOLDfnTag{AVL_trees}{keys_def}\HOLAVLXXtreesDefinitionskeysXXdef
+\HOLDfnTag{AVL_trees}{lookup_avl_def}\HOLAVLXXtreesDefinitionslookupXXavlXXdef
+\HOLDfnTag{AVL_trees}{minimal_avl_def}\HOLAVLXXtreesDefinitionsminimalXXavlXXdef
+\HOLDfnTag{AVL_trees}{N_def}\HOLAVLXXtreesDefinitionsNXXdef
+\HOLDfnTag{AVL_trees}{node_count_def}\HOLAVLXXtreesDefinitionsnodeXXcountXXdef
+\HOLDfnTag{AVL_trees}{singleton_avl_def}\HOLAVLXXtreesDefinitionssingletonXXavlXXdef
+\HOLDfnTag{AVL_trees}{tree_def}\HOLAVLXXtreesDefinitionstreeXXdef
+}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXbalL}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r} \HOLSymConst{\HOLTokenConj{}}
+     (\HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+      \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{avl} (\HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXbalL}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXbalL}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXbalR}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r} \HOLSymConst{\HOLTokenConj{}}
+     (\HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+      \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{avl} (\HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXbalR}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXbalR}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXcompleteXXavl}
+\HOLTokenTurnstile{} \HOLConst{avl} (\HOLConst{complete_avl} \HOLFreeVar{k}) \HOLSymConst{\HOLTokenEquiv{}} \HOLConst{T}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXcompleteXXavl}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXcompleteXXavl}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXinsertXXaux}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}.
+     \HOLConst{avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{avl} (\HOLConst{insert_avl} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{\HOLTokenConj{}}
+     (\HOLConst{height} (\HOLConst{insert_avl} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{\HOLTokenDisj{}}
+      \HOLConst{height} (\HOLConst{insert_avl} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXinsertXXaux}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXinsertXXaux}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtOne}
+\HOLTokenTurnstile{} \HOLConst{avl} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip} \HOLConst{Tip})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtOne}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtOne}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtTwo}
+\HOLTokenTurnstile{} \HOLConst{avl} (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtTwo}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtTwo}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtThree}
+\HOLTokenTurnstile{} \HOLConst{avl} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtThree}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtThree}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtFour}
+\HOLTokenTurnstile{} \HOLConst{avl}
+     (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip})
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtFour}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtFour}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtFive}
+\HOLTokenTurnstile{} \HOLConst{avl}
+     (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip})
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip})))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtFive}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtFive}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtSix}
+\HOLTokenTurnstile{} \HOLConst{avl}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip})))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtSix}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtSix}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtSeven}
+\HOLTokenTurnstile{} \HOLConst{avl}
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip})))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtSeven}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtSeven}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtreeXXcaseXXeq}
+\HOLTokenTurnstile{} \HOLConst{avl_tree_CASE} \HOLFreeVar{x} \HOLFreeVar{v} \HOLFreeVar{f} \HOLSymConst{=} \ensuremath{\HOLFreeVar{v}\sp{\prime{}}} \HOLSymConst{\HOLTokenEquiv{}}
+   \HOLFreeVar{x} \HOLSymConst{=} \HOLConst{Tip} \HOLSymConst{\HOLTokenConj{}} \HOLFreeVar{v} \HOLSymConst{=} \ensuremath{\HOLFreeVar{v}\sp{\prime{}}} \HOLSymConst{\HOLTokenDisj{}}
+   \HOLSymConst{\HOLTokenExists{}}\HOLBoundVar{i} \HOLBoundVar{n} \ensuremath{\HOLBoundVar{a}\sb{\mathrm{1}}} \HOLBoundVar{a} \ensuremath{\HOLBoundVar{a}\sb{\mathrm{0}}}. \HOLFreeVar{x} \HOLSymConst{=} \HOLConst{Bin} \HOLBoundVar{i} \HOLBoundVar{n} \ensuremath{\HOLBoundVar{a}\sb{\mathrm{1}}} \HOLBoundVar{a} \ensuremath{\HOLBoundVar{a}\sb{\mathrm{0}}} \HOLSymConst{\HOLTokenConj{}} \HOLFreeVar{f} \HOLBoundVar{i} \HOLBoundVar{n} \ensuremath{\HOLBoundVar{a}\sb{\mathrm{1}}} \HOLBoundVar{a} \ensuremath{\HOLBoundVar{a}\sb{\mathrm{0}}} \HOLSymConst{=} \ensuremath{\HOLFreeVar{v}\sp{\prime{}}}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtreeXXcaseXXeq}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtreeXXcaseXXeq}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsavlXXtreeXXpreservesXXavl}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{l} \HOLBoundVar{r} \HOLBoundVar{k} \HOLBoundVar{v}.
+     \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r} \HOLSymConst{\HOLTokenConj{}}
+     (\HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+      \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{avl} (\HOLConst{tree} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsavlXXtreeXXpreservesXXavl}{\UseVerbatim{HOLAVLXXtreesTheoremsavlXXtreeXXpreservesXXavl}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremschildrenXXofXXminimalXXavl}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{minimal_avl} (\HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{minimal_avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{minimal_avl} \HOLBoundVar{r}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremschildrenXXofXXminimalXXavl}{\UseVerbatim{HOLAVLXXtreesTheoremschildrenXXofXXminimalXXavl}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremscompleteXXavlXXcompute}
+\HOLTokenTurnstile{} \HOLConst{complete_avl} \HOLNumLit{0} \HOLSymConst{=} \HOLConst{Tip} \HOLSymConst{\HOLTokenConj{}}
+   (\HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{n}. \HOLConst{complete_avl} <..num comp'n..> \HOLSymConst{=}
+        \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{0} \HOLConst{ARB} (\HOLConst{complete_avl} (<..num comp'n..> \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}))
+          (\HOLConst{complete_avl} (<..num comp'n..> \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}))) \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{n}. \HOLConst{complete_avl} <..num comp'n..> \HOLSymConst{=}
+       \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{0} \HOLConst{ARB} (\HOLConst{complete_avl} <..num comp'n..> )
+         (\HOLConst{complete_avl} <..num comp'n..> )
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremscompleteXXavlXXcompute}{\UseVerbatim{HOLAVLXXtreesTheoremscompleteXXavlXXcompute}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsFibonacciXXdef}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{n}. \HOLConst{Fibonacci} \HOLBoundVar{n} \HOLSymConst{=}
+       \HOLKeyword{if} \HOLBoundVar{n} \HOLSymConst{=} \HOLNumLit{0} \HOLKeyword{then} \HOLNumLit{0}
+       \HOLKeyword{else} \HOLKeyword{if} \HOLBoundVar{n} \HOLSymConst{=} \HOLNumLit{1} \HOLKeyword{then} \HOLNumLit{1}
+       \HOLKeyword{else} \HOLConst{Fibonacci} (\HOLBoundVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}) \HOLSymConst{\ensuremath{+}} \HOLConst{Fibonacci} (\HOLBoundVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{2})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsFibonacciXXdef}{\UseVerbatim{HOLAVLXXtreesTheoremsFibonacciXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsFibonacciXXind}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{P}. (\HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{n}. (\HOLBoundVar{n} \HOLSymConst{\HOLTokenNotEqual{}} \HOLNumLit{0} \HOLSymConst{\HOLTokenConj{}} \HOLBoundVar{n} \HOLSymConst{\HOLTokenNotEqual{}} \HOLNumLit{1} \HOLSymConst{\HOLTokenImp{}} \HOLBoundVar{P} (\HOLBoundVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{1})) \HOLSymConst{\HOLTokenConj{}}
+            (\HOLBoundVar{n} \HOLSymConst{\HOLTokenNotEqual{}} \HOLNumLit{0} \HOLSymConst{\HOLTokenConj{}} \HOLBoundVar{n} \HOLSymConst{\HOLTokenNotEqual{}} \HOLNumLit{1} \HOLSymConst{\HOLTokenImp{}} \HOLBoundVar{P} (\HOLBoundVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{2})) \HOLSymConst{\HOLTokenImp{}}
+            \HOLBoundVar{P} \HOLBoundVar{n}) \HOLSymConst{\HOLTokenImp{}}
+       \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{v}. \HOLBoundVar{P} \HOLBoundVar{v}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsFibonacciXXind}{\UseVerbatim{HOLAVLXXtreesTheoremsFibonacciXXind}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsFibonacciXXmono}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{n}. \HOLConst{Fibonacci} \HOLBoundVar{n} \HOLSymConst{\HOLTokenLeq{}} \HOLConst{Fibonacci} (\HOLBoundVar{n} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsFibonacciXXmono}{\UseVerbatim{HOLAVLXXtreesTheoremsFibonacciXXmono}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsFibonacciXXmonoXXtransitive}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{m} \HOLBoundVar{n}. \HOLBoundVar{m} \HOLSymConst{\HOLTokenLeq{}} \HOLBoundVar{n} \HOLSymConst{\HOLTokenImp{}} \HOLConst{Fibonacci} \HOLBoundVar{m} \HOLSymConst{\HOLTokenLeq{}} \HOLConst{Fibonacci} \HOLBoundVar{n}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsFibonacciXXmonoXXtransitive}{\UseVerbatim{HOLAVLXXtreesTheoremsFibonacciXXmonoXXtransitive}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsFibonacciXXthm}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLConst{Fibonacci} (\HOLBoundVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{=} \HOLConst{Fibonacci} (\HOLBoundVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\ensuremath{+}} \HOLConst{Fibonacci} \HOLBoundVar{k}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsFibonacciXXthm}{\UseVerbatim{HOLAVLXXtreesTheoremsFibonacciXXthm}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsheightXXbalL}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r} \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{height} (\HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenDisj{}}
+     \HOLConst{height} (\HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{3}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsheightXXbalL}{\UseVerbatim{HOLAVLXXtreesTheoremsheightXXbalL}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsheightXXbalLTwo}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\HOLTokenNotEqual{}} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{height} (\HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLNumLit{1} \HOLSymConst{\ensuremath{+}} \HOLConst{MAX} (\HOLConst{height} \HOLBoundVar{l}) (\HOLConst{height} \HOLBoundVar{r})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsheightXXbalLTwo}{\UseVerbatim{HOLAVLXXtreesTheoremsheightXXbalLTwo}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsheightXXbalR}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r} \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{height} (\HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenDisj{}}
+     \HOLConst{height} (\HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{3}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsheightXXbalR}{\UseVerbatim{HOLAVLXXtreesTheoremsheightXXbalR}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsheightXXbalRTwo}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{avl} \HOLBoundVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{r} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\HOLTokenNotEqual{}} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{height} (\HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=} \HOLNumLit{1} \HOLSymConst{\ensuremath{+}} \HOLConst{MAX} (\HOLConst{height} \HOLBoundVar{l}) (\HOLConst{height} \HOLBoundVar{r})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsheightXXbalRTwo}{\UseVerbatim{HOLAVLXXtreesTheoremsheightXXbalRTwo}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsheightXXcompleteXXavl}
+\HOLTokenTurnstile{} \HOLConst{height} (\HOLConst{complete_avl} \HOLFreeVar{n}) \HOLSymConst{=} \HOLFreeVar{n}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsheightXXcompleteXXavl}{\UseVerbatim{HOLAVLXXtreesTheoremsheightXXcompleteXXavl}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsheightXXeqXXZero}
+\HOLTokenTurnstile{} (\HOLConst{height} \HOLFreeVar{t} \HOLSymConst{=} \HOLNumLit{0} \HOLSymConst{\HOLTokenEquiv{}} \HOLFreeVar{t} \HOLSymConst{=} \HOLConst{Tip}) \HOLSymConst{\HOLTokenConj{}} (\HOLNumLit{0} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{\HOLTokenEquiv{}} \HOLFreeVar{t} \HOLSymConst{=} \HOLConst{Tip})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsheightXXeqXXZero}{\UseVerbatim{HOLAVLXXtreesTheoremsheightXXeqXXZero}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsheightXXofXXminimalXXavlXXdiffXXOne}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{minimal_avl} (\HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{\HOLTokenImp{}}
+     \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{Tip} \HOLSymConst{\HOLTokenConj{}} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{Tip} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+     \HOLConst{height} \HOLBoundVar{r} \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsheightXXofXXminimalXXavlXXdiffXXOne}{\UseVerbatim{HOLAVLXXtreesTheoremsheightXXofXXminimalXXavlXXdiffXXOne}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremskeysXXbalanceL}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{1}}} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{2}}}.
+     \HOLConst{keys} (\HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{v} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{1}}} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{2}}}) \HOLSymConst{=} \HOLTokenLeftbrace{}\HOLBoundVar{k}\HOLTokenRightbrace{} \HOLConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{1}}} \HOLConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{2}}}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremskeysXXbalanceL}{\UseVerbatim{HOLAVLXXtreesTheoremskeysXXbalanceL}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremskeysXXbalanceR}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{1}}} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{2}}}.
+     \HOLConst{keys} (\HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{v} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{1}}} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{2}}}) \HOLSymConst{=} \HOLTokenLeftbrace{}\HOLBoundVar{k}\HOLTokenRightbrace{} \HOLConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{1}}} \HOLConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLBoundVar{t}\sb{\mathrm{2}}}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremskeysXXbalanceR}{\UseVerbatim{HOLAVLXXtreesTheoremskeysXXbalanceR}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremskeysXXinsert}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{t}. \HOLConst{keys} (\HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{=} \HOLConst{keys} \HOLBoundVar{t} \HOLConst{\HOLTokenUnion{}} \HOLTokenLeftbrace{}\HOLBoundVar{x}\HOLTokenRightbrace{}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremskeysXXinsert}{\UseVerbatim{HOLAVLXXtreesTheoremskeysXXinsert}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremslookupOne}
+\HOLTokenTurnstile{} \HOLConst{lookup_avl} \HOLNumLit{3}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{13} \HOLNumLit{13} (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} \HOLConst{Tip} \HOLConst{Tip}))
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{SOME} \HOLNumLit{3}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremslookupOne}{\UseVerbatim{HOLAVLXXtreesTheoremslookupOne}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremslookupTwo}
+\HOLTokenTurnstile{} \HOLConst{lookup_avl} \HOLNumLit{14}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{13} \HOLNumLit{13} (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} \HOLConst{Tip} \HOLConst{Tip}))
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{SOME} \HOLNumLit{14}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremslookupTwo}{\UseVerbatim{HOLAVLXXtreesTheoremslookupTwo}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremslookupThree}
+\HOLTokenTurnstile{} \HOLConst{lookup_avl} \HOLNumLit{4}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{NONE}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremslookupThree}{\UseVerbatim{HOLAVLXXtreesTheoremslookupThree}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremslookupFour}
+\HOLTokenTurnstile{} \HOLConst{lookup_avl} \HOLNumLit{6}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{13} \HOLNumLit{13} (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} \HOLConst{Tip} \HOLConst{Tip}))
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{SOME} \HOLNumLit{6}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremslookupFour}{\UseVerbatim{HOLAVLXXtreesTheoremslookupFour}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremslookupFive}
+\HOLTokenTurnstile{} \HOLConst{lookup_avl} \HOLNumLit{10}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{13} \HOLNumLit{13} (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} \HOLConst{Tip} \HOLConst{Tip}))
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{NONE}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremslookupFive}{\UseVerbatim{HOLAVLXXtreesTheoremslookupFive}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsminimalXXavlXXexists}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLSymConst{\HOLTokenExists{}}\HOLBoundVar{t}. \HOLConst{minimal_avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{=} \HOLBoundVar{k}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsminimalXXavlXXexists}{\UseVerbatim{HOLAVLXXtreesTheoremsminimalXXavlXXexists}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsminimalXXavlXXlXXisXXavl}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{t}. \HOLConst{minimal_avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenImp{}} \HOLConst{avl} \HOLBoundVar{t}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsminimalXXavlXXlXXisXXavl}{\UseVerbatim{HOLAVLXXtreesTheoremsminimalXXavlXXlXXisXXavl}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsminimalXXavlXXnodeXXcount}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{t}. \HOLConst{minimal_avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{=} \HOLBoundVar{k} \HOLSymConst{\HOLTokenImp{}} \HOLConst{node_count} \HOLBoundVar{t} \HOLSymConst{=} \HOLConst{N} \HOLBoundVar{k}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsminimalXXavlXXnodeXXcount}{\UseVerbatim{HOLAVLXXtreesTheoremsminimalXXavlXXnodeXXcount}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsNXXZero}
+\HOLTokenTurnstile{} \HOLConst{N} \HOLNumLit{0} \HOLSymConst{=} \HOLNumLit{0}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsNXXZero}{\UseVerbatim{HOLAVLXXtreesTheoremsNXXZero}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsNXXOne}
+\HOLTokenTurnstile{} \HOLConst{N} \HOLNumLit{1} \HOLSymConst{=} \HOLNumLit{1}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsNXXOne}{\UseVerbatim{HOLAVLXXtreesTheoremsNXXOne}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsNXXfibonacciXXrelation}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLConst{N} \HOLBoundVar{k} \HOLSymConst{=} \HOLConst{Fibonacci} (\HOLBoundVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsNXXfibonacciXXrelation}{\UseVerbatim{HOLAVLXXtreesTheoremsNXXfibonacciXXrelation}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsNXXk}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLConst{N} (\HOLBoundVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{=} \HOLConst{N} (\HOLBoundVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\ensuremath{+}} \HOLConst{N} \HOLBoundVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsNXXk}{\UseVerbatim{HOLAVLXXtreesTheoremsNXXk}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsremoveXXmaxXXdef}
+\HOLTokenTurnstile{} (\HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{k}. \HOLConst{remove_max} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLConst{Tip}) \HOLSymConst{=} (\HOLBoundVar{k}\HOLSymConst{,}\HOLBoundVar{v}\HOLSymConst{,}\HOLBoundVar{l})) \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{v}\sb{\mathrm{9}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{8}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{7}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{11}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{10}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{v} \HOLBoundVar{l} \HOLBoundVar{k}.
+     \HOLConst{remove_max} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{7}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{8}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{9}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{10}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{11}}})) \HOLSymConst{=}
+     (\HOLKeyword{let}
+        (\HOLBoundVar{max\HOLTokenUnderscore{}k}\HOLSymConst{,}\HOLBoundVar{max\HOLTokenUnderscore{}v}\HOLSymConst{,}\ensuremath{\HOLBoundVar{r}\sp{\prime{}}}) = \HOLConst{remove_max} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{7}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{8}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{9}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{10}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{11}}})
+      \HOLKeyword{in}
+        (\HOLBoundVar{max\HOLTokenUnderscore{}k}\HOLSymConst{,}\HOLBoundVar{max\HOLTokenUnderscore{}v}\HOLSymConst{,}\HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \ensuremath{\HOLBoundVar{r}\sp{\prime{}}}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsremoveXXmaxXXdef}{\UseVerbatim{HOLAVLXXtreesTheoremsremoveXXmaxXXdef}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremsremoveXXmaxXXind}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{P}. (\HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l}. \HOLBoundVar{P} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{0}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \HOLConst{Tip})) \HOLSymConst{\HOLTokenConj{}}
+       (\HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{7}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{8}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{9}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{10}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{11}}}.
+          \HOLBoundVar{P} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{7}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{8}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{9}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{10}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{11}}}) \HOLSymConst{\HOLTokenImp{}}
+          \HOLBoundVar{P} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{l} (\HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{7}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{8}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{9}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{10}}} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{11}}}))) \HOLSymConst{\HOLTokenConj{}} \HOLBoundVar{P} \HOLConst{Tip} \HOLSymConst{\HOLTokenImp{}}
+       \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{v}. \HOLBoundVar{P} \HOLBoundVar{v}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremsremoveXXmaxXXind}{\UseVerbatim{HOLAVLXXtreesTheoremsremoveXXmaxXXind}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstOne}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip} \HOLSymConst{=} \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip} \HOLConst{Tip}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstOne}{\UseVerbatim{HOLAVLXXtreesTheoremstOne}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstOneZero}
+\HOLTokenTurnstile{} \HOLConst{delete_avl} \HOLNumLit{14}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{13} \HOLNumLit{13} (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} \HOLConst{Tip} \HOLConst{Tip}))
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{5} \HOLNumLit{5}
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstOneZero}{\UseVerbatim{HOLAVLXXtreesTheoremstOneZero}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstOneOne}
+\HOLTokenTurnstile{} \HOLConst{delete_avl} \HOLNumLit{5}
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{5} \HOLNumLit{5}
+        (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+           (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip} \HOLConst{Tip}))
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstOneOne}{\UseVerbatim{HOLAVLXXtreesTheoremstOneOne}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstOneTwo}
+\HOLTokenTurnstile{} \HOLConst{delete_avl} \HOLNumLit{4}
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4}
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstOneTwo}{\UseVerbatim{HOLAVLXXtreesTheoremstOneTwo}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstTwo}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip}) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5} \HOLConst{Tip} \HOLConst{Tip})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstTwo}{\UseVerbatim{HOLAVLXXtreesTheoremstTwo}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstThree}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip})) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5} \HOLConst{Tip} \HOLConst{Tip})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstThree}{\UseVerbatim{HOLAVLXXtreesTheoremstThree}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstFour}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{4} \HOLNumLit{4}
+     (\HOLConst{insert_avl} \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip}))) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip})
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstFour}{\UseVerbatim{HOLAVLXXtreesTheoremstFour}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstFive}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{13} \HOLNumLit{13}
+     (\HOLConst{insert_avl} \HOLNumLit{4} \HOLNumLit{4}
+        (\HOLConst{insert_avl} \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip})))) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip})
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstFive}{\UseVerbatim{HOLAVLXXtreesTheoremstFive}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstSix}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{14} \HOLNumLit{14}
+     (\HOLConst{insert_avl} \HOLNumLit{13} \HOLNumLit{13}
+        (\HOLConst{insert_avl} \HOLNumLit{4} \HOLNumLit{4}
+           (\HOLConst{insert_avl} \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip}))))) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{2} \HOLNumLit{2} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+     (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstSix}{\UseVerbatim{HOLAVLXXtreesTheoremstSix}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstSeven}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{1} \HOLNumLit{1}
+     (\HOLConst{insert_avl} \HOLNumLit{14} \HOLNumLit{14}
+        (\HOLConst{insert_avl} \HOLNumLit{13} \HOLNumLit{13}
+           (\HOLConst{insert_avl} \HOLNumLit{4} \HOLNumLit{4}
+              (\HOLConst{insert_avl} \HOLNumLit{2} \HOLNumLit{2}
+                 (\HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip})))))) \HOLSymConst{=}
+   \HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{5} \HOLNumLit{5}
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+     (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{13} \HOLNumLit{13} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstSeven}{\UseVerbatim{HOLAVLXXtreesTheoremstSeven}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstEight}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{6} \HOLNumLit{6}
+     (\HOLConst{insert_avl} \HOLNumLit{1} \HOLNumLit{1}
+        (\HOLConst{insert_avl} \HOLNumLit{14} \HOLNumLit{14}
+           (\HOLConst{insert_avl} \HOLNumLit{13} \HOLNumLit{13}
+              (\HOLConst{insert_avl} \HOLNumLit{4} \HOLNumLit{4}
+                 (\HOLConst{insert_avl} \HOLNumLit{2} \HOLNumLit{2}
+                    (\HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip}))))))) \HOLSymConst{=}
+   \HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{5} \HOLNumLit{5}
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+     (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{13} \HOLNumLit{13} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} \HOLConst{Tip}) (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstEight}{\UseVerbatim{HOLAVLXXtreesTheoremstEight}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstNine}
+\HOLTokenTurnstile{} \HOLConst{insert_avl} \HOLNumLit{7} \HOLNumLit{7}
+     (\HOLConst{insert_avl} \HOLNumLit{6} \HOLNumLit{6}
+        (\HOLConst{insert_avl} \HOLNumLit{1} \HOLNumLit{1}
+           (\HOLConst{insert_avl} \HOLNumLit{14} \HOLNumLit{14}
+              (\HOLConst{insert_avl} \HOLNumLit{13} \HOLNumLit{13}
+                 (\HOLConst{insert_avl} \HOLNumLit{4} \HOLNumLit{4}
+                    (\HOLConst{insert_avl} \HOLNumLit{2} \HOLNumLit{2}
+                       (\HOLConst{insert_avl} \HOLNumLit{5} \HOLNumLit{5} (\HOLConst{insert_avl} \HOLNumLit{3} \HOLNumLit{3} \HOLConst{Tip})))))))) \HOLSymConst{=}
+   \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{5} \HOLNumLit{5}
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{3} \HOLNumLit{3} (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{2} \HOLNumLit{2} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{1} \HOLNumLit{1} \HOLConst{Tip} \HOLConst{Tip}) \HOLConst{Tip})
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{4} \HOLNumLit{4} \HOLConst{Tip} \HOLConst{Tip}))
+     (\HOLConst{Bin} (\HOLSymConst{\ensuremath{-}}\HOLNumLit{1}) \HOLNumLit{13} \HOLNumLit{13} (\HOLConst{Bin} \HOLNumLit{1} \HOLNumLit{6} \HOLNumLit{6} \HOLConst{Tip} (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{7} \HOLNumLit{7} \HOLConst{Tip} \HOLConst{Tip}))
+        (\HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{14} \HOLNumLit{14} \HOLConst{Tip} \HOLConst{Tip}))
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstNine}{\UseVerbatim{HOLAVLXXtreesTheoremstNine}}
+\begin{SaveVerbatim}{HOLAVLXXtreesTheoremstreesXXofXXheightXXexist}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLSymConst{\HOLTokenExists{}}\HOLBoundVar{t}. \HOLConst{avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{=} \HOLBoundVar{k}
+\end{SaveVerbatim}
+\newcommand{\HOLAVLXXtreesTheoremstreesXXofXXheightXXexist}{\UseVerbatim{HOLAVLXXtreesTheoremstreesXXofXXheightXXexist}}
+\newcommand{\HOLAVLXXtreesTheorems}{
+\HOLThmTag{AVL_trees}{avl_balL}\HOLAVLXXtreesTheoremsavlXXbalL
+\HOLThmTag{AVL_trees}{avl_balR}\HOLAVLXXtreesTheoremsavlXXbalR
+\HOLThmTag{AVL_trees}{avl_complete_avl}\HOLAVLXXtreesTheoremsavlXXcompleteXXavl
+\HOLThmTag{AVL_trees}{avl_insert_aux}\HOLAVLXXtreesTheoremsavlXXinsertXXaux
+\HOLThmTag{AVL_trees}{avl_t1}\HOLAVLXXtreesTheoremsavlXXtOne
+\HOLThmTag{AVL_trees}{avl_t2}\HOLAVLXXtreesTheoremsavlXXtTwo
+\HOLThmTag{AVL_trees}{avl_t3}\HOLAVLXXtreesTheoremsavlXXtThree
+\HOLThmTag{AVL_trees}{avl_t4}\HOLAVLXXtreesTheoremsavlXXtFour
+\HOLThmTag{AVL_trees}{avl_t5}\HOLAVLXXtreesTheoremsavlXXtFive
+\HOLThmTag{AVL_trees}{avl_t6}\HOLAVLXXtreesTheoremsavlXXtSix
+\HOLThmTag{AVL_trees}{avl_t7}\HOLAVLXXtreesTheoremsavlXXtSeven
+\HOLThmTag{AVL_trees}{avl_tree_case_eq}\HOLAVLXXtreesTheoremsavlXXtreeXXcaseXXeq
+\HOLThmTag{AVL_trees}{avl_tree_preserves_avl}\HOLAVLXXtreesTheoremsavlXXtreeXXpreservesXXavl
+\HOLThmTag{AVL_trees}{children_of_minimal_avl}\HOLAVLXXtreesTheoremschildrenXXofXXminimalXXavl
+\HOLThmTag{AVL_trees}{complete_avl_compute}\HOLAVLXXtreesTheoremscompleteXXavlXXcompute
+\HOLThmTag{AVL_trees}{Fibonacci_def}\HOLAVLXXtreesTheoremsFibonacciXXdef
+\HOLThmTag{AVL_trees}{Fibonacci_ind}\HOLAVLXXtreesTheoremsFibonacciXXind
+\HOLThmTag{AVL_trees}{Fibonacci_mono}\HOLAVLXXtreesTheoremsFibonacciXXmono
+\HOLThmTag{AVL_trees}{Fibonacci_mono_transitive}\HOLAVLXXtreesTheoremsFibonacciXXmonoXXtransitive
+\HOLThmTag{AVL_trees}{Fibonacci_thm}\HOLAVLXXtreesTheoremsFibonacciXXthm
+\HOLThmTag{AVL_trees}{height_balL}\HOLAVLXXtreesTheoremsheightXXbalL
+\HOLThmTag{AVL_trees}{height_balL2}\HOLAVLXXtreesTheoremsheightXXbalLTwo
+\HOLThmTag{AVL_trees}{height_balR}\HOLAVLXXtreesTheoremsheightXXbalR
+\HOLThmTag{AVL_trees}{height_balR2}\HOLAVLXXtreesTheoremsheightXXbalRTwo
+\HOLThmTag{AVL_trees}{height_complete_avl}\HOLAVLXXtreesTheoremsheightXXcompleteXXavl
+\HOLThmTag{AVL_trees}{height_eq_0}\HOLAVLXXtreesTheoremsheightXXeqXXZero
+\HOLThmTag{AVL_trees}{height_of_minimal_avl_diff_1}\HOLAVLXXtreesTheoremsheightXXofXXminimalXXavlXXdiffXXOne
+\HOLThmTag{AVL_trees}{keys_balanceL}\HOLAVLXXtreesTheoremskeysXXbalanceL
+\HOLThmTag{AVL_trees}{keys_balanceR}\HOLAVLXXtreesTheoremskeysXXbalanceR
+\HOLThmTag{AVL_trees}{keys_insert}\HOLAVLXXtreesTheoremskeysXXinsert
+\HOLThmTag{AVL_trees}{lookup1}\HOLAVLXXtreesTheoremslookupOne
+\HOLThmTag{AVL_trees}{lookup2}\HOLAVLXXtreesTheoremslookupTwo
+\HOLThmTag{AVL_trees}{lookup3}\HOLAVLXXtreesTheoremslookupThree
+\HOLThmTag{AVL_trees}{lookup4}\HOLAVLXXtreesTheoremslookupFour
+\HOLThmTag{AVL_trees}{lookup5}\HOLAVLXXtreesTheoremslookupFive
+\HOLThmTag{AVL_trees}{minimal_avl_exists}\HOLAVLXXtreesTheoremsminimalXXavlXXexists
+\HOLThmTag{AVL_trees}{minimal_avl_l_is_avl}\HOLAVLXXtreesTheoremsminimalXXavlXXlXXisXXavl
+\HOLThmTag{AVL_trees}{minimal_avl_node_count}\HOLAVLXXtreesTheoremsminimalXXavlXXnodeXXcount
+\HOLThmTag{AVL_trees}{N_0}\HOLAVLXXtreesTheoremsNXXZero
+\HOLThmTag{AVL_trees}{N_1}\HOLAVLXXtreesTheoremsNXXOne
+\HOLThmTag{AVL_trees}{N_fibonacci_relation}\HOLAVLXXtreesTheoremsNXXfibonacciXXrelation
+\HOLThmTag{AVL_trees}{N_k}\HOLAVLXXtreesTheoremsNXXk
+\HOLThmTag{AVL_trees}{remove_max_def}\HOLAVLXXtreesTheoremsremoveXXmaxXXdef
+\HOLThmTag{AVL_trees}{remove_max_ind}\HOLAVLXXtreesTheoremsremoveXXmaxXXind
+\HOLThmTag{AVL_trees}{t1}\HOLAVLXXtreesTheoremstOne
+\HOLThmTag{AVL_trees}{t10}\HOLAVLXXtreesTheoremstOneZero
+\HOLThmTag{AVL_trees}{t11}\HOLAVLXXtreesTheoremstOneOne
+\HOLThmTag{AVL_trees}{t12}\HOLAVLXXtreesTheoremstOneTwo
+\HOLThmTag{AVL_trees}{t2}\HOLAVLXXtreesTheoremstTwo
+\HOLThmTag{AVL_trees}{t3}\HOLAVLXXtreesTheoremstThree
+\HOLThmTag{AVL_trees}{t4}\HOLAVLXXtreesTheoremstFour
+\HOLThmTag{AVL_trees}{t5}\HOLAVLXXtreesTheoremstFive
+\HOLThmTag{AVL_trees}{t6}\HOLAVLXXtreesTheoremstSix
+\HOLThmTag{AVL_trees}{t7}\HOLAVLXXtreesTheoremstSeven
+\HOLThmTag{AVL_trees}{t8}\HOLAVLXXtreesTheoremstEight
+\HOLThmTag{AVL_trees}{t9}\HOLAVLXXtreesTheoremstNine
+\HOLThmTag{AVL_trees}{trees_of_height_exist}\HOLAVLXXtreesTheoremstreesXXofXXheightXXexist
+}

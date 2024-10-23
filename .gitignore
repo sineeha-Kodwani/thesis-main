@@ -1,0 +1,8 @@
+/.hollogs/
+/.HOLMK/
+/.holobjs/
+*.aux
+*.log
+*.exe
+/heap
+*.out

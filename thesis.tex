@@ -96,7 +96,8 @@ The \texttt{height} function computes the height of an AVL tree, which is define
 
 \begin{alltt}
 [height_def]
-\HOLthm[def]{AVL_trees.height_def}
+\HOLConst{height} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLNumLit{0}
+\HOLConst{height} (\HOLConst{Bin} \HOLFreeVar{h} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{} \HOLConst{MAX} (\HOLConst{height} \HOLFreeVar{l}) (\HOLConst{height} \HOLFreeVar{r}) \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
 \end{alltt}
 
 The height of an empty tree is 0, and for a non-empty tree, the height is determined by the maximum height of its left and right subtrees, incremented by 1. This ensures that the height of a balanced AVL tree grows logarithmically with the number of nodes.
@@ -106,7 +107,7 @@ A singleton AVL tree consists of a single node. This is a base case used in inse
 
 \begin{alltt}
 [singleton_avl_def]
-\HOLthm[def]{AVL_trees.singleton_avl_def}
+\HOLConst{singleton_avl} \HOLFreeVar{k} \HOLFreeVar{v} \HOLTokenDefEquality{} \HOLConst{Bin} \HOLNumLit{0} \HOLFreeVar{k} \HOLFreeVar{v} \HOLConst{Tip} \HOLConst{Tip}
 \end{alltt}
 
 This creates a node with a balance factor of 0, a key \texttt{k}, a value \texttt{v}, and two empty subtrees (\texttt{Tip}). The balance factor of 0 indicates that the node is perfectly balanced with no children.
@@ -116,7 +117,11 @@ The predicate \texttt{avl} is used to check whether a tree satisfies the AVL pro
 
 \begin{alltt}
 [avl_def]
-\HOLthm[def]{AVL_trees.avl_def}
+\HOLConst{avl} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLConst{T}
+\HOLConst{avl} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{}
+  (\HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+   \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\HOLTokenConj{}} \HOLFreeVar{bf} \HOLSymConst{=} \HOLSymConst{\&}\HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{-}} \HOLSymConst{\&}\HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}}
+  \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r}
 \end{alltt}
 
 This definition recursively checks the balance condition at every node, ensuring that both the left and right subtrees also satisfy the AVL property. The balance factor, calculated from the heights of the left and right subtrees, ensures that the AVL property holds after each operation.
@@ -126,7 +131,8 @@ The \texttt{node\_count} function computes the number of nodes in an AVL tree. T
 
 \begin{alltt}
 [node_count_def]
-\HOLthm[def]{AVL_trees.node_count_def}
+\HOLConst{node_count} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLNumLit{0}
+\HOLConst{node_count} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{} \HOLConst{node_count} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLConst{node_count} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
 \end{alltt}
 
 The node count of an empty tree is zero, while for a non-empty tree, the node count is the sum of the node counts of its left and right subtrees, plus one for the root node.
@@ -136,7 +142,11 @@ A minimal AVL tree is defined as one that satisfies the AVL property while havin
 
 \begin{alltt}
 [minimal_avl_def]
-\HOLthm[def]{AVL_trees.minimal_avl_def}
+\HOLConst{minimal_avl} \HOLFreeVar{t} \HOLTokenDefEquality{}
+  \HOLConst{avl} \HOLFreeVar{t} \HOLSymConst{\HOLTokenConj{}}
+  \HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{t}\sp{\prime{}}}.
+    \HOLConst{avl} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{\HOLTokenImp{}}
+    \HOLConst{node_count} \HOLFreeVar{t} \HOLSymConst{\HOLTokenLeq{}} \HOLConst{node_count} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}}
 \end{alltt}
 
 This predicate ensures that for any AVL tree \( t' \) of the same height, the number of nodes in \( t \) is less than or equal to the number of nodes in \( t' \), thus ensuring minimality.
@@ -146,7 +156,9 @@ A complete AVL tree is one in which all levels are fully filled, except possibly
 
 \begin{alltt}
 [complete_avl_def]
-\HOLthm[def]{AVL_trees.complete_avl_def}
+\HOLConst{complete_avl} \HOLNumLit{0} \HOLTokenDefEquality{} \HOLConst{Tip}
+\HOLConst{complete_avl} (\HOLConst{SUC} \HOLFreeVar{n}) \HOLTokenDefEquality{}
+  \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{0} \HOLConst{ARB} (\HOLConst{complete_avl} \HOLFreeVar{n}) (\HOLConst{complete_avl} \HOLFreeVar{n})
 \end{alltt}
 
 This recursive definition constructs a balanced AVL tree of height \( n \) by creating left and right subtrees of height \( n \). A complete AVL tree is useful for understanding the optimal balance and node distribution in AVL trees of varying heights.
@@ -164,7 +176,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
 
 \begin{alltt}
 [height_eq_0]
-\HOLthm[nosp]{AVL_trees.height_eq_0}
+\HOLTokenTurnstile{} (\HOLConst{height} \HOLFreeVar{t} \HOLSymConst{=} \HOLNumLit{0} \HOLSymConst{\HOLTokenEquiv{}} \HOLFreeVar{t} \HOLSymConst{=} \HOLConst{Tip}) \HOLSymConst{\HOLTokenConj{}} (\HOLNumLit{0} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{\HOLTokenEquiv{}} \HOLFreeVar{t} \HOLSymConst{=} \HOLConst{Tip})
 \end{alltt}
 
   This theorem ensures that for any AVL tree \( t \), if the height of \( t \) is zero, it must be an empty tree. This result is foundational for verifying AVL tree operations, as many structural properties depend on correctly identifying the base case of an empty tree. It also plays a critical role in inductive proofs where the height of a tree is reduced step-by-step.
@@ -174,7 +186,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
 
 \begin{alltt}
 [avl_complete_avl]
-\HOLthm[nosp]{AVL_trees.avl_complete_avl}
+\HOLTokenTurnstile{} \HOLConst{avl} (\HOLConst{complete_avl} \HOLFreeVar{k}) \HOLSymConst{\HOLTokenEquiv{}} \HOLConst{T}
 \end{alltt}
 
   This theorem is significant as it confirms that the construction of a complete AVL tree results in a valid AVL tree. Complete AVL trees are commonly used as examples of balanced trees and serve as a useful model for understanding how the AVL property is maintained as trees grow in height.
@@ -184,7 +196,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
 
 \begin{alltt}
 [minimal_avl_exists]
-\HOLthm[nosp]{AVL_trees.minimal_avl_exists}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLSymConst{\HOLTokenExists{}}\HOLBoundVar{t}. \HOLConst{minimal_avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{=} \HOLBoundVar{k}
 \end{alltt}
 
   The significance of this theorem lies in its demonstration that AVL trees can be constructed in an optimal manner with respect to node count. Minimal AVL trees are important because they represent the most compact tree structure that still satisfies the AVL property. This guarantees that AVL trees can be kept as small as possible, improving space efficiency while maintaining balance and performance.
@@ -194,7 +206,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
 
 \begin{alltt}
 [minimal_avl_node_count]
-\HOLthm[nosp]{AVL_trees.minimal_avl_node_count}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{t}. \HOLConst{minimal_avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{=} \HOLBoundVar{k} \HOLSymConst{\HOLTokenImp{}} \HOLConst{node_count} \HOLBoundVar{t} \HOLSymConst{=} \HOLConst{N} \HOLBoundVar{k}
 \end{alltt}
 
   The Fibonacci sequence plays a critical role in AVL trees because it captures the optimal relationship between height and node count. A minimal AVL tree of height \( k \) has a node count that grows in a Fibonacci-like fashion, which ensures that the tree remains as compact as possible while still allowing logarithmic height growth. This result highlights the efficiency of AVL trees in terms of both space and time complexity, as it demonstrates that the height of an AVL tree grows logarithmically with the number of nodes.
@@ -204,7 +216,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
 
 \begin{alltt}
 [N_fibonacci_relation]
-\HOLthm[nosp]{AVL_trees.N_fibonacci_relation} 
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k}. \HOLConst{N} \HOLBoundVar{k} \HOLSymConst{=} \HOLConst{Fibonacci} (\HOLBoundVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\ensuremath{-}} \HOLNumLit{1} 
 \end{alltt}
 
   This theorem provides a more detailed characterization of the relationship between the number of nodes in an AVL tree and its height. The Fibonacci sequence governs the growth of AVL trees, and this theorem demonstrates that the number of nodes in a minimal AVL tree of height \( k \) is equal to the \( (k+2) \)-th Fibonacci number minus one. This result is essential for understanding the recursive structure of AVL trees and their efficiency, as it proves that the trees grow in a balanced and optimal manner according to the Fibonacci series.
@@ -214,7 +226,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
 
 \begin{alltt}
 [height_complete_avl]
-\HOLthm[nosp]{AVL_trees.height_complete_avl}
+\HOLTokenTurnstile{} \HOLConst{height} (\HOLConst{complete_avl} \HOLFreeVar{n}) \HOLSymConst{=} \HOLFreeVar{n}
 \end{alltt}
 
   This theorem is significant because it guarantees that the height of a complete AVL tree is correctly calculated, which plays a crucial role in operations such as insertion and balancing. Knowing the height of a tree is necessary for maintaining the balance condition after modifications.
@@ -224,7 +236,11 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
 
 \begin{alltt}
 [avl_insert_aux]
-\HOLthm[nosp]{AVL_trees.avl_insert_aux}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}.
+     \HOLConst{avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenImp{}}
+     \HOLConst{avl} (\HOLConst{insert_avl} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{\HOLTokenConj{}}
+     (\HOLConst{height} (\HOLConst{insert_avl} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{\HOLTokenDisj{}}
+      \HOLConst{height} (\HOLConst{insert_avl} \HOLBoundVar{k} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{=} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1})
 \end{alltt}
 
   This theorem ensures that after inserting a key-value pair \( (k, v) \) into the tree, the resulting tree still satisfies the AVL property. This is critical for the correctness of insertion operations, as it guarantees that the tree remains balanced after an insertion.
@@ -248,7 +264,18 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
 
 \begin{alltt}
 [balanceL_def]
-\HOLthm[def]{AVL_trees.balanceL_def}
+\HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r} \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLKeyword{then}
+    \HOLKeyword{case} \HOLFreeVar{l} \HOLKeyword{of}
+      \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
+    \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} \HOLBoundVar{lr} \HOLTokenImp{}
+      \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{ll} \HOLSymConst{\HOLTokenLt{}} \HOLConst{height} \HOLBoundVar{lr} \HOLKeyword{then}
+        \HOLKeyword{case} \HOLBoundVar{lr} \HOLKeyword{of}
+          \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLBoundVar{lr} \HOLFreeVar{r})
+        \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{6}}} \HOLBoundVar{lrn} \HOLBoundVar{lrv} \HOLBoundVar{lrl} \HOLBoundVar{lrr} \HOLTokenImp{}
+          \HOLConst{tree} \HOLBoundVar{lrn} \HOLBoundVar{lrv} (\HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} \HOLBoundVar{lrl}) (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLBoundVar{lrr} \HOLFreeVar{r})
+      \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLBoundVar{lr} \HOLFreeVar{r})
+  \HOLKeyword{else} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
 \end{alltt}
   
   This operation works by comparing the heights of the left and right subtrees of the current node. If the left subtree is too tall (i.e., the height difference is greater than one), a rotation is performed. The precise rotation depends on whether the imbalance is caused by the left or right child of the left subtree. The function handles both single and double rotations to restore balance. The balancing of the left subtree is critical for maintaining the AVL property and ensuring that the tree remains balanced after an insertion on the left side.
@@ -258,7 +285,18 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
 
 \begin{alltt}
 [balanceR_def]
-\HOLthm{AVL_trees.balanceR_def}
+\HOLTokenTurnstile{} \HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r} \HOLSymConst{=}
+   \HOLKeyword{if} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLKeyword{then}
+     \HOLKeyword{case} \HOLFreeVar{r} \HOLKeyword{of}
+       \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
+     \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{rk} \HOLBoundVar{rv} \HOLBoundVar{rl} \HOLBoundVar{rr} \HOLTokenImp{}
+       \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{rl} \HOLSymConst{\HOLTokenGt{}} \HOLConst{height} \HOLBoundVar{rr} \HOLKeyword{then}
+         \HOLKeyword{case} \HOLBoundVar{rl} \HOLKeyword{of}
+           \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLBoundVar{rl}) \HOLBoundVar{rr}
+         \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{6}}} \HOLBoundVar{rln} \HOLBoundVar{rlv} \HOLBoundVar{rll} \HOLBoundVar{rlr} \HOLTokenImp{}
+           \HOLConst{tree} \HOLBoundVar{rln} \HOLBoundVar{rlv} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLBoundVar{rll}) (\HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} \HOLBoundVar{rlr} \HOLBoundVar{rr})
+       \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLBoundVar{rl}) \HOLBoundVar{rr}
+   \HOLKeyword{else} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
 \end{alltt}
 
   The logic for \texttt{balanceR} is analogous to \texttt{balanceL}, but it handles the case where the right subtree is imbalanced. Similar to \texttt{balanceL}, this function performs either a single or double rotation depending on the structure of the right subtree. Rebalancing the right subtree is essential for maintaining the AVL property after an insertion into the right child of the tree.
@@ -268,7 +306,11 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
 
 \begin{alltt}
 [insert_avl_def]
-\HOLthm[def]{AVL_trees.insert_avl_def}
+\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLConst{singleton_avl} \HOLFreeVar{x} \HOLFreeVar{v}
+\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{kv} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLFreeVar{x} \HOLSymConst{=} \HOLFreeVar{k} \HOLKeyword{then} \HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{kv} \HOLFreeVar{l} \HOLFreeVar{r}
+  \HOLKeyword{else} \HOLKeyword{if} \HOLFreeVar{x} \HOLSymConst{\HOLTokenLt{}} \HOLFreeVar{k} \HOLKeyword{then} \HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{kv} (\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} \HOLFreeVar{l}) \HOLFreeVar{r}
+  \HOLKeyword{else} \HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{kv} \HOLFreeVar{l} (\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} \HOLFreeVar{r})
 \end{alltt}
 
   In the \texttt{insert\_avl} function, the key-value pair \( (x, v) \) is inserted into the correct position in the tree according to the binary search tree property. If \( x \) is smaller than the current key \( k \), the insertion proceeds in the left subtree. If \( x \) is larger than \( k \), the insertion proceeds in the right subtree. After the insertion, the balance of the tree is checked. If the tree becomes imbalanced, either \texttt{balanceL} or \texttt{balanceR} is applied to restore balance.
@@ -291,7 +333,7 @@ The insertion of elements into an AVL tree must maintain the AVL property, the b
 
 \begin{alltt}
 [keys_insert]
-\HOLthm[nosp]{AVL_trees.keys_insert}
+\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{t}. \HOLConst{keys} (\HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{t}) \HOLSymConst{=} \HOLConst{keys} \HOLBoundVar{t} \HOLSymConst{\HOLTokenUnion{}} \HOLTokenLeftbrace{}\HOLBoundVar{x}\HOLTokenRightbrace{}
 \end{alltt}
 
   This theorem demonstrates that the insertion of a key into an AVL tree correctly updates the set of keys stored in the tree. Specifically, if \( x \) is inserted into the tree \( t \), the resulting set of keys will be the same as the set of keys in \( t \), with the addition of \( x \). The proof proceeds by structural induction on the tree, verifying that the insertion preserves the binary search tree property (i.e., that keys are correctly placed in the left or right subtrees according to their values) and that no duplicate keys are introduced.
@@ -321,7 +363,10 @@ The insertion of elements into an AVL tree must maintain the AVL property, the b
 
 \begin{alltt}
 [avl_tree_preserves_avl]
-\HOLthm{AVL_trees.avl_tree_preserves_avl}
+\HOLTokenTurnstile{} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenConj{}}
+   (\HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+    \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{avl} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r})
 \end{alltt}
 
   This theorem is a more general form of the previous theorem, which ensures that the AVL property is preserved not just at the root of the tree, but at every node where balancing occurs. The condition on the heights of the left and right subtrees ensures that the balance factor is within the allowed range of \([-1, 1]\), maintaining the AVL property throughout the entire tree.
@@ -352,7 +397,10 @@ In HOL4, the Fibonacci sequence is formalized as follows:
 
 \begin{alltt}
 [Fibonacci_def]
-\HOLthm[def]{AVL_trees.Fibonacci_def}
+\HOLConst{Fibonacci} \HOLFreeVar{n} \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLFreeVar{n} \HOLSymConst{=} \HOLNumLit{0} \HOLKeyword{then} \HOLNumLit{0}
+  \HOLKeyword{else} \HOLKeyword{if} \HOLFreeVar{n} \HOLSymConst{=} \HOLNumLit{1} \HOLKeyword{then} \HOLNumLit{1}
+  \HOLKeyword{else} \HOLConst{Fibonacci} (\HOLFreeVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}) \HOLSymConst{\ensuremath{+}} \HOLConst{Fibonacci} (\HOLFreeVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{2})
 \end{alltt}
 
 This definition of the Fibonacci sequence allows us to compute Fibonacci numbers recursively. Starting with the base cases \( F(0) = 0 \) and \( F(1) = 1 \), the function recursively computes each subsequent Fibonacci number by summing the previous two values. This recursive definition plays a pivotal role in establishing the relationship between the height of an AVL tree and the number of nodes it contains.
@@ -369,7 +417,7 @@ The following theorem formally establishes this relationship in HOL4:
 
 \begin{alltt}
 [N_fibonacci_relation]
-\HOLthm{AVL_trees.N_fibonacci_relation}
+\HOLTokenTurnstile{} \HOLConst{N} \HOLFreeVar{k} \HOLSymConst{=} \HOLConst{Fibonacci} (\HOLFreeVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}
 \end{alltt}
 
   The proof of this theorem involves showing that the recursive structure of minimal AVL trees corresponds exactly to the recursive structure of the Fibonacci sequence. Specifically, the number of nodes in a minimal AVL tree of height \( k \) is the sum of the number of nodes in the left and right subtrees (which are minimal AVL trees of smaller heights), plus one for the root node. This recursive structure aligns perfectly with the Fibonacci sequence, where each term is the sum of the two preceding terms.
