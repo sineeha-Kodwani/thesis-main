@@ -20,7 +20,7 @@
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
-\title{Formal Verification of AVL Trees in HOL Theorem Prover}
+\title{Formal Verification of AVL Trees in HOL4}
 \author{Sineeha Kodwani}
 \date{\today}
 
@@ -30,42 +30,60 @@
 \begin{abstract}
 Interactive Theorem Proving (ITP) enables researchers to build reusable libraries of formalized mathematics, algorithms, and data structures. This thesis contributes to the formalization of AVL trees in the HOL Theorem Prover (HOL4), an interactive theorem-proving system based on higher-order logic. The formalization covers the theoretical foundations of AVL trees, focusing on essential properties such as height constraints, node counts, and balancing operations through rotations after insertions and deletions. A recursive relationship between the number of nodes in an AVL tree and the Fibonacci sequence is established, demonstrating that minimal AVL trees achieve optimal performance with a height logarithmic to the number of nodes. Additionally, design adaptations made to integrate the formalization into HOL4’s framework are discussed.
 
-Comparisons with other existing theories, such as Isabelle's AVL tree implementation and balanced binary search trees (balanced\_bst) in HOL4 are also presented. The present work aims to become a part of HOL4's official examples, adding to its valuable collection of verified data structures for future developers.
+We also compared with some related work, such as Isabelle's AVL tree formalization, and the existing balanced binary search trees (\verb|balanced_map|) in HOL4. The present work aims to become a part of HOL4's official examples, adding to its valuable collection of verified data structures for future developers.
 \end{abstract}
 
 \section{Introduction}
-AVL trees are a type of self-balancing binary search tree, where the difference between heights of left and right subtrees for any node is less than or equal to one. This balancing ensures logarithmic height relative to the number of nodes, making search, insertion, and deletion operations efficient.
 
-Interactive Theorem Proving (ITP) involves the formal verification of mathematical theorems and data structures through human-guided proof systems. HOL4 is one such system based on Higher-Order Logic (HOL). The formal verification of algorithms within HOL4 helps ensure correctness and contributes to building a reusable, verified library of algorithms and data structures.
+Interactive Theorem Proving (ITP) involves the formal verification of mathematical theorems and data structures through human-guided proof systems. The HOL theorem prover (HOL4) is one such system based on Higher-Order Logic (HOL). The formal verification of algorithms within HOL4 helps ensuring their correctness, and contributes to building a reusable, verified library of algorithms and data structures.
+
+AVL trees are self-balancing binary search trees, where the height difference of left and right subtrees for any tree node is less than or equal to one. This balancing requirement ensures logarithmic height with respect to the number of nodes, making search, insertion, and deletion operations on AVL trees more efficient (in $O(\log{n})$) than
+those on linear data structures ($O(n)$) such as arrays and linked lists.
 
 The goal of this thesis is to provide a formal verification of AVL trees using HOL4. This involves defining AVL trees in HOL4, proving fundamental properties such as balance conditions and operations (insertion, deletion, rotation), and comparing this formalization to existing formalizations in systems like Isabelle.
 
 \section{Higher-Order Logic and HOL4}
+
+% NOTE: There shouldn't be blanks between section and subsection titles. Write something here.
+In this section, we briefly introduce Higher-Order Logic (HOL) and its implementation, HOL4.
+
 \subsection{Introduction to Higher-Order Logic}
 
-Higher-Order Logic (HOL) extends first-order logic by enabling quantification over individual objects, predicates, and functions, providing a more expressive framework for formal reasoning. This expressiveness is crucial for formal verification tasks, where one needs to specify and prove properties of complex systems such as algorithms, data structures, and hardware designs.
+Higher-Order Logic (HOL) extends first-order logic by enabling quantification over individual objects, predicates, and functions, providing an expressive framework for formal reasoning. This expressiveness is crucial for formal verification tasks, where one needs to specify and prove properties of complex systems such as algorithms, data structures, and hardware designs.
 
-Unlike first-order logic, which only allows quantification over variables that represent objects, HOL allows quantification over higher-level entities like functions and sets of functions. This feature is useful when formalizing sophisticated mathematical structures and operations, such as those seen in AVL trees, where recursive functions define balance conditions and other properties.
+Unlike first-order logic, which only allows quantification over variables that represent objects, HOL allows quantification over higher-level entities like functions and sets of functions. This feature is useful when formalizing sophisticated mathematical structures and operations, such as the present work for AVL trees, where recursive functions are used for defining balance conditions and other properties.
 
-\subsection{HOL4 Theorem Prover}
+\subsection{HOL Theorem Prover}
 
-HOL4, a prominent implementation of higher-order logic, offers a robust, interactive, and automated proof environment. It is built on an ML-based foundation, originally developed by Mike Gordon in the 1980s as an adaptation of the Edinburgh LCF system, and has since evolved into a powerful tool for formal verification tasks \cite{gordon1993introduction}. HOL4’s system is distinguished by its small trusted kernel, which encapsulates the core logical rules, ensuring the soundness of the proofs derived from it. This architecture allows HOL4 to remain flexible and reliable while offering an extensive suite of derived rules and proof tools that support advanced features like quotient types, mutual recursion, and automated reasoning.
+The HOL Theorem Prover (HOL4)~\cite{gordon2008hol4}, a prominent implementation of HOL, offers a robust, interactive, and automated proof environment. It is built on an ML-based foundation, originally developed by Mike Gordon in the 1980s as an adaptation of the Edinburgh LCF system, and has since evolved into a powerful tool for formal verification tasks \cite{gordon1993introduction}. HOL4’s entire software system is distinguished by its small trusted kernel, which encapsulates the core logical rules, ensuring the soundness of the proofs derived from it. This architecture allows HOL4 to remain flexible and reliable while offering an extensive suite of derived rules and proof tools that support advanced features like quotient types, mutual recursion, and automated reasoning.
 
 HOL4’s libraries are extensive, covering a wide range of mathematical and computational domains—from arithmetic and number theory to program logics and hardware models like the ARM architecture \cite{harrison2009handbook}. These libraries are not only persistent but also customizable, allowing users to build their proofs atop established formalizations or create new ones tailored to their specific needs. This makes HOL4 especially suitable for verifying both theoretical constructs and practical implementations. Its ability to mix automated reasoning with human-guided proof development further enhances its versatility, enabling efficient handling of complex proofs with both precision and flexibility \cite{nipkow2002isabelle}.
 
 For tasks involving AVL trees, HOL4’s capabilities are particularly valuable. The formal verification of AVL trees in HOL4 involves defining the tree structure, specifying invariants like balance conditions, and proving the correctness of operations such as insertion, deletion, and tree rotations. Additionally, HOL4 supports reasoning about recursive relationships, which is critical in establishing the connection between AVL trees and the Fibonacci sequence—a key factor in demonstrating that AVL trees maintain logarithmic height relative to the number of nodes.
 
-HOL4 integrates interactive proof guidance with automated reasoning tools, such as SAT solvers, allowing researchers to handle both small-scale formal verifications and large-scale system validations. This mix of automation and interactivity makes it an indispensable tool in formal methods, particularly when verifying correctness properties for data structures and algorithms, as is the case with AVL trees in this thesis.
+HOL4 integrates interactive proof guidance with automated reasoning tools, such as SAT solvers and first-order solvers, allowing researchers to handle both small-scale formal verifications and large-scale system validations. The mix of automation and interactivity makes HOL4 an indispensable tool in formal methods, particularly when verifying correctness properties for data structures and algorithms, as is the case with AVL trees in this thesis.
 
 Moreover, HOL4's libraries and its proven track record in hardware and software verification projects make it an essential tool for both academic and industrial verification tasks. For example, HOL4 has been used to verify the correctness of hardware architectures and safety-critical software systems \cite{avigad2014formally}, underscoring its importance in the broader context of formal verification.
 
-The canonical citation for HOL4 is the paper "A brief overview of HOL4" \cite{gordon2008hol4}. HOL4 is especially useful in this thesis due to its integration of higher-order logic and its extensive libraries for formal verification tasks, which allow the formal proof of properties such as the balance conditions and recursive relationships in AVL trees.
-\section{Background of AVL Trees in HOL4}
-\subsection{AVL Tree Definition in HOL4}
-An AVL tree is defined as a binary search tree that maintains a balance condition, which ensures that for any node, the height of its left and right subtrees differs by at most one. In HOL4, this can be represented using recursive definitions and predicates.
+HOL4 is especially useful in this thesis due to its integration of higher-order logic and its extensive libraries for formal verification tasks, which allow the formal proof of properties such as the balance conditions and recursive relationships in AVL trees.
+
+\section{AVL Trees in HOL}
+
+\subsection{AVL Trees}
+
+An AVL tree is defined as a binary search tree that maintains a balance condition, which ensures that for any node, the height of its left and right subtrees differs by at most one. An AVL tree stores finite number of key-value pairs, where all keys must be distinct.
+
+In HOL4, AVL trees can be represented by an inductive, algebraic datatype, where the type of data to be stored in the tree as a type variable. Without loss of generality, we consider keys as natural numbers.
 
 \subsection{Properties of AVL Trees}
-The height of an AVL tree is logarithmic to the number of nodes, ensuring efficient operations. AVL trees use rotations to maintain their balance after insertion or deletion operations.
+
+In theory, a complete binary tree of height $n$ (the height of single node is 1) has $2^n-1$ nodes, and thus
+the height of complete binary trees is in logarithmic (more precisely, in log 2) of the number of nodes.
+Note that, in the worst case, a valid AVL tree may be unbalanced (i.e. the height different of two subtree is 1) at
+every non-leave node, and it is not immediate that the height of such unbalanced trees is still in logarithmic
+of the number of nodes.
+
+In fact, the maximal height of an AVL tree can be proved to be logarithmic to the number of nodes, ensuring efficient operations. AVL trees use rotations to maintain their balance after insertion or deletion operations. This proof here, however, is only given indirectly, by a smart connection to Fibonacci series, which is known to have logarithmic upper and lower bounds.
 
 \section{Formalization of AVL Trees in HOL4}
 
@@ -75,7 +93,7 @@ In this section, we present the formalization of AVL trees in the HOL4 theorem p
 
 In this section, we present the fundamental definitions and data structures used in the formalization of AVL trees in the HOL4 theorem prover. AVL trees are a specific type of self-balancing binary search tree that ensures logarithmic height by maintaining a balance between the heights of its subtrees. These definitions provide the foundation for verifying the correctness and properties of AVL trees, which are crucial for efficient data storage and retrieval.
 
-\textbf{Datatype:} \\
+\paragraph{Datatype}
 An AVL tree is a self-balancing binary search tree where the heights of the two child subtrees of any node differ by at most one. This balance ensures that search, insertion, and deletion operations remain efficient by maintaining a logarithmic height relative to the number of nodes in the tree. When the tree becomes unbalanced after an insertion or deletion, rebalancing operations are performed to restore the AVL property.
 
 In HOL4, the datatype of an AVL tree is formally defined as:
@@ -84,7 +102,7 @@ In HOL4, the datatype of an AVL tree is formally defined as:
 avl_tree = Tip | Bin int num 'a avl_tree avl_tree
 \end{verbatim}
 
-Here, the AVL tree can either be a \texttt{Tip}, representing an empty tree, or a \texttt{Bin} node, which contains the following:
+Here, the AVL tree can be either a \texttt{Tip}, representing an empty tree, or a \texttt{Bin} node, which contains the following (Note that a singleton AVL tree is constructed by a \texttt{Bin} node with two \texttt{Tip}s):
 \begin{itemize}
     \item \textbf{int}: The balance factor of the node, which is the difference between the heights of the left and right subtrees.
     \item \textbf{num}: The key associated with the node.
@@ -92,9 +110,9 @@ Here, the AVL tree can either be a \texttt{Tip}, representing an empty tree, or 
     \item \textbf{'a avl\_tree}: The right subtree.
 \end{itemize}
 
-This recursive structure enables us to define the properties of AVL trees and the operations that can be performed on them. The balance factor is crucial for determining whether the tree remains balanced after operations such as insertion or deletion.
+This recursive structure allows to define the properties of AVL trees and the operations performed on them. The balance factor is a cached value calculated by the height of right subtree subtracts the height of left subtree. It is crucial for quickly determining whether the tree remains balanced after insertion or deletion operations.
 
-\textbf{Definition of Height:} \\
+\paragraph{Definition of Height}
 The \texttt{height} function computes the height of an AVL tree, which is defined as the number of edges from the root to the furthest leaf. The height is essential for maintaining the AVL property, as it is used to calculate the balance factor of a node. It is formally defined in HOL4 as follows:
 
 \begin{alltt}
@@ -104,7 +122,7 @@ The \texttt{height} function computes the height of an AVL tree, which is define
 
 The height of an empty tree is 0, and for a non-empty tree, the height is determined by the maximum height of its left and right subtrees, incremented by 1. This ensures that the height of a balanced AVL tree grows logarithmically with the number of nodes.
 
-\textbf{Definition of Singleton AVL Tree:} \\
+\paragraph{Definition of Singleton AVL Tree}
 A singleton AVL tree consists of a single node. This is a base case used in insertion operations when creating new nodes in the tree. The formal definition in HOL4 is:
 
 \begin{alltt}
@@ -114,7 +132,7 @@ A singleton AVL tree consists of a single node. This is a base case used in inse
 
 This creates a node with a balance factor of 0, a key \texttt{k}, a value \texttt{v}, and two empty subtrees (\texttt{Tip}). The balance factor of 0 indicates that the node is perfectly balanced with no children.
 
-\textbf{AVL Property (avl):} \\
+\paragraph{AVL Predicate}
 The predicate \texttt{avl} is used to check whether a tree satisfies the AVL property. For a tree to be an AVL tree, the height difference between its left and right subtrees must be at most 1. This ensures that the tree remains balanced. The formal definition of the AVL predicate in HOL4 is:
 
 \begin{alltt}
@@ -124,7 +142,7 @@ The predicate \texttt{avl} is used to check whether a tree satisfies the AVL pro
 
 This definition recursively checks the balance condition at every node, ensuring that both the left and right subtrees also satisfy the AVL property. The balance factor, calculated from the heights of the left and right subtrees, ensures that the AVL property holds after each operation.
 
-\textbf{Node Count:} \\
+\paragraph{Node Count}
 The \texttt{node\_count} function computes the number of nodes in an AVL tree. This function is important for evaluating the structure of the tree and ensuring that the tree is minimally balanced. The formal definition is:
 
 \begin{alltt}
@@ -134,7 +152,7 @@ The \texttt{node\_count} function computes the number of nodes in an AVL tree. T
 
 The node count of an empty tree is zero, while for a non-empty tree, the node count is the sum of the node counts of its left and right subtrees, plus one for the root node.
 
-\textbf{Minimal AVL Trees:} \\
+\paragraph{Minimal AVL Trees}
 A minimal AVL tree is defined as one that satisfies the AVL property while having the smallest possible number of nodes for a given height. This is essential for ensuring that AVL trees maintain optimal structure and performance. The formal definition in HOL4 is:
 
 \begin{alltt}
@@ -144,7 +162,7 @@ A minimal AVL tree is defined as one that satisfies the AVL property while havin
 
 This predicate ensures that for any AVL tree \( t' \) of the same height, the number of nodes in \( t \) is less than or equal to the number of nodes in \( t' \), thus ensuring minimality.
 
-\textbf{Complete AVL Tree:} \\
+\paragraph{Complete AVL Tree}
 A complete AVL tree is one in which all levels are fully filled, except possibly for the last level, which is filled from left to right. A complete AVL tree is balanced and maintains the AVL property. The formal definition of a complete AVL tree in HOL4 is:
 
 \begin{alltt}
@@ -485,7 +503,7 @@ In summary, the formalization of AVL trees in HOL4 required several key design a
 
 Isabelle/HOL \cite{IsabelleAVL} provides a formalization of AVL trees that is widely regarded as one of the most complete and influential formalizations in the field of theorem proving. Isabelle's formalization of AVL trees follows a monolithic approach, where all the components—data type definitions, auxiliary functions, and theorems—are tightly integrated into one comprehensive theory. This contrasts with the more modular structure that HOL4 typically encourages, where components are often distributed across different theories for reusability and composability.
 
-\subsubsection{Datatype Representation in Isabelle}
+\paragraph{Datatype Representation in Isabelle}
 In Isabelle, the AVL tree is defined as a recursive data structure using a datatype declaration. Here is the definition from Isabelle’s formalization:
 
 \begin{verbatim}
@@ -497,37 +515,39 @@ This datatype closely mirrors the one used in HOL4 but includes an additional `n
 In HOL4, by contrast, the height is computed dynamically using a recursive function. The AVL tree in HOL4 is defined as follows:
 
 \begin{verbatim}
-avl_tree = Tip | Bin int num 'a avl_tree avl_tree
+Datatype :
+  avl_tree = Tip | Bin int num 'a avl_tree avl_tree
+End
 \end{verbatim}
 
 This definition uses a balance factor (an integer representing the height difference between the left and right subtrees) instead of explicitly storing the height as in Isabelle. This design decision aligns with the traditional AVL tree structure and maintains the dynamic computation of tree properties rather than encoding them directly in the data structure.
 
-\subsubsection{Height Calculation}
+\paragraph{Height Calculation}
 The height of an AVL tree in Isabelle is calculated using a primitive recursive function:
 
 \begin{verbatim}
-primrec height :: "'a tree ⇒ nat" where
+primrec height :: "'a tree => nat" where
 "height ET = 0" |
 "height (MKT x l r h) = max (height l) (height r) + 1"
 \end{verbatim}
 
 In HOL4, a similar function calculates the height of the tree, but it uses a recursive definition rather than reading the height from the tree’s structure. The HOL4 height function is:
 
-\begin{verbatim}
-height Tip = 0 ∧ height (Bin h k v l r) = MAX (height l) (height r) + 1
-\end{verbatim}
+\begin{alltt}
+\HOLthm[def]{AVL_trees.height_def}
+\end{alltt}
 
 While both functions ultimately compute the height of the tree, Isabelle’s approach benefits from faster height lookups, as the height is stored in each node. However, this comes at the cost of maintaining this value during tree mutations, increasing the complexity of operations like insertion and deletion.
 
-\subsubsection{AVL Tree Property (avl Predicate)}
+\paragraph{AVL Predicates}
 Both Isabelle and HOL4 define a predicate to ensure that a tree satisfies the AVL property. In Isabelle, the AVL property is enforced as follows:
 
 \begin{verbatim}
-primrec avl :: "'a tree ⇒ bool" where
+primrec avl :: "'a tree => bool" where
 "avl ET = True" |
 "avl (MKT x l r h) =
- ((height l = height r ∨ height l = height r + 1 ∨ height r = height l + 1) ∧ 
-  h = max (height l) (height r) + 1 ∧ avl l ∧ avl r)"
+ ((height l = height r \/ height l = height r + 1 \/ height r = height l + 1) /\ 
+  h = max (height l) (height r) + 1 /\ avl l /\ avl r)"
 \end{verbatim}
 
 This function checks that the tree is balanced by ensuring the heights of the left and right subtrees differ by at most one, and it also verifies that the stored height value is consistent with the actual height of the tree.
@@ -535,20 +555,20 @@ This function checks that the tree is balanced by ensuring the heights of the le
 In HOL4, the AVL property is similarly enforced, but using the balance factor instead of explicitly stored heights:
 
 \begin{verbatim}
-avl Tip = T ∧
+avl Tip = T /\
 avl (Bin bf k v l r) =
- ((height l = height r ∨ height l = height r + 1 ∨ height r = height l + 1) ∧
-  bf = &height r - &height l ∧ avl l ∧ avl r)
+ ((height l = height r \/ height l = height r + 1 \/ height r = height l + 1) /\
+  bf = &height r - &height l /\ avl l /\ avl r)
 \end{verbatim}
 
 Both implementations ensure that the AVL property is maintained, but the HOL4 version dynamically calculates the height difference between subtrees using the balance factor, while the Isabelle version relies on pre-computed height values.
 
-\subsubsection{Insertion and Balancing}
+\paragraph{Insertion and Balancing}
 
 The insertion operation in Isabelle is more complex due to the explicit height field in each node. Here’s the definition for inserting a new element into the tree:
 
 \begin{verbatim}
-primrec insert :: "'a::order ⇒ 'a tree ⇒ 'a tree" where
+primrec insert :: "'a::order => 'a tree => 'a tree" where
 "insert x ET = MKT x ET ET 1" |
 "insert x (MKT n l r h) = 
    (if x=n
@@ -563,7 +583,7 @@ This function balances the tree after an insertion using two auxiliary functions
 In HOL4, the insertion function does not need to maintain an explicit height field. Instead, it focuses on maintaining the balance factor, which simplifies the balancing operations:
 
 \begin{verbatim}
-insert_avl x v Tip = singleton_avl x v ∧  
+insert_avl x v Tip = singleton_avl x v /\  
 insert_avl x v (Bin bf k kv l r) =
   if x = k then Bin bf k kv l r  
   else if x < k then balanceL k kv (insert_avl x v l) r  
@@ -572,32 +592,32 @@ insert_avl x v (Bin bf k kv l r) =
 
 Here, `balanceL` and `balanceR` handle left and right rotations, ensuring the AVL property is restored after insertion. Since the height is calculated recursively, there is no need to explicitly update it during these operations.
 
-\subsubsection{Efficiency and Trade-offs}
+\paragraph{Efficiency and Trade-offs}
 
 The primary trade-off between the two implementations lies in the efficiency of height lookups and the complexity of maintaining balance. Isabelle's approach, which stores the height in each node, allows for faster lookups during insertion and deletion but increases the complexity of maintaining correct height values. In contrast, HOL4’s implementation dynamically calculates the height and uses a balance factor, simplifying the maintenance of tree invariants but potentially making height lookups slightly slower.
 
 Overall, the HOL4 implementation is more in line with the traditional AVL tree design, focusing on balance factors, while Isabelle’s version opts for an explicit height field, which influences both performance and complexity.
 
-\subsubsection{Proof Techniques and Automation}
+\paragraph{Proof Techniques and Automation}
 Isabelle’s AVL tree formalization leverages Isabelle’s powerful proof automation tools, such as `simp` and `auto`, to simplify the proof of correctness for insertion and deletion operations. For example, the following lemma ensures that the AVL property is maintained after insertion:
 
 \begin{verbatim}
 theorem avl_insert_aux:
   assumes "avl t"
   shows "avl(insert x t)"
-        "(height (insert x t) = height t ∨ height (insert x t) = height t + 1)"
+        "(height (insert x t) = height t \/ height (insert x t) = height t + 1)"
 \end{verbatim}
 
 HOL4 employs similar proof strategies but relies more heavily on explicit recursion and case analysis to establish the same properties. The modularity of HOL4’s proof tactics, such as \(rw\) (rewrite) and \(induct_on\), allows for fine-grained control over the proof process.
 
-\subsubsection{Summary of Differences}
+\paragraph{Summary of Differences}
 In summary, Isabelle’s AVL tree formalization takes a more explicit approach by storing the height of each tree node, which simplifies height lookups but complicates insertion and deletion operations. HOL4’s formalization, on the other hand, maintains the traditional AVL tree structure by dynamically calculating heights and using a balance factor to ensure the tree remains balanced. Both approaches have their advantages and trade-offs, with Isabelle’s approach favoring efficient height lookups and HOL4’s approach favoring simplicity in tree mutations.
 
 \subsection{Balanced\_bst in HOL4}
 
 In contrast to Isabelle’s formalization of AVL trees, HOL4 \cite{HOLBalancedBST} provides a modular and flexible formalization of balanced binary search trees (BSTs), known as \texttt{balanced\_bst}. HOL4's approach is characterized by its focus on modularity, where different components such as balance operations, key comparison, and height management are separated into reusable theories. This modular design encourages compositional reasoning and reusability of core components across different theories.
 
-\subsubsection{Data Type Representation in HOL4}
+\paragraph{Data Type Representation in HOL4}
 In HOL4, the \texttt{balanced\_bst} type follows the typical structure of binary search trees, with nodes that store keys, values, and left and right subtrees. This differs from Isabelle's AVL tree formalization, which includes an explicit height parameter stored in each node. HOL4 avoids encoding height directly into the datatype, opting instead for recursive functions to manage balancing operations and height computations.
 
 The HOL4 definition for \texttt{balanced\_bst} is as follows:
@@ -608,18 +628,18 @@ balanced_bst = Tip | Bin size key value balanced_bst balanced_bst
 
 In this definition, the tree is either empty (\texttt{Tip}) or a binary node (\texttt{Bin}) that stores the size of the subtree, a key, a value, and references to left and right subtrees. Unlike Isabelle, which stores an explicit height value, HOL4 calculates properties such as height recursively as needed.
 
-\subsubsection{Balancing and Height Calculation}
+\paragraph{Balancing and Height Calculation}
 HOL4’s balancing functions dynamically compute the balance factor using the height difference between subtrees. This contrasts with Isabelle’s approach, where the height is stored within each node.
 
 The height of a tree in HOL4 is computed as follows:
 
 \begin{verbatim}
-height Tip = 0 ∧ height (Bin _ _ _ l r) = MAX (height l) (height r) + 1
+height Tip = 0 /\ height (Bin _ _ _ l r) = MAX (height l) (height r) + 1
 \end{verbatim}
 
 In this recursive definition, the height of an empty tree (\texttt{Tip}) is zero, while the height of a node is the maximum height of its subtrees plus one. This approach mirrors the classic AVL tree structure, maintaining balance based on dynamic height calculations rather than pre-stored height values.
 
-\subsubsection{Balancing Operations}
+\paragraph{Balancing Operations}
 The balancing operations in HOL4 focus on restoring the AVL property by applying left and right rotations when needed. The \texttt{balance\_L} and \texttt{balance\_R} functions are used to rebalance the tree after an insertion or deletion.
 
 \begin{verbatim}
@@ -629,15 +649,15 @@ balanceR k v l r = if height r > height l + 1 then rotateL k v l r else Bin _ k 
 
 These functions ensure that the balance factor remains within acceptable limits by rotating the tree when the height difference between left and right subtrees exceeds 1. Unlike Isabelle, which recalculates and stores the height explicitly in each node, HOL4’s balancing is based solely on recursive height calculations.
 
-\subsubsection{Trade-offs and Design Considerations}
+\paragraph{Trade-offs and Design Considerations}
 The primary difference between HOL4’s and Isabelle’s implementations lies in the handling of height. While Isabelle stores the height explicitly within each node, HOL4 opts for recursive height calculations. This decision simplifies the node structure in HOL4 but may lead to slightly slower height lookups compared to Isabelle’s approach.
 
 Moreover, HOL4's modular design promotes code reuse and flexibility, allowing developers to extend or adapt the core balanced tree structure without tightly coupling all components into a single monolithic theory. In contrast, Isabelle's formalization integrates all components into a single theory, which can be beneficial for comprehensive reasoning but may limit modularity.
 
-\subsubsection{Proof Techniques and Automation}
+\paragraph{Proof Techniques and Automation}
 The proof strategies employed in HOL4 leverage its modularity and tactics such as \texttt{rw} (rewrite) and \texttt{induct\_on} for case analysis and recursion. HOL4 requires more explicit handling of recursion and case distinctions compared to Isabelle, where powerful automation tools like \texttt{simp} and \texttt{auto} play a central role in proofs. The modularity of HOL4’s proof system allows for precise control over individual components of the proof, making it a preferred choice for fine-grained formal reasoning.
 
-\subsubsection{Summary of Differences}
+\paragraph{Summary of Differences}
 In summary, HOL4’s \texttt{balanced\_bst} formalization maintains the traditional AVL tree structure by dynamically calculating heights and focusing on balance factors. This contrasts with Isabelle’s more explicit approach, where the height is stored within each node, allowing for faster height lookups but requiring more complex maintenance of tree properties. HOL4’s design favors modularity, flexibility, and dynamic height computation, whereas Isabelle’s approach favors efficiency in height lookups and monolithic integration.
 
 
@@ -654,5 +674,30 @@ In conclusion, this thesis advances the state of the art in formal verification 
 
 \bibliographystyle{alpha}
 \bibliography{thesis_ref}
+
+%% APPENDIX
+\section*{Appendix: AVL\_trees Theory}
+
+\input{HOLAVLXXtrees}
+
+\begin{flushleft}
+\textbf{Parent Theories:} comparison,
+alist,
+integerRing,
+int\_arith,
+Omega,
+EVAL\_numRing
+\end{flushleft}
+% ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+\subsection{Definitions}
+% .....................................
+
+\HOLAVLXXtreesDefinitions
+
+\subsection{Theorems}
+% .....................................
+
+\HOLAVLXXtreesTheorems
 
 \end{document}
