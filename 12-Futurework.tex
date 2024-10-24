@@ -1,0 +1,66 @@
+\chapter{Future Work}\label{chap:LaTeXAdvice}
+While significant progress has been made in formalizing AVL trees, there are still several open problems and extensions that deserve further exploration. In this section, we outline some of the key areas that can be addressed in future work, with a particular focus on the relationship between Fibonacci sequences and AVL tree properties, as well as the formal proof of tree depth and node count relations.
+
+\subsection*{Fibonacci Sequence to logarithmic nature}
+
+The Fibonacci sequence \( 0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \) is defined by the following recurrence relation:
+
+\[
+F(0) = 0, \quad F(1) = 1, \quad F(i) = F(i - 1) + F(i - 2) \quad \text{for } i \geq 2
+\]
+
+This sequence has been studied for centuries, and it exhibits fascinating mathematical properties. The elements of the Fibonacci sequence can be expressed as linear combinations with fixed coefficients of the powers of the roots of the polynomial \( x^2 - x - 1 \), whose roots are given by:
+
+\[
+\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618 \quad \text{and} \quad \hat{\phi} = \frac{1 - \sqrt{5}}{2} \approx -0.618
+\]
+
+Here, \( \phi \) is known as the golden ratio. The Fibonacci sequence is then approximated as follows:
+
+\[
+F(i) = \frac{1}{\sqrt{5}} \left( \phi^i - \hat{\phi}^i \right) \quad \text{for } i \geq 0
+\]
+
+Since the absolute value of \( \hat{\phi} \) is smaller than 1, the term \( \hat{\phi}^i \) quickly becomes negligible as \( i \) increases, allowing for a good approximation of \( F(i) \) using just the first term:
+
+\[
+F(i) \approx \frac{1}{\sqrt{5}} \phi^i
+\]
+
+This approximation is especially relevant for studying AVL trees, as the number of nodes \( n \) in an AVL tree of depth \( k \) is bounded by a relationship involving Fibonacci numbers. Specifically, the number of nodes satisfies:
+
+\[
+n \geq N(k) = F(k + 3) - 1 \approx \frac{1}{\sqrt{5}} \phi^{k+3} - 1
+\]
+
+This relationship provides an exponential bound on the number of nodes in terms of the tree’s depth, which is crucial for understanding the efficiency and scalability of AVL trees.
+
+\subsection*{Current Achievements and Future Directions}
+
+In this work, we have successfully proved the relationship between the Fibonacci sequence and the node count of AVL trees. Specifically, we demonstrated that the minimum number of nodes \( N(k) \) in an AVL tree of depth \( k \) is related to Fibonacci numbers. This result is important as it shows that the structure of AVL trees is nearly optimal in terms of space efficiency, with the height growing logarithmically with the number of nodes.
+
+However, proving deeper relations between Fibonacci numbers and AVL trees remains an open problem. For example, while we have established the relation between node count and Fibonacci numbers, we have yet to fully prove the relationship between Fibonacci numbers and tree depth. According to **Theorem 5.1**, the number of nodes \( n \) in an AVL tree of depth \( k \) is at least exponential in \( k \), meaning \( n \geq a^k \) for some constant \( a > 1 \). This exponential bound still needs to be formalized rigorously within the context of the Fibonacci sequence.
+
+The bounds on the depth \( k \) of AVL trees are also connected to the logarithmic nature of Fibonacci numbers. Specifically, we know that:
+
+\[
+\log_\phi \left( \sqrt{5}(n + 1) \right) \geq k + 3
+\]
+
+This provides a bound on the depth of AVL trees, even in the worst-case scenario, where the depth is at most 44\% larger than in the best-case scenario. Additionally, the average depth can be shown to be approximately \( 1.04 \log_2 n \), indicating that AVL trees offer highly efficient access and search operations.
+
+Future work will focus on rigorously proving these bounds, using Fibonacci-based recurrence relations to formalize the relationships between node count and depth in AVL trees. Specifically, proving the relationship expressed in Theorem 5.1 in its full generality remains an open challenge, as it requires careful analysis of the recursive nature of AVL trees and their relationship to Fibonacci numbers.
+
+
+\subsection*{Proving Properties of Deletion and Lookup for Trees}
+
+While this work has formalized many aspects of AVL trees, including insertion, balancing, and the relationship between node count and Fibonacci numbers, proving properties related to deletion and lookup operations remains an open problem for future research.
+
+\textbf{Deletion}: The deletion operation in AVL trees is more complex than insertion, as it involves removing a node while ensuring that the tree remains balanced. Although we have defined the \texttt{delete\_avl} function and explored its behavior in various cases (e.g., nodes with zero, one, or two children), a formal proof of its correctness, specifically regarding maintaining the AVL property, has yet to be completed. Proving that the tree remains balanced after every deletion operation, and that the height of the tree either remains the same or decreases by one, is critical for ensuring the efficiency of the deletion process.
+
+\textbf{Lookup}: Similarly, the lookup operation, defined by the \texttt{lookup\_avl} function, has not been formally verified. The lookup function searches for a key in the tree by recursively traversing the left or right subtree based on the comparison with the root key. While the function’s behavior appears correct, a formal proof that the operation maintains the binary search tree property and that the time complexity is \( O(\log n) \) in the worst case is still required.
+
+Both deletion and lookup operations are fundamental to the practical use of AVL trees, and formal verification of these operations will ensure that AVL trees remain efficient for all operations. Future work will focus on developing formal proofs for these operations, demonstrating that they preserve the key properties of AVL trees, such as balance and logarithmic height.
+
+By completing the proofs for deletion and lookup, we can provide a fully verified framework for AVL trees, ensuring that all tree operations are both correct and efficient.
+

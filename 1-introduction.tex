@@ -1,0 +1,31 @@
+\chapter{Introduction}
+
+AVL trees are a type of self-balancing binary search tree, where the difference between heights of left and right subtrees for any node is less than or equal to one. This balancing ensures logarithmic height relative to the number of nodes, making search, insertion, and deletion operations efficient.
+
+Interactive Theorem Proving (ITP) involves the formal verification of mathematical theorems and data structures through human-guided proof systems. HOL4 is one such system based on Higher-Order Logic (HOL). The formal verification of algorithms within HOL4 helps ensure correctness and contributes to building a reusable, verified library of algorithms and data structures.
+
+The goal of this thesis is to provide a formal verification of AVL trees using HOL4. This involves defining AVL trees in HOL4, proving fundamental properties such as balance conditions and operations (insertion, deletion, rotation), and comparing this formalization to existing formalizations in systems like Isabelle.
+
+\section{Higher-Order Logic and HOL4}
+\subsection{Introduction to Higher-Order Logic}
+
+Higher-Order Logic (HOL) extends first-order logic by enabling quantification over individual objects, predicates, and functions, providing a more expressive framework for formal reasoning. This expressiveness is crucial for formal verification tasks, where one needs to specify and prove properties of complex systems such as algorithms, data structures, and hardware designs.
+
+Unlike first-order logic, which only allows quantification over variables that represent objects, HOL allows quantification over higher-level entities like functions and sets of functions. This feature is useful when formalizing mathematical structures and operations, such as those seen in AVL trees, where recursive functions define balance conditions and other properties.
+
+\subsection{HOL4 Theorem Prover}
+
+HOL4, a prominent implementation of higher-order logic, offers a robust, interactive, and automated proof environment. It is built on an ML-based foundation, originally developed by Mike Gordon in the 1980s as an adaptation of the Edinburgh LCF system, and has since evolved into a powerful tool for formal verification tasks . HOL4’s system is distinguished by its small trusted kernel, which encapsulates the core logical rules, ensuring the soundness of the proofs derived from it. This architecture allows HOL4 to remain flexible and reliable while offering an extensive suite of derived rules and proof tools that support advanced features like quotient types, mutual recursion, and automated reasoning.
+
+HOL4’s libraries are extensive, covering a wide range of mathematical and computational domains—from arithmetic and number theory to program logic and hardware models like the ARM architecture. These libraries are not only persistent but also customizable, allowing users to build their proofs atop established formalizations or create new ones tailored to their specific needs. This makes HOL4 especially suitable for verifying both theoretical constructs and practical implementations. Its ability to mix automated reasoning with human-guided proof development further enhances its versatility, enabling efficient handling of complex proofs with both precision and flexibility.
+
+For tasks involving AVL trees, HOL4’s capabilities are particularly valuable. The formal verification of AVL trees in HOL4 involves defining the tree structure, specifying invariants like balance conditions, and proving the correctness of operations such as insertion, deletion, and tree rotations. Additionally, HOL4 supports reasoning about recursive relationships, which is critical in establishing the connection between AVL trees and the Fibonacci sequence—a key factor in demonstrating that AVL trees maintain logarithmic height relative to the number of nodes.
+
+HOL4 integrates interactive proof guidance with automated reasoning tools, such as SAT solvers, allowing researchers to handle both small-scale formal verifications and large-scale system validations. This mix of automation and interactivity makes it an indispensable tool in formal methods, particularly when verifying correctness properties for data structures and algorithms, as is the case with AVL trees in this thesis.
+
+Moreover, HOL4's libraries and its proven track record in hardware and software verification projects make it an essential tool for both academic and industrial verification tasks. For example, HOL4 has been used to verify the correctness of hardware architectures and safety-critical software systems, underscoring its importance in the broader context of formal verification.
+
+The canonical citation for HOL4 is the paper "A brief overview of HOL4". HOL4 is especially useful in this thesis due to its integration of higher-order logic and its extensive libraries for formal verification tasks, which allow the formal proof of properties such as the balance conditions and recursive relationships in AVL trees.
+
+
+% \cite{gordon1993introduction} ,, \cite{nipkow2002isabelle},, \cite{harrison2009handbook} ,,\cite{avigad2014formally},,\cite{gordon2008hol4}

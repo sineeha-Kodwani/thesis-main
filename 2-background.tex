@@ -1,0 +1,47 @@
+\chapter{Background of AVL Trees}\label{chap:background}
+
+AVL trees are a type of self-balancing binary search tree where the difference in height between the left and right subtrees of any node is kept at most 1, ensuring that the tree remains balanced. This property guarantees that the height of the tree is logarithmic to the number of nodes, ensuring efficient search, insertion, and deletion operations. The efficiency of these operations—usually $O(\log n)$—makes AVL trees an ideal choice for dynamic sets of data where a balanced structure must be maintained even with frequent updates.
+
+\subsection{Balance Condition}
+In AVL trees, the key property that distinguishes them from general binary search trees is the balance condition:
+\[
+|d(T_R(v)) - d(T_L(v))| \leq 1 \quad \forall v \in T
+\]
+where $T_L(v)$ and $T_R(v)$ are the left and right subtrees of a node $v$, respectively, and $d(T)$ denotes the depth of the tree $T$. This balance condition ensures that no path from the root to a leaf is disproportionately long compared to any other path, preventing worst-case scenarios where the tree behaves like a linked list.
+
+\subsection{Depth and Fibonacci Relationship}
+One of the fundamental properties of AVL trees is that the number of nodes is bounded by a function of their height. Specifically, the number of nodes $n$ in an AVL tree of depth $k$ is closely related to the Fibonacci sequence. The minimum number of nodes $N(k)$ in an AVL tree of height $k$ follows the recurrence relation:
+\[
+N(k) = N(k-1) + N(k-2) + 1
+\]
+This recurrence is identical to the Fibonacci sequence, leading to the following relationship between the height of the tree and the number of nodes:
+\[
+N(k) = F(k+3) - 1
+\]
+where $F(i)$ is the Fibonacci number. This result shows that AVL trees are nearly optimal in terms of space, with the height bounded by:
+\[
+d(T) \leq 1.4404 \log_2(n + 1) - 1.33
+\]
+ensuring logarithmic depth even in the worst case.
+
+
+\subsection{AVL Tree Operations : Insertion and Deletion}
+Insertions and deletions in AVL trees must maintain the balance property, requiring rebalancing through rotations. When an imbalance occurs after insertion or deletion, the tree is restructured through single or double rotations to restore the balance. These operations ensure that the depth of the tree is adjusted while keeping the balance property intact.
+
+For instance, when inserting a node, the balance factors (the difference between the heights of the left and right subtrees) are updated, and rotations are performed if necessary to correct any imbalance. These rotations are classified as:
+\begin{itemize}
+	\item \textbf{Single Rotation:} Performed when the imbalance is caused by a single insertion in one subtree (Left-Left or Right-Right).
+	\item \textbf{Double Rotation:} Used when the imbalance arises from insertion into the opposite subtree of a child node (Left-Right or Right-Left).
+\end{itemize}
+Similar procedures apply for deletions, where the balance condition must be restored after removing a node from the tree. Deletion may cause an imbalance that requires rebalancing through rotations.
+
+\subsubsection{Lookup in AVL Trees}
+The lookup operation in AVL trees follows a similar path as in regular binary search trees. It starts at the root and proceeds down the tree based on key comparisons:
+\begin{itemize}
+    \item If the key being searched for is smaller than the current node's key, the search continues in the left subtree.
+    \item If the key is larger, the search proceeds in the right subtree.
+    \item If the key matches, the corresponding value is returned.
+\end{itemize}
+
+
+%\cite{knuth1998art} ,, \cite{cormen2009introduction} ,,\cite{harrison2009handbook} ,,

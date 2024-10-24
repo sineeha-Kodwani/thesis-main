@@ -1,0 +1,202 @@
+\chapter{Comparision with existing theories}\label{chap:LaTeXAdvice}
+
+\subsection{Isabelle’s AVL Tree Implementation}
+
+Isabelle/HOL provides a formalization of AVL trees that is widely regarded as one of the most complete and influential formalizations in the field of theorem proving. Isabelle's formalization of AVL trees follows a monolithic approach, where all the components—data type definitions, auxiliary functions, and theorems—are tightly integrated into one comprehensive theory. This contrasts with the more modular structure that HOL4 typically encourages, where components are often distributed across different theories for reusability and composability.
+
+\subsubsection{Datatype Representation in Isabelle}
+In Isabelle, the AVL tree is defined as a recursive data structure using a datatype declaration. Here is the definition from Isabelle’s formalization:
+
+\[
+\text{datatype} \, (\text{set\_of}: \, 'a) \, \text{tree} = 
+\text{ET} \, | \, \text{MKT} \, 'a \, (\text{'a \, tree}) \, (\text{'a \, tree}) \, \text{nat}
+\]
+
+This datatype closely mirrors the one used in HOL4 but includes an additional `nat` parameter in each node, which explicitly stores the height of the tree as part of the node’s structure. This explicit height parameter differs from the HOL4 approach, where the height of a tree is computed recursively rather than being stored within the tree structure. While storing the height as part of the node structure simplifies some operations, such as balancing and checking AVL properties, it increases the complexity of maintaining the correct height values during tree mutations (insertions and deletions).
+
+In HOL4, by contrast, the height is computed dynamically using a recursive function. The AVL tree in HOL4 is defined as follows:
+
+\[
+\text{avl\_tree} = \text{Tip} \, | \, \text{Bin} \, (\text{int}) \, (\text{num}) \, ('a) \, (\text{avl\_tree}) \, (\text{avl\_tree})
+\]
+
+This definition uses a balance factor (an integer representing the height difference between the left and right subtrees) instead of explicitly storing the height as in Isabelle. This design decision aligns with the traditional AVL tree structure and maintains the dynamic computation of tree properties rather than encoding them directly in the data structure.
+
+\subsubsection{Height Calculation}
+The height of an AVL tree in Isabelle is calculated using a primitive recursive function:
+
+\[
+\text{height} \, (\text{ET}) = 0
+\]
+\[
+\text{height} \, (\text{MKT} \, x \, l \, r \, h) = \max(\text{height}(l), \text{height}(r)) + 1
+\]
+In HOL4, a similar function calculates the height of the tree, but it uses a recursive definition rather than reading the height from the tree’s structure. The HOL4 height function is:
+
+\[
+\text{height}(\text{Tip}) = 0
+\]
+\[
+\text{height}(\text{Bin} \, h \, k \, v \, l \, r) = \max(\text{height}(l), \text{height}(r)) + 1
+\]
+
+While both functions ultimately compute the height of the tree, Isabelle’s approach benefits from faster height lookups, as the height is stored in each node. However, this comes at the cost of maintaining this value during tree mutations, increasing the complexity of operations like insertion and deletion.
+
+\subsubsection{AVL Tree Property (avl Predicate)}
+Both Isabelle and HOL4 define a predicate to ensure that a tree satisfies the AVL property. In Isabelle, the AVL property is enforced as follows:
+
+\begin{align*}
+	\text{avl}(\text{MKT} \, x \, l \, r \, h) = & \left( (\text{height}(l) = \text{height}(r) \right. \\
+	& \lor \, \text{height}(l) = \text{height}(r) + 1 \\
+	& \lor \, \text{height}(r) = \text{height}(l) + 1) \\
+	& \land \, h = \max(\text{height}(l), \text{height}(r)) + 1 \\
+	& \land \, \text{avl}(l) \, \land \, \text{avl}(r) \left. \right)
+\end{align*}
+
+
+This function checks that the tree is balanced by ensuring the heights of the left and right subtrees differ by at most one, and it also verifies that the stored height value is consistent with the actual height of the tree.
+
+In HOL4, the AVL property is similarly enforced, but using the balance factor instead of explicitly stored heights:
+
+\[
+\text{avl}(\text{Tip}) = \text{T}
+\]
+\begin{align*}
+	\text{avl}(\text{Bin} \, bf \, k \, v \, l \, r) = & \left( (\text{height}(l) = \text{height}(r) \right. \\
+	& \lor \, \text{height}(l) = \text{height}(r) + 1 \\
+	& \lor \, \text{height}(r) = \text{height}(l) + 1) \\
+	& \land \, bf = \text{\&height}(r) - \text{\&height}(l) \\
+	& \land \, \text{avl}(l) \, \land \, \text{avl}(r) \left. \right)
+\end{align*}
+
+Both implementations ensure that the AVL property is maintained, but the HOL4 version dynamically calculates the height difference between subtrees using the balance factor, while the Isabelle version relies on pre-computed height values.
+
+\subsubsection{Insertion and Balancing}
+
+The insertion operation in Isabelle is more complex due to the explicit height field in each node. Here’s the definition for inserting a new element into the tree:
+
+\[
+\text{insert}(x, \text{ET}) = \text{MKT}(x, \text{ET}, \text{ET}, 1)
+\]
+\begin{align*}
+	\text{insert}(x, \text{MKT}(n, l, r, h)) = & 
+	\begin{cases}
+		x = n \Rightarrow \text{MKT}(n, l, r, h), \\
+		x < n \Rightarrow \text{mkt\_bal\_l}(n, \text{insert}(x, l), r), \\
+		x > n \Rightarrow \text{mkt\_bal\_r}(n, l, \text{insert}(x, r))
+	\end{cases}
+\end{align*}
+
+This function balances the tree after an insertion using two auxiliary functions, \(mkt_bal_l\) and \(mkt_bal_r\), which handle left and right rotations, respectively. These balancing functions are more complex in Isabelle because they need to maintain the height field after rebalancing.
+
+In HOL4, the insertion function does not need to maintain an explicit height field. Instead, it focuses on maintaining the balance factor, which simplifies the balancing operations:
+
+\[
+\text{insert\_avl}(x, v, \text{Tip}) = \text{singleton\_avl}(x, v)
+\]
+\begin{align*}
+	\text{insert\_avl}(x, v, \text{Bin}(bf, k, kv, l, r)) = 
+	& \begin{cases}
+		x = k \Rightarrow \text{Bin}(bf, k, kv, l, r), \\
+		x < k \Rightarrow \text{balanceL}(k, kv, \text{insert\_avl}(x, v, l), r), \\
+		x > k \Rightarrow \text{balanceR}(k, kv, l, \text{insert\_avl}(x, v, r))
+	\end{cases}
+\end{align*}
+
+Here, `balanceL` and `balanceR` handle left and right rotations, ensuring the AVL property is restored after insertion. Since the height is calculated recursively, there is no need to explicitly update it during these operations.
+
+\subsubsection{Efficiency and Trade-offs}
+
+The primary trade-off between the two implementations lies in the efficiency of height lookups and the complexity of maintaining balance. Isabelle's approach, which stores the height in each node, allows for faster lookups during insertion and deletion but increases the complexity of maintaining correct height values. In contrast, HOL4’s implementation dynamically calculates the height and uses a balance factor, simplifying the maintenance of tree invariants but potentially making height lookups slightly slower.
+
+Overall, the HOL4 implementation is more in line with the traditional AVL tree design, focusing on balance factors, while Isabelle’s version opts for an explicit height field, which influences both performance and complexity.
+
+\subsubsection{Proof Techniques and Automation}
+Isabelle’s AVL tree formalization leverages Isabelle’s powerful proof automation tools, such as `simp` and `auto`, to simplify the proof of correctness for insertion and deletion operations. For example, the following lemma ensures that the AVL property is maintained after insertion:
+
+\begin{thm}{avl\_insert\_aux}
+	
+	This theorem proves that inserting a key into an AVL tree preserves the AVL property and that the height of the tree is either unchanged or increased by one. The formal statement is:
+	
+	\[
+	\text{assumes:} \, \text{avl}(t)
+	\]
+	\[
+	\text{shows:} \, \text{avl}(\text{insert}(x, t)) \quad \land
+	\]
+	\[
+	\left( \text{height}(\text{insert}(x, t)) = \text{height}(t) \, \lor \, 
+	\text{height}(\text{insert}(x, t)) = \text{height}(t) + 1 \right)
+	\]
+	
+	This theorem guarantees that after inserting a new key \( x \) into an AVL tree \( t \), the AVL property is preserved, and the height of the tree will either remain the same or increase by one.
+	
+\end{thm}
+HOL4 employs similar proof strategies but relies more heavily on explicit recursion and case analysis to establish the same properties. The modularity of HOL4’s proof tactics, such as \(rw\) (rewrite) and \(induct_on\), allows for fine-grained control over the proof process.
+
+\subsubsection{Summary of Differences}
+In summary, Isabelle’s AVL tree formalization takes a more explicit approach by storing the height of each tree node, which simplifies height lookups but complicates insertion and deletion operations. HOL4’s formalization, on the other hand, maintains the traditional AVL tree structure by dynamically calculating heights and using a balance factor to ensure the tree remains balanced. Both approaches have their advantages and trade-offs, with Isabelle’s approach favoring efficient height lookups and HOL4’s approach favoring simplicity in tree mutations.
+
+\subsection{Balanced\_bst in HOL4}
+
+In contrast to Isabelle’s formalization of AVL trees, HOL4 \cite{HOLBalancedBST} provides a modular and flexible formalization of balanced binary search trees (BSTs), known as \texttt{balanced\_bst}. HOL4's approach is characterized by its focus on modularity, where different components such as balance operations, key comparison, and height management are separated into reusable theories. This modular design encourages compositional reasoning and reusability of core components across different theories.
+
+\subsubsection{Data Type Representation in HOL4}
+In HOL4, the \texttt{balanced\_bst} type follows the typical structure of binary search trees, with nodes that store keys, values, and left and right subtrees. This differs from Isabelle's AVL tree formalization, which includes an explicit height parameter stored in each node. HOL4 avoids encoding height directly into the datatype, opting instead for recursive functions to manage balancing operations and height computations.
+
+The HOL4 definition for \texttt{balanced\_bst} is as follows:
+
+\[
+\text{balanced\_bst} = \text{Tip} \, | \, \text{Bin} \, (\text{size}) \, (\text{key}) \, (\text{value}) \, (\text{balanced\_bst}) \, (\text{balanced\_bst})
+\]
+
+In this definition, the tree is either empty (\texttt{Tip}) or a binary node (\texttt{Bin}) that stores the size of the subtree, a key, a value, and references to left and right subtrees. Unlike Isabelle, which stores an explicit height value, HOL4 calculates properties such as height recursively as needed.
+
+\subsubsection{Balancing and Height Calculation}
+HOL4’s balancing functions dynamically compute the balance factor using the height difference between subtrees. This contrasts with Isabelle’s approach, where the height is stored within each node.
+
+The height of a tree in HOL4 is computed as follows:
+
+\[
+\text{height}(\text{Tip}) = 0
+\]
+\[
+\text{height}(\text{Bin} \, \_ \, \_ \, \_ \, l \, r) = \max(\text{height}(l), \text{height}(r)) + 1
+\]
+
+In this recursive definition, the height of an empty tree (\texttt{Tip}) is zero, while the height of a node is the maximum height of its subtrees plus one. This approach mirrors the classic AVL tree structure, maintaining balance based on dynamic height calculations rather than pre-stored height values.
+
+\subsubsection{Balancing Operations}
+The balancing operations in HOL4 focus on restoring the AVL property by applying left and right rotations when needed. The \texttt{balance\_L} and \texttt{balance\_R} functions are used to rebalance the tree after an insertion or deletion.
+
+\[
+\text{balanceL}(k, v, l, r) = 
+\begin{cases}
+	\text{if} \, \text{height}(l) > \text{height}(r) + 1, \, \text{then} \, \text{rotateR}(k, v, l, r), \\
+	\text{else} \, \text{Bin}(\_, k, v, l, r)
+\end{cases}
+\]
+
+\[
+\text{balanceR}(k, v, l, r) = 
+\begin{cases}
+	\text{if} \, \text{height}(r) > \text{height}(l) + 1, \, \text{then} \, \text{rotateL}(k, v, l, r), \\
+	\text{else} \, \text{Bin}(\_, k, v, l, r)
+\end{cases}
+\]
+
+
+These functions ensure that the balance factor remains within acceptable limits by rotating the tree when the height difference between left and right subtrees exceeds 1. Unlike Isabelle, which recalculates and stores the height explicitly in each node, HOL4’s balancing is based solely on recursive height calculations.
+
+\subsubsection{Trade-offs and Design Considerations}
+The primary difference between HOL4’s and Isabelle’s implementations lies in the handling of height. While Isabelle stores the height explicitly within each node, HOL4 opts for recursive height calculations. This decision simplifies the node structure in HOL4 but may lead to slightly slower height lookups compared to Isabelle’s approach.
+
+Moreover, HOL4's modular design promotes code reuse and flexibility, allowing developers to extend or adapt the core balanced tree structure without tightly coupling all components into a single monolithic theory. In contrast, Isabelle's formalization integrates all components into a single theory, which can be beneficial for comprehensive reasoning but may limit modularity.
+
+\subsubsection{Proof Techniques and Automation}
+The proof strategies employed in HOL4 leverage its modularity and tactics such as \texttt{rw} (rewrite) and \texttt{induct\_on} for case analysis and recursion. HOL4 requires more explicit handling of recursion and case distinctions compared to Isabelle, where powerful automation tools like \texttt{simp} and \texttt{auto} play a central role in proofs. The modularity of HOL4’s proof system allows for precise control over individual components of the proof, making it a preferred choice for fine-grained formal reasoning.
+
+\subsubsection{Summary of Differences}
+In summary, HOL4’s \texttt{balanced\_bst} formalization maintains the traditional AVL tree structure by dynamically calculating heights and focusing on balance factors. This contrasts with Isabelle’s more explicit approach, where the height is stored within each node, allowing for faster height lookups but requiring more complex maintenance of tree properties. HOL4’s design favors modularity, flexibility, and dynamic height computation, whereas Isabelle’s approach favors efficiency in height lookups and monolithic integration.
+
+%\cite{IsabelleAVL}

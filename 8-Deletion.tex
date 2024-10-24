@@ -1,0 +1,115 @@
+\chapter{Deletion in AVL Trees}\label{chap:LaTeXAdvice}
+
+Deleting a node from an AVL tree is a more complex operation than insertion because we not only need to remove the node but also ensure that the tree remains balanced afterward. AVL trees maintain their efficiency by guaranteeing that the height difference between the left and right subtrees of any node is at most one. To preserve this property, deletion operations in AVL trees are often followed by one or more rebalancing steps.
+
+This section introduces two key definitions used in the deletion process: \texttt{remove\_max}, which handles finding and removing the maximum element in a subtree, and \texttt{delete\_avl}, the main function for deleting a node from an AVL tree while maintaining the AVL property.
+
+\begin{defn}{remove\_max}
+
+The \texttt{remove\_max} function is designed to find and remove the maximum element from a given subtree. This operation is particularly important when deleting a node with two children, as we often replace the deleted node with its predecessor—the maximum node from the left subtree. The formal definition of \texttt{remove\_max} is as follows:
+
+
+\begin{alltt}
+	[remove_max]
+	\HOLthm{def}{AVL_trees.remove_max_def}
+\end{alltt}
+
+\end{defn}
+
+
+\texttt{remove\_max} works as follows:
+\begin{itemize}
+    \item If the right subtree of a node is empty (represented by \texttt{Tip}), the node itself is the maximum node, and the left subtree becomes the new subtree after the removal of the maximum node.
+    \item If the right subtree is not empty, the function recursively calls itself on the right subtree to find the maximum node, and then it rebalances the resulting tree using the \texttt{balanceL} function. This ensures that the AVL property is preserved after the maximum node is removed.
+\end{itemize}
+
+This function is crucial in maintaining the AVL tree structure, particularly when we need to replace a node with its predecessor during deletion.
+
+\begin{defn}{delete\_avl}
+
+The main operation for deleting a node from an AVL tree is defined by the \texttt{delete\_avl} function. This function removes the key \( x \) from the tree while preserving the AVL property by balancing the tree when necessary. The formal definition is:
+
+
+\begin{alltt}
+	[delete_avl]
+	\HOLthm{def}{AVL_trees.delete_avl}
+\end{alltt}
+
+This definition ensures that the AVL property is preserved after deleting a node from the tree by applying the appropriate balancing operations (\texttt{balanceL} or \texttt{balanceR}) depending on which subtree the deletion occurs in.
+\end{defn}
+
+
+The \texttt{delete\_avl} function works in the following way:
+\begin{itemize}
+    \item If the tree is empty (i.e., \texttt{Tip}), there is nothing to delete, and the function simply returns \texttt{Tip}.
+    \item If the key \( x \) matches the root key \( k \), then the function must delete this node. There are four cases to handle:
+    \begin{itemize}
+        \item If both the left and right subtrees are empty (\texttt{Tip}), the result is \texttt{Tip}, indicating that the tree is now empty.
+        \item If only the left subtree is empty, the right subtree replaces the current node.
+        \item If only the right subtree is empty, the left subtree replaces the current node.
+        \item If both subtrees are non-empty, the function finds the maximum node from the left subtree using \texttt{remove\_max}, and replaces the current node with this maximum node. Afterward, the tree is rebalanced using the \texttt{balanceR} function to ensure that the AVL property is maintained.
+    \end{itemize}
+    \item If the key \( x \) is less than the root key \( k \), the function recursively deletes \( x \) from the left subtree, and then rebalances the resulting tree using \texttt{balanceR}.
+    \item If the key \( x \) is greater than the root key \( k \), the function recursively deletes \( x \) from the right subtree, and then rebalances the resulting tree using \texttt{balanceL}.
+\end{itemize}
+
+This function ensures that the AVL tree remains balanced after a deletion by applying the appropriate rebalancing operation, either \texttt{balanceL} or \texttt{balanceR}, depending on which subtree was modified.
+
+\subsubsection{Balancing After Deletion}
+
+After a node is deleted from an AVL tree, the tree may become unbalanced. To restore balance, AVL trees use two main types of balancing operations:
+\begin{itemize}
+    \item \textbf{Left Balancing (\texttt{balanceL})}: This is used when the right subtree becomes taller than the left subtree. Left balancing involves single or double rotations to redistribute the height and restore the AVL property.
+    \item \textbf{Right Balancing (\texttt{balanceR})}: This is used when the left subtree becomes taller than the right subtree. Right balancing, similar to left balancing, involves rotations that adjust the tree's height to ensure balance.
+\end{itemize}
+
+These balancing operations guarantee that the AVL tree remains balanced after any deletion. Without rebalancing, the tree could degrade into an unbalanced binary search tree, losing the logarithmic height that makes AVL trees efficient for operations such as search, insertion, and deletion.
+
+\subsubsection{Handling the Deletion of Nodes with Two Children}
+
+The most complex case occurs when the node to be deleted has two children. In this situation, AVL trees follow a common strategy in binary search trees: replacing the node with either its predecessor (the maximum node from the left subtree) or its successor (the minimum node from the right subtree). This ensures that the binary search tree property is maintained.
+
+In the \texttt{delete\_avl} function, we use the predecessor (maximum node from the left subtree). Once the predecessor is removed from the left subtree using \texttt{remove\_max}, the tree is rebalanced using \texttt{balanceR} to restore the AVL property.
+
+Deletion in AVL trees involves several steps: finding the node to be deleted, removing it while preserving the structure of the tree, and rebalancing the tree as necessary to ensure that the AVL property is maintained. Whether the node is a leaf, has one child, or has two children, the function carefully handles each case and uses the \texttt{balanceL} and \texttt{balanceR} operations to maintain the balance of the tree.
+
+The result is an AVL tree that remains efficient for all operations, with logarithmic height in the number of nodes, ensuring optimal performance even after deletions.
+
+
+\begin{center}
+	\resizebox{1\textwidth}{!}{
+		\begin{tikzpicture}[node distance=3cm] % Increased node distance for better spacing
+			
+			\node (start) [startstop] {Start Deletion};
+			\node (checktip) [decision, below of=start] {Is the tree empty (Tip)?};
+			\node (checkkey) [decision, below of=checktip, yshift=-1.5cm] {x = k?}; % Increased yshift for more space
+			\node (leafcase) [process, right of=checkkey, xshift=5cm] {Delete and return Tip}; % Increased xshift
+			\node (onechild) [decision, below of=checkkey, yshift=-2cm] {Has one child?}; % Increased yshift for more space
+			\node (replaceleft) [process, left of=onechild, xshift=-5cm] {Return left child}; % Increased xshift
+			\node (replaceright) [process, right of=onechild, xshift=5cm] {Return right child}; % Increased xshift
+			\node (twosubtrees) [process, below of=onechild, yshift=-2cm] {Replace with predecessor (max from left subtree)};
+			\node (removeandbalance) [process, below of=twosubtrees, yshift=-1.5cm] {Balance using balanceR};
+			\node (recursionleft) [process, left of=checkkey, xshift=-5cm] {Delete from left subtree, balance using balanceR}; % Increased xshift
+			\node (recursionright) [process, right of=checkkey, xshift=5cm] {Delete from right subtree, balance using balanceL}; % Increased xshift
+			\node (end) [startstop, below of=removeandbalance, yshift=-1.5cm] {End};
+			
+			\draw [arrow] (start) -- (checktip);
+			\draw [arrow] (checktip) -- node[anchor=east] {Yes} (leafcase);
+			\draw [arrow] (checktip) -- node[anchor=west] {No} (checkkey);
+			\draw [arrow] (checkkey) -- node[anchor=south] {Yes} (onechild);
+			\draw [arrow] (onechild) -- node[anchor=south] {Yes, left child} (replaceleft);
+			\draw [arrow] (onechild) -- node[anchor=south] {Yes, right child} (replaceright);
+			\draw [arrow] (onechild) -- node[anchor=west] {No, two subtrees} (twosubtrees);
+			\draw [arrow] (twosubtrees) -- (removeandbalance);
+			\draw [arrow] (checkkey) -- node[anchor=south] {No, x \textless\ k} (recursionleft); % Fixed left arrow label
+			\draw [arrow] (checkkey) -- node[anchor=south] {No, x \textgreater\ k} (recursionright); % Fixed right arrow label
+			\draw [arrow] (removeandbalance) -- (end);
+			\draw [arrow] (leafcase) -- (end);
+			\draw [arrow] (replaceleft) -- (end);
+			\draw [arrow] (replaceright) -- (end);
+			\draw [arrow] (recursionleft) -- (end);
+			\draw [arrow] (recursionright) -- (end);
+			
+		\end{tikzpicture}
+	}
+\end{center}
