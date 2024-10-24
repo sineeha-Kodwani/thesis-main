@@ -1,0 +1,142 @@
+\chapter{Formalization of AVL Trees in HOL4}\label{chap:relatedWork}
+
+In this section, the formalization of AVL trees in the HOL4 theorem prover is presented. The following definitions and theorems outline the construction and properties of AVL trees as verified within HOL4. The precise code of these formalizations is available as part of the appendix and has been verified using HOL4.
+
+\subsection{Datatype and Definitions}
+
+In this section, the fundamental definitions and data structures used in the formalization of AVL trees in the HOL4 theorem prover is presented. AVL trees are a specific type of self-balancing binary search tree that ensures logarithmic height by maintaining a balance between the heights of its subtrees. These definitions provide the foundation for verifying the correctness and properties of AVL trees, which are crucial for efficient data storage and retrieval.
+
+\textbf{Datatype:} \\
+An AVL tree is a self-balancing binary search tree where the heights of the two child subtrees of any node differ by at most one. When the tree becomes unbalanced after an insertion or deletion, rebalancing operations are performed to restore the AVL property.
+
+In HOL4, the datatype of an AVL tree is formally defined as:
+
+\begin{defn}{AVL Tree Definition}
+An AVL tree can be defined recursively as:
+
+\[
+    avl\_tree = Tip \mid Bin \quad \mathit{int} \quad \mathit{num} \quad \alpha \quad avl\_tree \quad avl\_tree
+\]
+
+Where:
+\begin{itemize}
+    \item \texttt{Tip} represents an empty tree.
+    \item \texttt{Bin} represents a non-empty tree, with:
+    \begin{itemize}
+        \item an integer balance factor,
+        \item a key value of type \texttt{num},
+        \item a left subtree,
+        \item a right subtree.
+    \end{itemize}
+\end{itemize}
+\end{defn}
+
+This recursive structure enables us to define the properties of AVL trees and the operations that can be performed on them. The balance factor is crucial for determining whether the tree remains balanced after operations such as insertion or deletion.
+
+\textbf{Height of an AVL Tree}
+
+The \texttt{height} function computes the height of an AVL tree, which is defined as the number of edges from the root to the furthest leaf. The height is essential for maintaining the AVL property, as it is used to calculate the balance factor of a node. It is formally defined in HOL4 as follows:
+
+\begin{alltt}
+	[height_def]
+	\HOLConst{height} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLNumLit{0}
+\HOLConst{height} (\HOLConst{Bin} \HOLFreeVar{h} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{} \HOLConst{MAX} (\HOLConst{height} \HOLFreeVar{l}) (\HOLConst{height} \HOLFreeVar{r}) \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+\end{alltt}
+
+
+The height of an empty tree is 0, and for a non-empty tree, the height is determined by the maximum height of its left and right subtrees, incremented by 1. This ensures that the height of a balanced AVL tree grows logarithmically with the number of nodes.
+
+
+\begin{defn}{Singleton AVL Tree}
+A singleton AVL tree consists of a single node. This is a base case used in insertion operations when creating new nodes in the tree. The formal definition in HOL4 is:
+
+\begin{alltt}
+	[singleton_avl_def]
+	\HOLConst{singleton_avl} \HOLFreeVar{k} \HOLFreeVar{v} \HOLTokenDefEquality{} \HOLConst{Bin} \HOLNumLit{0} \HOLFreeVar{k} \HOLFreeVar{v} \HOLConst{Tip} \HOLConst{Tip}
+\end{alltt}
+
+
+
+This creates a node with a balance factor of 0, a key \texttt{k}, a value \texttt{v}, and two empty subtrees (\texttt{Tip}). The balance factor of 0 indicates that the node is perfectly balanced with no children.
+\end{defn}
+
+
+\begin{defn}{AVL Property (avl)}
+
+The predicate \texttt{avl} is used to check whether a tree satisfies the AVL property. For a tree to be an AVL tree, the height difference between its left and right subtrees must be at most 1. This ensures that the tree remains balanced. The formal definition of the AVL predicate in HOL4 is:
+
+\begin{alltt}
+	[singleton_avl_def]
+	\HOLConst{avl} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLConst{T}
+\HOLConst{avl} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{}
+  (\HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+   \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\HOLTokenConj{}} \HOLFreeVar{bf} \HOLSymConst{=} \HOLSymConst{\&}\HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{-}} \HOLSymConst{\&}\HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}}
+  \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r}
+\end{alltt}
+
+This definition recursively checks the balance condition at every node, ensuring that both the left and right subtrees also satisfy the AVL property. The balance factor, calculated from the heights of the left and right subtrees, ensures that the AVL property holds after each operation.
+\end{defn}
+
+
+\begin{defn}{Node Count}
+
+The \texttt{node\_count} function computes the number of nodes in an AVL tree. This function is important for evaluating the structure of the tree and ensuring that the tree is minimally balanced. The formal definition is:
+
+\begin{alltt}
+	[Node_count_def]
+	\HOLConst{node_count} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLNumLit{0}
+\HOLConst{node_count} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{} \HOLConst{node_count} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLConst{node_count} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+\end{alltt}
+
+The node count of an empty tree is zero, while for a non-empty tree, the node count is the sum of the node counts of its left and right subtrees, plus one for the root node.
+\end{defn}
+
+
+
+\begin{defn}{Definition of \(N(k)\)}
+
+The function \(N(k)\) defines the minimal number of nodes in an AVL tree of height \(k\). It is based on the set of all AVL trees with height \(k\), and it selects the tree with the minimal number of nodes. The formal definition in HOL4 is:
+
+\begin{alltt}
+	[N_def]
+	\HOLConst{N} \HOLFreeVar{k} \HOLTokenDefEquality{} \HOLConst{MIN_SET} (\HOLConst{IMAGE} \HOLConst{node_count} \HOLTokenLeftbrace{}\HOLBoundVar{x} \HOLTokenBar{} \HOLConst{height} \HOLBoundVar{x} \HOLSymConst{=} \HOLFreeVar{k} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLBoundVar{x}\HOLTokenRightbrace{})
+
+\end{alltt}
+
+This ensures that \(N(k)\) gives the minimum number of nodes for an AVL tree of height \(k\).This definition computes the minimal number of nodes for any AVL tree of height \( k \), ensuring that we maintain the efficiency and minimality property of AVL trees.
+\end{defn}
+
+\begin{defn}{Minimal AVL Trees}
+
+A minimal AVL tree is defined as one that satisfies the AVL property while having the smallest possible number of nodes for a given height. This is essential for ensuring that AVL trees maintain optimal structure and performance. The formal definition in HOL4 is:
+
+\begin{alltt}
+	[minimal_avl_def]
+	\HOLConst{minimal_avl} \HOLFreeVar{t} \HOLTokenDefEquality{}
+  \HOLConst{avl} \HOLFreeVar{t} \HOLSymConst{\HOLTokenConj{}}
+  \HOLSymConst{\HOLTokenForall{}}\ensuremath{\HOLBoundVar{t}\sp{\prime{}}}.
+    \HOLConst{avl} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{\HOLTokenImp{}}
+    \HOLConst{node_count} \HOLFreeVar{t} \HOLSymConst{\HOLTokenLeq{}} \HOLConst{node_count} \ensuremath{\HOLBoundVar{t}\sp{\prime{}}}
+\end{alltt}
+
+
+This predicate ensures that for any AVL tree \( t' \) of the same height, the number of nodes in \( t \) is less than or equal to the number of nodes in \( t' \), thus ensuring minimality.
+\end{defn}
+
+
+\begin{defn}{Complete AVL Tree}
+
+A complete AVL tree is one in which all levels are fully filled, except possibly for the last level, which is filled from left to right. A complete AVL tree is balanced and maintains the AVL property. The formal definition of a complete AVL tree in HOL4 is:
+
+\begin{alltt}
+	[complete_avl_def]
+	\HOLConst{complete_avl} \HOLNumLit{0} \HOLTokenDefEquality{} \HOLConst{Tip}
+\HOLConst{complete_avl} (\HOLConst{SUC} \HOLFreeVar{n}) \HOLTokenDefEquality{}
+  \HOLConst{Bin} \HOLNumLit{0} \HOLNumLit{0} \HOLConst{ARB} (\HOLConst{complete_avl} \HOLFreeVar{n}) (\HOLConst{complete_avl} \HOLFreeVar{n})
+\end{alltt}
+
+This defines a complete AVL tree recursively, where the base case is an empty tree (\texttt{Tip}), and for each successor height \(n+1\), the tree is built as a binary tree with two complete AVL subtrees of height \(n\).
+\end{defn}
+
+
+

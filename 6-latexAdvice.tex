@@ -12,7 +12,7 @@ The function \texttt{balanceL} is responsible for rebalancing the tree when the 
 
 \begin{alltt}
 	[balanceL_def]
-	\HOLthm{def}{AVL_trees.balanceL_def}
+	\HOLthm[def]{AVL_trees.balanceL_def}
 \end{alltt}
 
 
@@ -88,7 +88,7 @@ If the left subtree becomes imbalanced, this function performs the necessary rot
 The \texttt{balanceR} function rebalances the tree when the right subtree becomes too tall compared to the left subtree. This can occur after an insertion into the right subtree. If the right subtree becomes imbalanced, \texttt{balanceR} restores balance by performing a rotation. The formal definition in HOL4 is:
 \begin{alltt}
 	[balanceR_def]
-	\HOLthm{def}{AVL_trees.balanceR_def}
+	\HOLthm[def]{AVL_trees.balanceR_def}
 \end{alltt}
 
 If the right subtree becomes imbalanced, this function performs the necessary rotation to restore the AVL property and ensure the tree remains balanced.
@@ -161,7 +161,7 @@ The function \texttt{insert\_avl} is responsible for inserting a new key-value p
 
 \begin{alltt}
 	[insert_avl_def]
-	\HOLthm{def}{AVL_trees.insert_avl_def}
+	\HOLthm[def]{AVL_trees.insert_avl_def}
 \end{alltt}
 
 

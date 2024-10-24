@@ -11,7 +11,7 @@ The \texttt{remove\_max} function is designed to find and remove the maximum ele
 
 \begin{alltt}
 	[remove_max]
-	\HOLthm{def}{AVL_trees.remove_max_def}
+	\HOLthm[def]{AVL_trees.remove_max_def}
 \end{alltt}
 
 \end{defn}
@@ -31,8 +31,8 @@ The main operation for deleting a node from an AVL tree is defined by the \textt
 
 
 \begin{alltt}
-	[delete_avl]
-	\HOLthm{def}{AVL_trees.delete_avl}
+	[delete_avl_def]
+	\HOLthm[def]{AVL_trees.delete_avl_def}
 \end{alltt}
 
 This definition ensures that the AVL property is preserved after deleting a node from the tree by applying the appropriate balancing operations (\texttt{balanceL} or \texttt{balanceR}) depending on which subtree the deletion occurs in.

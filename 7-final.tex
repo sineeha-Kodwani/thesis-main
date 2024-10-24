@@ -1,0 +1,175 @@
+\chapter{Key Theorems for Balancing and Insertion}\label{chap:LaTeXAdvice}
+
+The insertion of elements into an AVL tree must maintain the AVL property, the binary search tree property, and ensure that the keys are updated correctly. The following theorems formally prove the correctness of the insertion algorithm in HOL4. Each theorem plays a critical role in verifying that after an element is inserted, the resulting tree remains balanced, its height is properly adjusted, and the set of keys is correctly updated. These proofs are essential for demonstrating that AVL trees continue to function optimally after an insertion operation.
+
+\begin{thm}{keys\_balanceL}
+
+This theorem states that the set of keys in the tree is preserved when the left balancing operation (\texttt{balanceL}) is performed. The formal statement of the theorem is:
+
+
+\begin{alltt}
+	[keys_balanceL]
+	\HOLTokenTurnstile{} \HOLConst{keys} (\HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{v} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{1}}} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{2}}}) \HOLSymConst{=} \HOLTokenLeftbrace{}\HOLFreeVar{k}\HOLTokenRightbrace{} \HOLSymConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{1}}} \HOLSymConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{2}}}
+\end{alltt}
+
+
+\end{thm}
+This theorem proves that performing the left balancing operation does not alter the set of keys in the AVL tree. After the balancing is applied, the resulting tree still contains the same keys as the original tree, including the root key \( k \), and all the keys from the left subtree \( t1 \) and right subtree \( t2 \).
+
+The proof proceeds by case analysis on the structure of the left subtree. Depending on whether the tree requires a single or double rotation, the set of keys remains unchanged as the nodes are simply rearranged without any keys being added or removed. The correctness of this theorem guarantees that the balancing operation preserves the AVL tree's key set and structure.
+\begin{thm}{keys\_balanceR}
+
+This theorem is analogous to the previous one but applies to the right balancing operation (\texttt{balanceR}). The formal statement is:
+
+\begin{alltt}
+	[keys_balanceR]
+	\HOLTokenTurnstile{} \HOLConst{keys} (\HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{v} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{1}}} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{2}}}) \HOLSymConst{=} \HOLTokenLeftbrace{}\HOLFreeVar{k}\HOLTokenRightbrace{} \HOLSymConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{1}}} \HOLSymConst{\HOLTokenUnion{}} \HOLConst{keys} \ensuremath{\HOLFreeVar{t}\sb{\mathrm{2}}}
+\end{alltt}
+\end{thm}
+
+This theorem proves that after performing a right balancing operation, the set of keys in the AVL tree remains unchanged. The key set after balancing still consists of the root key \( k \), along with all the keys from the left subtree \( t1 \) and right subtree \( t2 \).
+
+As with \texttt{keys\_balanceL}, the proof is done by case analysis on the structure of the right subtree. Regardless of the type of rotation (single or double), no keys are removed or added; the nodes are simply rearranged to maintain the tree’s balance. This ensures that the AVL tree remains consistent and its key set is preserved after balancing.
+
+\begin{thm}{keys\_insert}
+
+This theorem proves that after inserting a key \(x\) into an AVL tree \(t\), the resulting set of keys is the union of the set of keys in \(t\) and the singleton set \(\{x\}\). Formally, the theorem is:
+
+
+\begin{alltt}
+	[keys_insert]
+	\HOLTokenTurnstile{} \HOLConst{keys} (\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} \HOLFreeVar{t}) \HOLSymConst{=} \HOLConst{keys} \HOLFreeVar{t} \HOLSymConst{\HOLTokenUnion{}} \HOLTokenLeftbrace{}\HOLFreeVar{x}\HOLTokenRightbrace{}
+\end{alltt}
+\end{thm}
+
+The proof proceeds by structural induction on the AVL tree \( t \), ensuring that the insertion operation correctly places the key \( x \) in either the left or right subtree, depending on its value, while maintaining the binary search tree property. The result confirms that the set of keys is updated correctly after insertion, with no duplicates introduced, thereby preserving the AVL tree's correctness.
+
+\begin{thm}{height\_balL}
+
+This theorem describes the height of an AVL tree after performing a left balancing operation (\texttt{balanceL}). If the left subtree \(l\) has a height that is 2 greater than the right subtree \(r\), then the height of the tree after balancing will be either \(\text{height}(r) + 2\) or \(\text{height}(r) + 3\). Formally:
+
+
+\begin{alltt}
+	[height_balL]
+	\HOLTokenTurnstile{} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{height} (\HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenDisj{}}
+   \HOLConst{height} (\HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{3}
+\end{alltt}
+
+\end{thm}
+
+This theorem proves that the height of the tree after left balancing is within a bounded range, ensuring that the AVL tree remains balanced. The proof proceeds by case analysis on the left subtree and shows that balancing adjusts the tree height while maintaining the AVL properties.
+
+
+\begin{thm}{height\_balR}
+
+This theorem is the symmetric case of \texttt{height\_balL}, describing the height of an AVL tree after performing a right balancing operation (\texttt{balanceR}). If the right subtree \(r\) has a height that is 2 greater than the left subtree \(l\), then the height of the tree after balancing will be either \(\text{height}(l) + 2\) or \(\text{height}(l) + 3\). Formally:
+
+
+\begin{alltt}
+	[height_balR]
+	\HOLTokenTurnstile{} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{height} (\HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenDisj{}}
+   \HOLConst{height} (\HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{3}
+\end{alltt}
+
+\end{thm}
+
+This theorem ensures that after right balancing, the tree's height is adjusted within a specific range, maintaining the balanced structure of the AVL tree.
+
+
+\begin{thm}{height\_balL2}
+
+This theorem deals with the height of an AVL tree after a left balancing operation when the height difference between the left and right subtrees is not 2. It states that in such cases, the height of the resulting tree is simply the maximum height of the left and right subtrees, plus 1:
+
+
+\begin{alltt}
+	[height_balL2]
+	\HOLTokenTurnstile{} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\HOLTokenNotEqual{}} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{height} (\HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{=} \HOLNumLit{1} \HOLSymConst{\ensuremath{+}} \HOLConst{MAX} (\HOLConst{height} \HOLFreeVar{l}) (\HOLConst{height} \HOLFreeVar{r})
+\end{alltt}
+
+\end{thm}
+
+This theorem ensures that left balancing adjusts the tree height correctly when there is no significant imbalance between the left and right subtrees.
+
+
+\begin{thm}{height\_balR2}
+
+This theorem is the symmetric counterpart of \texttt{height\_balL2}, applying to the right balancing operation. It states that when the height difference between the right and left subtrees is not 2, the height of the resulting tree after balancing is the maximum height of the left and right subtrees, plus 1:
+
+
+\begin{alltt}
+	[height_balR2]
+	\HOLTokenTurnstile{} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\HOLTokenNotEqual{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{height} (\HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{=} \HOLNumLit{1} \HOLSymConst{\ensuremath{+}} \HOLConst{MAX} (\HOLConst{height} \HOLFreeVar{l}) (\HOLConst{height} \HOLFreeVar{r})
+\end{alltt}
+
+
+\end{thm}
+
+\begin{thm}{avl\_balL}
+
+This theorem proves that performing a left balancing operation on an AVL tree preserves the AVL property, provided that the heights of the left and right subtrees are either equal or differ by 1 or 2:
+
+
+\begin{alltt}
+	[avl_balL]
+	\HOLTokenTurnstile{} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenConj{}}
+   (\HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+    \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{avl} (\HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r})
+\end{alltt}
+
+
+\end{thm}
+
+\begin{thm}{avl\_balR}
+
+This theorem is the symmetric case of \texttt{avl\_balL}. It proves that performing a right balancing operation preserves the AVL property, provided the heights of the subtrees are either equal or differ by 1 or 2:
+
+
+\begin{alltt}
+	[avl_balR]
+	\HOLTokenTurnstile{} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenConj{}}
+   (\HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+    \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{avl} (\HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r})
+\end{alltt}
+
+\end{thm}
+
+\begin{thm}{avl\_tree\_preserves\_avl}
+
+This theorem guarantees that the AVL property is preserved when constructing a binary tree using the \texttt{tree} function, as long as both left and right subtrees are AVL trees and their heights are either equal or differ by at most 1:
+
+
+\begin{alltt}
+	[avl_tree_preserves_avl]
+	\HOLTokenTurnstile{} \HOLConst{avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{avl} \HOLFreeVar{r} \HOLSymConst{\HOLTokenConj{}}
+   (\HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+    \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{avl} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r})
+\end{alltt}
+\end{thm}
+
+This theorem ensures that the AVL tree property is preserved whenever a tree is constructed from balanced subtrees.
+
+\begin{thm}{avl\_insert\_aux}
+
+This theorem proves that inserting a new key \(k\) and value \(v\) into an AVL tree preserves the AVL property. It also states that the height of the tree will either remain the same or increase by 1:
+
+
+\begin{alltt}
+	[avl_insert_aux]
+	\HOLTokenTurnstile{} \HOLConst{avl} \HOLFreeVar{t} \HOLSymConst{\HOLTokenImp{}}
+   \HOLConst{avl} (\HOLConst{insert_avl} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{t}) \HOLSymConst{\HOLTokenConj{}}
+   (\HOLConst{height} (\HOLConst{insert_avl} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{t}) \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{\HOLTokenDisj{}}
+    \HOLConst{height} (\HOLConst{insert_avl} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{t}) \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1})
+\end{alltt}
+
+\end{thm}
+
+This theorem guarantees that the insertion of a new key preserves both the AVL tree’s balance and its height properties.
+
+The proofs of these theorems collectively demonstrate that the insertion operation in AVL trees is both correct and efficient. By ensuring that the AVL property is preserved, the height is properly adjusted, and the set of keys is correctly updated, these theorems guarantee that AVL trees continue to function optimally after insertion. Furthermore, the balancing operations (handled by \texttt{balanceL} and \texttt{balanceR}) ensure that any imbalance introduced by the insertion is corrected, preserving the logarithmic height of the tree and ensuring efficient search and insertion times.

@@ -6,14 +6,22 @@ MUNGE_DEPS = paperTheory
 
 EXTRA_CLEANS = $(MUNGE) heap
 
-all: $(MUNGE) thesis.tex
+all: $(MUNGE) thesis.tex \
+	3-final.tex \
+	4-final.tex \
+	5-final.tex \
+	6-final.tex \
+	7-final.tex \
+	8-final.tex \
+	9-final.tex \
+	10-final.tex
 
 ifdef POLY
 HOLHEAP = heap
 
 all: $(HOLHEAP)
 
-$(HOLHEAP): $(HOLDIR)/bin/hol.state
+$(HOLHEAP): $(HOLDIR)/bin/hol.state $(HOLDIR)/examples/balanced_bst/AVL_treesScript.sml
 	$(protect $(HOLDIR)/bin/buildheap) $(DEBUG_FLAG) -o $@ \
 		$(HOLDIR)/examples/balanced_bst/AVL_treesTheory
 endif
@@ -23,5 +31,29 @@ $(MUNGE): $(patsubst %,%.uo,$(MUNGE_DEPS))
 
 thesis.tex: $(MUNGE) main.tex
 	$(MUNGE) < main.tex > thesis.tex
+
+3-final.tex: $(MUNGE) 3-relatedWork.tex
+	$(MUNGE) < 3-relatedWork.tex > 3-final.tex
+
+4-final.tex: $(MUNGE) 4-thesisContent.tex
+	$(MUNGE) < 4-thesisContent.tex > 4-final.tex
+
+5-final.tex: $(MUNGE) 5-writingAdvice.tex
+	$(MUNGE) < 5-writingAdvice.tex > 5-final.tex
+
+6-final.tex: $(MUNGE) 6-latexAdvice.tex
+	$(MUNGE) < 6-latexAdvice.tex > 6-final.tex
+
+7-final.tex: $(MUNGE) 7-InsertionTheorems.tex
+	$(MUNGE) < 7-InsertionTheorems.tex > 7-final.tex
+
+8-final.tex: $(MUNGE) 8-Deletion.tex
+	$(MUNGE) < 8-Deletion.tex > 8-final.tex
+
+9-final.tex: $(MUNGE) 9-Lookup.tex
+	$(MUNGE) < 9-Lookup.tex > 9-final.tex
+
+10-final.tex: $(MUNGE) 10-designintegration.tex
+	$(MUNGE) < 10-designintegration.tex > 10-final.tex
 
 .PHONY: all
