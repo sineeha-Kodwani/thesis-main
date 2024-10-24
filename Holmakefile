@@ -6,7 +6,7 @@ MUNGE_DEPS = paperTheory
 
 EXTRA_CLEANS = $(MUNGE) heap
 
-all: $(MUNGE) thesis.tex \
+all: $(MUNGE) \
 	3-final.tex \
 	4-final.tex \
 	5-final.tex \
