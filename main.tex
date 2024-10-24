@@ -5,11 +5,21 @@
 
 % Set page size and margins
 \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
-
+\usepackage{booktabs}
 % Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
 
 \title{Formal Verification of AVL Trees in HOL Theorem Prover}
 \author{Sineeha Kodwani}
@@ -51,20 +61,63 @@ HOL4 integrates interactive proof guidance with automated reasoning tools, such 
 Moreover, HOL4's libraries and its proven track record in hardware and software verification projects make it an essential tool for both academic and industrial verification tasks. For example, HOL4 has been used to verify the correctness of hardware architectures and safety-critical software systems \cite{avigad2014formally}, underscoring its importance in the broader context of formal verification.
 
 The canonical citation for HOL4 is the paper "A brief overview of HOL4" \cite{gordon2008hol4}. HOL4 is especially useful in this thesis due to its integration of higher-order logic and its extensive libraries for formal verification tasks, which allow the formal proof of properties such as the balance conditions and recursive relationships in AVL trees.
-\section{Background of AVL Trees in HOL4}
-\subsection{AVL Tree Definition in HOL4}
-An AVL tree is defined as a binary search tree that maintains a balance condition, which ensures that for any node, the height of its left and right subtrees differs by at most one. In HOL4, this can be represented using recursive definitions and predicates.
 
-\subsection{Properties of AVL Trees}
-The height of an AVL tree is logarithmic to the number of nodes, ensuring efficient operations. AVL trees use rotations to maintain their balance after insertion or deletion operations.
+\section{Background of AVL Trees}
+
+
+AVL trees are a type of self-balancing binary search tree where the difference in height between the left and right subtrees of any node is kept at most 1, ensuring that the tree remains balanced. This property guarantees that the height of the tree is logarithmic in relation to the number of nodes, ensuring efficient search, insertion, and deletion operations. The efficiency of these operations—usually $O(\log n)$—makes AVL trees an ideal choice for dynamic sets of data where a balanced structure must be maintained even with frequent updates \cite{cormen2009introduction}.
+
+\subsection{Balance Condition}
+In AVL trees, the key property that distinguishes them from general binary search trees is the balance condition:
+\[
+|d(T_L(v)) - d(T_R(v))| \leq 1 \quad \forall v \in T
+\]
+where $T_L(v)$ and $T_R(v)$ are the left and right subtrees of a node $v$, respectively, and $d(T)$ denotes the depth of the tree $T$. This balance condition ensures that no path from the root to a leaf is disproportionately long compared to any other path, preventing worst-case scenarios where the tree behaves like a linked list \cite{knuth1998art}.
+
+\subsection{Depth and Fibonacci Relationship}
+One of the fundamental properties of AVL trees is that the number of nodes is bounded by a function of their height. Specifically, the number of nodes $n$ in an AVL tree of depth $k$ is closely related to the Fibonacci sequence. The minimum number of nodes $N(k)$ in an AVL tree of height $k$ follows the recurrence relation:
+\[
+N(k) = N(k-1) + N(k-2) + 1
+\]
+This recurrence is identical to the Fibonacci sequence, leading to the following relationship between the height of the tree and the number of nodes:
+\[
+N(k) = F(k+3) - 1
+\]
+where $F(i)$ is the Fibonacci number \cite{harrison2009handbook}. This result shows that AVL trees are nearly optimal in terms of space, with the height bounded by:
+\[
+d(T) \leq 1.4404 \log_2(n + 1) - 1.33
+\]
+ensuring logarithmic depth even in the worst case.
+
+
+\subsection{AVL Tree Operations}
+Insertions and deletions in AVL trees must maintain the balance property, requiring rebalancing through rotations. When an imbalance occurs after insertion or deletion, the tree is restructured through single or double rotations to restore the balance. These operations ensure that the depth of the tree is adjusted while keeping the balance property intact \cite{harrison2009handbook}.
+
+For instance, when inserting a node, the balance factors (difference between the heights of the left and right subtrees) are updated, and rotations are performed if necessary to correct any imbalance. These rotations are classified as:
+\begin{itemize}
+    \item \textbf{Single Rotation:} Performed when the imbalance is caused by a single insertion in one subtree (Left-Left or Right-Right).
+    \item \textbf{Double Rotation:} Used when the imbalance arises from an insertion into the opposite subtree of a child node (Left-Right or Right-Left).
+\end{itemize}
+Similar procedures apply for deletions, where the balance condition must be restored after removing a node from the tree. Deletion may cause an imbalance that requires rebalancing through rotations.
+
+\subsection{Fibonacci Sequence}
+The Fibonacci sequence is defined as:
+\[
+\text{Fibonacci}(n) =
+\begin{cases}
+0 & \text{if } n = 0 \\
+1 & \text{if } n = 1 \\
+\text{Fibonacci}(n-1) + \text{Fibonacci}(n-2) & \text{if } n \geq 2
+\end{cases}
+\]
 
 \section{Formalization of AVL Trees in HOL4}
 
-In this section, we present the formalization of AVL trees in the HOL4 theorem prover. The following definitions and theorems outline the construction and properties of AVL trees as verified within HOL4. The precise code of these formalizations is available as part of the appendix and has been verified using HOL4.
+In this section, the formalization of AVL trees in the HOL4 theorem prover is presented. The following definitions and theorems outline the construction and properties of AVL trees as verified within HOL4. The precise code of these formalizations is available as part of the appendix and has been verified using HOL4.
 
 \subsection{Datatype and Definitions}
 
-In this section, we present the fundamental definitions and data structures used in the formalization of AVL trees in the HOL4 theorem prover. AVL trees are a specific type of self-balancing binary search tree that ensures logarithmic height by maintaining a balance between the heights of its subtrees. These definitions provide the foundation for verifying the correctness and properties of AVL trees, which are crucial for efficient data storage and retrieval.
+In this section, the fundamental definitions and data structures used in the formalization of AVL trees in the HOL4 theorem prover is presented. AVL trees are a specific type of self-balancing binary search tree that ensures logarithmic height by maintaining a balance between the heights of its subtrees. These definitions provide the foundation for verifying the correctness and properties of AVL trees, which are crucial for efficient data storage and retrieval.
 
 \textbf{Datatype:} \\
 An AVL tree is a self-balancing binary search tree where the heights of the two child subtrees of any node differ by at most one. This balance ensures that search, insertion, and deletion operations remain efficient by maintaining a logarithmic height relative to the number of nodes in the tree. When the tree becomes unbalanced after an insertion or deletion, rebalancing operations are performed to restore the AVL property.
@@ -77,7 +130,7 @@ avl_tree = Tip | Bin int num 'a avl_tree avl_tree
 
 Here, the AVL tree can either be a \texttt{Tip}, representing an empty tree, or a \texttt{Bin} node, which contains the following:
 \begin{itemize}
-    \item \textbf{int}: The balance factor of the node, which is the difference between the heights of the left and right subtrees.
+    \item \textbf{int}: The balance factor of the node, which is the difference between the heights of the right and left subtrees.
     \item \textbf{num}: The key associated with the node.
     \item \textbf{'a avl\_tree}: The left subtree.
     \item \textbf{'a avl\_tree}: The right subtree.
@@ -88,58 +141,94 @@ This recursive structure enables us to define the properties of AVL trees and th
 \textbf{Definition of Height:} \\
 The \texttt{height} function computes the height of an AVL tree, which is defined as the number of edges from the root to the furthest leaf. The height is essential for maintaining the AVL property, as it is used to calculate the balance factor of a node. It is formally defined in HOL4 as follows:
 \begin{verbatim}
-height Tip = 0 ∧ height (Bin h k v l r) = MAX (height l) (height r) + 1
+Definition height_def:
+    height Tip = 0 ∧ 
+    height (Bin h k v l r) = MAX (height l) (height r) + 1
+End
 \end{verbatim}
 
 The height of an empty tree is 0, and for a non-empty tree, the height is determined by the maximum height of its left and right subtrees, incremented by 1. This ensures that the height of a balanced AVL tree grows logarithmically with the number of nodes.
 
 \textbf{Definition of Singleton AVL Tree:} \\
+
 A singleton AVL tree consists of a single node. This is a base case used in insertion operations when creating new nodes in the tree. The formal definition in HOL4 is:
+
 \begin{verbatim}
-singleton_avl k v = Bin 0 k v Tip Tip
+Definition singleton_avl_def:
+  singleton_avl k v = Bin 0 k v Tip Tip
+End
 \end{verbatim}
 This creates a node with a balance factor of 0, a key \texttt{k}, a value \texttt{v}, and two empty subtrees (\texttt{Tip}). The balance factor of 0 indicates that the node is perfectly balanced with no children.
 
 \textbf{AVL Property (avl):} \\
 The predicate \texttt{avl} is used to check whether a tree satisfies the AVL property. For a tree to be an AVL tree, the height difference between its left and right subtrees must be at most 1. This ensures that the tree remains balanced. The formal definition of the AVL predicate in HOL4 is:
 \begin{verbatim}
-avl Tip = T ∧
-avl (Bin bf k v l r) =
-  ((height l = height r ∨ height l = height r + 1 ∨ height r = height l + 1) ∧
-   bf = &height r - &height l ∧
-   avl l ∧ avl r)
+Definition avl_def:
+  avl Tip = T ∧
+  avl (Bin bf k v l r) =
+     ((height l = height r ∨ height l = height r + 1 ∨ height r = height l + 1) ∧
+      bf = &height r - &height l ∧
+      avl l ∧ avl r)
+End        
 \end{verbatim}
 This definition recursively checks the balance condition at every node, ensuring that both the left and right subtrees also satisfy the AVL property. The balance factor, calculated from the heights of the left and right subtrees, ensures that the AVL property holds after each operation.
 
 \textbf{Node Count:} \\
 The \texttt{node\_count} function computes the number of nodes in an AVL tree. This function is important for evaluating the structure of the tree and ensuring that the tree is minimally balanced. The formal definition is:
 \begin{verbatim}
-node_count Tip = 0n ∧
-node_count (Bin bf k v l r) = node_count l + node_count r + 1
+Definition node_count_def:
+  node_count Tip = 0n ∧
+  node_count (Bin bf k v l r) = node_count l + node_count r + 1
+End    
 \end{verbatim}
 The node count of an empty tree is zero, while for a non-empty tree, the node count is the sum of the node counts of its left and right subtrees, plus one for the root node.
 
+\textbf{Definition of N(k):} \\
+The function $N(k)$ defines the minimal number of nodes in an AVL tree of height $k$. It is based on the set of all AVL trees with height $k$, and it selects the tree with the minimal number of nodes. The formal definition in HOL4 is:
+\begin{verbatim}
+Definition N_def:
+ N k = MIN_SET(IMAGE node_count {x:num avl_tree | height x = k ∧ avl x})
+End
+\end{verbatim}
+
+This definition computes the minimal number of nodes for any AVL tree of height \( k \), ensuring that we maintain the efficiency and minimality property of AVL trees.
+
 \textbf{Minimal AVL Trees:} \\
 A minimal AVL tree is defined as one that satisfies the AVL property while having the smallest possible number of nodes for a given height. This is essential for ensuring that AVL trees maintain optimal structure and performance. The formal definition in HOL4 is:
+
 \begin{verbatim}
-minimal_avl (t: 'a avl_tree) ⇔
-  avl t ∧
-  ∀t': 'a avl_tree.
-    avl t' ∧ height t' = height t ⇒
-    node_count t ≤ node_count t'
+Definition minimal_avl_def:
+minimal_avl (t: 'a avl_tree) \iff
+  avl t \land
+  \forall t': 'a avl_tree.
+    avl t' \land height t' = height t \Rightarrow
+    node_count t \leq node_count t'
+End        
 \end{verbatim}
+
+\begin{align*}
+\text{Definition minimal\_avl\_def:} \\
+\text{minimal\_avl} (t: \, \text{'a avl\_tree}) \iff &
+\; \text{avl} \, t \, \land \\
+& \forall t': \, \text{'a avl\_tree}. \; (\text{avl} \, t' \land \text{height} \, t' = \text{height} \, t) \Rightarrow \\
+& \; \text{node\_count} \, t \leq \text{node\_count} \, t'
+\end{align*}
+
 This predicate ensures that for any AVL tree \( t' \) of the same height, the number of nodes in \( t \) is less than or equal to the number of nodes in \( t' \), thus ensuring minimality.
 
 \textbf{Complete AVL Tree:} \\
 A complete AVL tree is one in which all levels are fully filled, except possibly for the last level, which is filled from left to right. A complete AVL tree is balanced and maintains the AVL property. The formal definition of a complete AVL tree in HOL4 is:
 \begin{verbatim}
-complete_avl 0 = Tip ∧
-complete_avl (SUC n) = Bin 0 0 ARB (complete_avl n) (complete_avl n)
+Definition complete_avl_def:
+   complete_avl 0 = Tip ∧
+   complete_avl (SUC n) = Bin 0 0 ARB (complete_avl n) (complete_avl n)
+End
 \end{verbatim}
+
 This recursive definition constructs a balanced AVL tree of height \( n \) by creating left and right subtrees of height \( n \). A complete AVL tree is useful for understanding the optimal balance and node distribution in AVL trees of varying heights.
 
-
 \subsection{Theorems on AVL Trees}
+
 The formal verification of key properties of AVL trees is essential to ensuring that operations such as insertion, deletion, and rotation maintain the necessary balance constraints and achieve optimal performance. The following theorems have been rigorously proven within the HOL4 framework, focusing on core properties such as height, balance factors, node counts, and recursive relationships between these properties. These theorems are fundamental to proving the correctness of AVL trees and ensuring that they exhibit the desired logarithmic time complexity for operations.
 
 The proof of these theorems within HOL4 serves as a guarantee that AVL trees behave optimally and maintain their essential balancing properties across various operations. Each theorem is accompanied by a description of its significance in the context of AVL trees.
@@ -150,7 +239,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
   This theorem asserts that the height of a tree is zero if and only if the tree is empty, represented by a \texttt{Tip}. This result is crucial as it establishes the base case for many proofs involving AVL trees, particularly those related to height and balance. The formal statement of the theorem is:
   \begin{verbatim}
   height t = 0 ⇔ t = Tip
-  \end{verbatim}
+ \end{verbatim}
   This theorem ensures that for any AVL tree \( t \), if the height of \( t \) is zero, it must be an empty tree. This result is foundational for verifying AVL tree operations, as many structural properties depend on correctly identifying the base case of an empty tree. It also plays a critical role in inductive proofs where the height of a tree is reduced step-by-step.
 
   \item \textbf{Theorem: avl\_complete\_avl} \\
@@ -159,6 +248,13 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
   avl (complete_avl n) = T
   \end{verbatim}
   This theorem is significant as it confirms that the construction of a complete AVL tree results in a valid AVL tree. Complete AVL trees are commonly used as examples of balanced trees and serve as a useful model for understanding how the AVL property is maintained as trees grow in height.
+
+  \item \textbf{Theorem: height\_complete\_avl} \\
+  This theorem states that the height of a complete AVL tree of height \( n \) is indeed \( n \). The formal definition ensures that the structure of the tree follows the expected pattern for a balanced binary tree. The formal statement is:
+  \begin{verbatim}
+  height (complete_avl n) = n
+  \end{verbatim}
+  This theorem is significant because it guarantees that the height of a complete AVL tree is correctly calculated, which plays a crucial role in operations such as insertion and balancing. Knowing the height of a tree is necessary for maintaining the balance condition after modifications.
 
   \item \textbf{Theorem: minimal\_avl\_exists} \\
   This theorem establishes the existence of minimal AVL trees for any given height. A minimal AVL tree is defined as the tree that satisfies the AVL property while containing the smallest possible number of nodes for that height. The formal statement is:
@@ -173,38 +269,171 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
   ∀k (t :num avl_tree). minimal_avl t ∧ height t = k
                                     ⇒ node_count t = N k
   \end{verbatim}
+
+  \item \textbf{Theorem: minimal\_avl\_exists} \\
+  This theorem asserts that for any height \( k \), there exists a minimal AVL tree of that height. A minimal AVL tree is one that maintains the AVL balance property while having the smallest possible number of nodes for its height. The formal statement is:
+  \begin{verbatim}
+  ∀k. ∃t. minimal_avl t ∧ height t = k
+  \end{verbatim}
+  The proof involves generalization over \( k \), constructing the minimal AVL tree by using the well-ordering principle on the node count of AVL trees of height \( k \). This guarantees the existence of a tree that meets both the balance and minimal node count properties.
+
+\item \textbf{Theorem: minimal\_avl\_node\_count} \\
+  This theorem ensures that for any AVL tree \( t \) of height \( k \) that satisfies the minimal AVL property, its node count is equal to \( N(k) \), the minimal number of nodes in an AVL tree of height \( k \). The formal statement is:
+  \begin{verbatim}
+  ∀k (t :num avl_tree). minimal_avl t ∧ height t = k ⇒ node_count t = N k
+  \end{verbatim}
+  This theorem formalizes the connection between the minimal AVL tree and the Fibonacci sequence-based \( N(k) \), proving that minimal AVL trees are the most space-efficient AVL trees for a given height.
+
+\subsection{Properties of Minimal AVL Trees}
+
+\item \textbf{Theorem: minimal\_avl\_l\_is\_avl} \\
+  This theorem confirms that if a tree is a minimal AVL tree, then it also satisfies the AVL property, meaning it is balanced. The formal statement is:
+  \begin{verbatim}
+  ∀t. minimal_avl t ⇒ avl t
+  \end{verbatim}
+  This theorem follows from the definition of minimal AVL trees, which inherently requires that the tree satisfies the AVL property while having the minimal node count for its height.
+
+\item \textbf{Theorem: height\_of\_minimal\_avl\_diff\_1} \\
+  This theorem characterizes the height difference between the left and right subtrees of a minimal AVL tree. It states that the heights of the left and right subtrees differ by at most one. The formal statement is:
+  \begin{verbatim}
+  ∀ bf k v l r. minimal_avl (Bin bf k v l r) ⇒
+                (l = Tip ∧ r = Tip) ∨
+                height l = height r + 1 ∨
+                height r = height l + 1
+  \end{verbatim}
+  This property is critical because it ensures that minimal AVL trees maintain the balance condition at each node, which is fundamental to their efficiency in operations like insertion and deletion.
+
+\item \textbf{Theorem: children\_of\_minimal\_avl} \\
+  This theorem states that if a tree is a minimal AVL tree, then its left and right subtrees are also minimal AVL trees. The formal statement is:
+  \begin{verbatim}
+  ∀bf k v l r. minimal_avl (Bin bf k v l r) ⇒ minimal_avl l ∧ minimal_avl r
+  \end{verbatim}
+  This result is important for inductive reasoning about AVL trees, as it shows that the minimality property is preserved across all subtrees. Thus, proving properties about minimal AVL trees can be done recursively, ensuring correctness at all levels of the tree.
+
+\section{Properties and Relationship of the Function \( N(k) \) and Fibonacci}
+
+In this section, we explore the deep connection between AVL trees and the Fibonacci sequence, a well-known sequence that plays a crucial role in ensuring the optimal structure of AVL trees. AVL trees are designed to maintain a balanced height relative to the number of nodes they contain, and this balance can be directly tied to the growth pattern of the Fibonacci sequence. Specifically, the number of nodes in an AVL tree of height \( k \) is closely related to the \( (k+2) \)-th Fibonacci number. This relationship ensures that the height of an AVL tree grows logarithmically with respect to the number of nodes, making AVL trees highly efficient for operations such as search, insertion, and deletion.
+
+The recursive nature of the Fibonacci sequence mirrors the recursive structure of AVL trees, where each node is balanced based on the heights of its left and right subtrees. The Fibonacci sequence thus provides a mathematical framework for understanding the growth and balance properties of AVL trees. In this section, we formalize the Fibonacci sequence in HOL4 and demonstrate how it is used to prove important properties of AVL trees.
+
+The following theorem formally establishes this relationship in HOL4:
+
+\begin{block}{Relationship between Node Count of Minimal AVL Trees and the Fibonacci Sequence}
+    The node count of a minimal AVL tree of height $k$, denoted as $N(k)$, follows a recurrence relation:
+    \[
+        N(k+2) = N(k+1) + N(k) + 1
+    \]
+    This relation can also be rewritten as:
+    \[
+        N(k) = N(k+2) - N(k+1) - 1
+    \]
+    This recurrence aligns with the Fibonacci sequence, where each term is the sum of the two preceding terms. It can be shown that the minimal number of nodes in an AVL tree of height $k$ is given by:
+    \[
+        N(k) = \text{Fibonacci}(k+2) - 1
+    \]
+ \end{block}
+
+\begin{table}
+    \centering
+    \begin{tabular}{cccccccccccccc}
+        \toprule
+        \textbf{$k$}          & 0   & 1   & 2   & 3   & 4   & 5    & 6    & 7    & 8    & 9    & 10     \\ \midrule
+        \textbf{$N(k)$}       & 0   & 1   & 2   & 4   & 7   & 12   & 20   & 33   & 54   & 88   & 143   \\ \midrule
+        \textbf{$F(k)$}       & 0   & 1   & 1   & 2   & 3   & 5    & 8    & 13   & 21   & 34   & 55    \\ \midrule
+        \textbf{$F(k+2) - 1$} & 0   & 1   & 2   & 4   & 7   & 12   & 20   & 33   & 54   & 88   & 143  \\ 
+        \bottomrule
+    \end{tabular}
+    \caption{Relationship between $N(k)$, $F(k)$, and $F(k+2) - 1$ for $k$ from 0 to 10.}
+\end{table}
+  
+These theorems, together, form the foundation of the formal verification of AVL trees in HOL4. They ensure that key properties such as height, balance factors, and node counts are maintained across various operations. The recursive relationship between the number of nodes and the Fibonacci sequence is particularly important, as it highlights the optimality of AVL trees with respect to both time and space efficiency. By proving these theorems, we can guarantee that AVL trees are implemented in a provably correct manner, ensuring their effectiveness in real-world applications. Furthermore, the Fibonacci-based structure ensures that AVL trees can handle a large number of elements while maintaining efficient operations.
+
+\subsection{Formalization of Fibonacci Sequence}
+
+The Fibonacci sequence is a recursive sequence where each term is the sum of the two preceding ones, starting from 0 and 1. The Fibonacci sequence is formally defined as:
+\[
+F(0) = 0, \quad F(1) = 1, \quad F(n) = F(n-1) + F(n-2) \text{ for } n \geq 2
+\]
+This recursive structure of the Fibonacci sequence mirrors the recursive nature of balanced binary trees, making it a natural fit for analyzing the properties of AVL trees.
+
+In HOL4, the Fibonacci sequence is formalized as follows:
+\begin{verbatim}
+Definition Fibonacci_def :
+    Fibonacci (n :num) =
+       if n = 0 then (0:num) else
+         if n = 1 then (1:num) else
+          Fibonacci (n - 1) + Fibonacci (n - 2)
+End
+\end{verbatim}
+
+This definition of the Fibonacci sequence allows us to compute Fibonacci numbers recursively. Starting with the base cases \( F(0) = 0 \) and \( F(1) = 1 \), the function recursively computes each subsequent Fibonacci number by summing the previous two values. This recursive definition plays a pivotal role in establishing the relationship between the height of an AVL tree and the number of nodes it contains.
+
+
+\subsection{The Importance of Fibonacci Sequence in AVL Trees}
+
+The recursive relationship between the number of nodes in an AVL tree and the Fibonacci sequence is fundamental to understanding the efficiency of AVL trees. Since the Fibonacci sequence grows exponentially, while the height of an AVL tree grows logarithmically with respect to the number of nodes, this ensures that AVL trees are highly efficient in terms of both time and space complexity.
+
+The Fibonacci sequence helps to establish that minimal AVL trees are optimally balanced, with the smallest possible number of nodes for a given height. This balance is what allows AVL trees to maintain their logarithmic height, ensuring that operations such as search, insertion, and deletion can be performed in \( O(\log n) \) time. By formally proving the relationship between the Fibonacci sequence and AVL trees in HOL4, we can guarantee the correctness and efficiency of AVL tree algorithms.
+\item \textbf{Theorem: N\_0} \\
+  This theorem states that the minimal number of nodes in an AVL tree of height 0 is 0, as expected since an empty tree has no nodes. The formal statement is:
+  \begin{verbatim}
+  N 0 = 0
+  \end{verbatim}
+  This theorem is important because it establishes the base case for the recursive definition of \( N(k) \), which represents the minimal number of nodes in an AVL tree of height \( k \).
+
+\item \textbf{Theorem: N\_1} \\
+  This theorem asserts that the minimal number of nodes in an AVL tree of height 1 is 1. The proof shows that the set of AVL trees of height 1 contains only a single tree, which is a singleton tree. The formal statement is:
+  \begin{verbatim}
+  N 1 = 1
+  \end{verbatim}
+  This result forms the next base case in the recursive definition of \( N(k) \) and aligns with the structure of AVL trees.
+
+\item \textbf{Theorem: N\_k} \\
+  This theorem provides the recurrence relation for the minimal number of nodes in an AVL tree of height \( k+2 \). It states that the number of nodes in a minimal AVL tree of height \( k+2 \) is the sum of the number of nodes in minimal AVL trees of heights \( k+1 \) and \( k \), plus one. The formal statement is:
+  \begin{verbatim}
+  ∀k. N (k+2) = N (k+1) + N(k) + 1
+  \end{verbatim}
+  This recurrence relation is fundamental for understanding the structure of AVL trees and links directly to the Fibonacci sequence.
+
+  \item \textbf{Theorem: Fibonacci\_thm} \\
+  This theorem states that the Fibonacci sequence satisfies the following recursive relationship:
+  \begin{verbatim}
+  ∀k. Fibonacci (k + 2) = Fibonacci (k + 1) + Fibonacci k
+  \end{verbatim}
+  
+  The proof of this theorem follows directly from the definition of the Fibonacci sequence. This recursive relationship is central to many of the inductive proofs involving AVL trees, as it provides a framework for reasoning about the growth of the tree as nodes are added or removed. By leveraging the recursive nature of the Fibonacci sequence, we can prove that AVL trees maintain their logarithmic height across all operations.
+
+\item \textbf{Theorem: Fibonacci\_mono} \\
+  This theorem proves that the Fibonacci sequence is monotonically increasing. In other words, for any natural number \( n \), the \( n \)-th Fibonacci number is less than or equal to the \( (n+1) \)-th Fibonacci number. The formal statement is:
+  \begin{verbatim}
+  ∀n. Fibonacci n ≤ Fibonacci (n+1)
+  \end{verbatim}
+  This result is useful for reasoning about the Fibonacci sequence in inductive proofs involving AVL trees.
+
+\item \textbf{Theorem: Fibonacci\_mono\_transitive} \\
+  This theorem extends the monotonicity property of the Fibonacci sequence, stating that if \( m \leq n \), then \( \text{Fibonacci}(m) \leq \text{Fibonacci}(n) \). The formal statement is:
+  \begin{verbatim}
+  ∀ m n. m ≤ n ⇒ Fibonacci m ≤ Fibonacci n
+  \end{verbatim}
+  This transitivity property is important for proving more complex properties of AVL trees and their relation to Fibonacci numbers.
+  
   The Fibonacci sequence plays a critical role in AVL trees because it captures the optimal relationship between height and node count. A minimal AVL tree of height \( k \) has a node count that grows in a Fibonacci-like fashion, which ensures that the tree remains as compact as possible while still allowing logarithmic height growth. This result highlights the efficiency of AVL trees in terms of both space and time complexity, as it demonstrates that the height of an AVL tree grows logarithmically with the number of nodes.
 
   \item \textbf{Theorem: N\_fibonacci\_relation} \\
-  This theorem builds on the previous result by explicitly stating the recursive relationship between the number of nodes in an AVL tree and the Fibonacci sequence. It shows that the number of nodes in a minimal AVL tree of height \( k \) follows the Fibonacci sequence. The formal statement is:
+  This theorem proves that the number of nodes in a minimal AVL tree of height \( k \) is given by \( F(k+2) - 1 \), where \( F \) represents the Fibonacci sequence. The formal statement of the theorem is:
   \begin{verbatim}
   ∀k. N k = Fibonacci (k+2) - 1
   \end{verbatim}
-  This theorem provides a more detailed characterization of the relationship between the number of nodes in an AVL tree and its height. The Fibonacci sequence governs the growth of AVL trees, and this theorem demonstrates that the number of nodes in a minimal AVL tree of height \( k \) is equal to the \( (k+2) \)-th Fibonacci number minus one. This result is essential for understanding the recursive structure of AVL trees and their efficiency, as it proves that the trees grow in a balanced and optimal manner according to the Fibonacci series.
   
-  \item \textbf{Theorem: height\_complete\_avl} \\
-  This theorem states that the height of a complete AVL tree of height \( n \) is indeed \( n \). The formal definition ensures that the structure of the tree follows the expected pattern for a balanced binary tree. The formal statement is:
-  \begin{verbatim}
-  height (complete_avl n) = n
-  \end{verbatim}
-  This theorem is significant because it guarantees that the height of a complete AVL tree is correctly calculated, which plays a crucial role in operations such as insertion and balancing. Knowing the height of a tree is necessary for maintaining the balance condition after modifications.
+  The proof of this theorem involves showing that the recursive structure of minimal AVL trees corresponds exactly to the recursive structure of the Fibonacci sequence. Specifically, the number of nodes in a minimal AVL tree of height \( k \) is the sum of the number of nodes in the left and right subtrees (which are minimal AVL trees of smaller heights), plus one for the root node. This recursive structure aligns perfectly with the Fibonacci sequence, where each term is the sum of the two preceding terms.
 
-  \item \textbf{Theorem: avl\_insert\_avl} \\
-  This theorem verifies that the insertion of a new element into an AVL tree preserves the AVL property. When a new element is added to the tree, the AVL property must be checked and potentially restored through rebalancing operations. The formal statement is:
-  \begin{verbatim}
-  ∀ k v t. avl t ⇒ avl(insert_avl k v t )
-  \end{verbatim}
-  This theorem ensures that after inserting a key-value pair \( (k, v) \) into the tree, the resulting tree still satisfies the AVL property. This is critical for the correctness of insertion operations, as it guarantees that the tree remains balanced after an insertion.
+  This theorem is significant because it demonstrates that the height of a minimal AVL tree grows logarithmically with respect to the number of nodes. The Fibonacci sequence grows exponentially, meaning that the height of the tree increases slowly as the number of nodes increases. This property is what allows AVL trees to maintain efficient operations, as the logarithmic height ensures that search, insertion, and deletion operations can be performed in \( O(\log n) \) time.
 
-\end{itemize}
+\end{description}
 
-These theorems, together, form the foundation of the formal verification of AVL trees in HOL4. They ensure that key properties such as height, balance factors, and node counts are maintained across various operations. The recursive relationship between the number of nodes and the Fibonacci sequence is particularly important, as it highlights the optimality of AVL trees with respect to both time and space efficiency. By proving these theorems, we can guarantee that AVL trees are implemented in a provably correct manner, ensuring their effectiveness in real-world applications. Furthermore, the Fibonacci-based structure ensures that AVL trees can handle a large number of elements while maintaining efficient operations.
+\section{Insertion and Balancing Operations}
 
-
-
-\subsection{Insertion and Balancing Operations}
-
-One of the key properties of AVL trees is their ability to maintain balance after insertions. After adding a new element to the tree, it is possible that the balance factor (the difference between the heights of the left and right subtrees) exceeds the allowed limit of 1. When this happens, the tree must be rebalanced to restore the AVL property. The balancing operations ensure that the tree maintains its logarithmic height, which is essential for efficient searching, insertion, and deletion operations.
+One of the key properties of AVL trees is their ability to maintain balance after insertions. After adding a new element to the tree, the balance factor (the difference between the heights of the left and right subtrees) may exceed the allowed limit of 1. When this happens, the tree must be rebalanced to restore the AVL property. The balancing operations ensure that the tree maintains its logarithmic height, which is essential for efficient searching, insertion, and deletion operations.
 
 In this section, we define two core balancing operations, \texttt{balanceL} and \texttt{balanceR}, which handle cases where the left or right subtree becomes too tall, respectively. We also describe the \texttt{insert\_avl} function, which is responsible for inserting elements into the tree while ensuring that the AVL property is preserved through rebalancing.
 
@@ -227,6 +456,68 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
     else
       tree k v l r
   \end{verbatim}
+
+  \subsection*{Left-Left Imbalance (Single Right Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, sibling distance=2cm, level distance=1.5cm]
+  % Initial Tree
+  \node (k) {k}
+    child {
+      node (lk) {lk}
+      child {node {ll}}
+      child {node {lr}}
+    }
+    child {node {r}};
+
+  % Arrow for Rotation
+  \draw[->, thick] (2,-1) -- (4,-1);  % Simple right arrow for rotation
+
+  % After Rotation
+  \node[right=5cm of k] (lk2) {lk}
+    child {
+      node {ll}
+    }
+    child {
+      node (k2) {k}
+      child {node {lr}}
+      child {node {r2}}
+    };
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Left-Right Imbalance (Left-Right Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, sibling distance=2 cm, level distance=1.5cm]
+  % Initial Tree
+  \node (k3) {k}
+    child {
+      node (lk3) {lk}
+      child {node {ll3}}
+      child {
+        node (lr) {lr}
+        child {node {lrl}}
+        child {node {lrr}}
+      }
+    }
+    child {node {r3}};
+
+  % Arrow for Rotation
+  \draw[->, thick] (2,-2) -- (4,-2);  % Simple left-right arrow for rotation
+
+  % After Rotation
+  \node[right=8cm of k3] (lr2) {lr}
+    child[sibling distance=3cm] {
+      node (lk4) {lk}
+      child[sibling distance=2.5cm] {node {ll4}}
+      child[sibling distance=2.5cm] {node {lrl2}}
+    }
+    child[sibling distance=3cm] {
+      node (k4) {k}
+      child[sibling distance=1cm] {node {lrr2}}
+      child[sibling distance=2.5cm] {node {r4}}
+    };
+\end{tikzpicture}
+\end{center}
   
   This operation works by comparing the heights of the left and right subtrees of the current node. If the left subtree is too tall (i.e., the height difference is greater than one), a rotation is performed. The precise rotation depends on whether the imbalance is caused by the left or right child of the left subtree. The function handles both single and double rotations to restore balance. The balancing of the left subtree is critical for maintaining the AVL property and ensuring that the tree remains balanced after an insertion on the left side.
 
@@ -247,7 +538,66 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
     else
       tree k v l r
   \end{verbatim}
-  
+
+  \subsection*{Right-Right Imbalance (Single Left Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, level distance=2cm]
+  % Initial Tree
+  \node (k) {k}
+    child[sibling distance=2cm] {node {l}}
+    child {
+      node (rk) {rk}
+      child[sibling distance=2cm] {node {rl}}
+      child[sibling distance=2cm] {node {rr}}
+    };
+
+  % Arrow for Rotation
+  \draw[->, thick] (3,-1) -- (5,-1);  % Simple left arrow for rotation
+
+  % After Rotation
+  \node[right=6cm of k] (rk2) {rk}
+    child[sibling distance=2cm] {
+      node (k2) {k}
+      child[sibling distance=2cm] {node {l}}
+      child[sibling distance=2cm] {node {rl}}
+    }
+    child[sibling distance=2cm] {node {rr2}};
+\end{tikzpicture}
+\end{center}
+
+\subsection*{Right-Left Imbalance (Right-Left Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, sibling distance=3cm, level distance=1.5cm]
+  % Initial Tree
+  \node (k3) {k}
+    child[sibling distance=3cm] {node {l3}}
+    child {
+      node (rk3) {rk}
+      child[sibling distance=2.5cm] {
+        node (rl) {rl}
+        child[sibling distance=2.5cm] {node {rll}}
+        child[sibling distance=2.5cm] {node {rlr}}
+      }
+      child[sibling distance=2.5cm] {node {rr3}}
+    };
+
+  % Arrow for Rotation
+  \draw[->, thick] (3,-2) -- (6,-2);  % Simple right-left arrow for rotation
+
+  % After Rotation
+  \node[right=8cm of k3] (rl2) {rl}
+    child[sibling distance=2cm] {
+      node (k4) {k}
+      child[sibling distance=2.5cm] {node {l4}}
+      child[sibling distance=1cm] {node {rll2}}
+    }
+    child[sibling distance=2cm] {
+      node (rk4) {rk}
+      child[sibling distance=0.5cm] {node {rlr2}}
+      child[sibling distance=2.5cm] {node {rr4}}
+    };
+\end{tikzpicture}
+\end{center}
   The logic for \texttt{balanceR} is analogous to \texttt{balanceL}, but it handles the case where the right subtree is imbalanced. Similar to \texttt{balanceL}, this function performs either a single or double rotation depending on the structure of the right subtree. Rebalancing the right subtree is essential for maintaining the AVL property after an insertion into the right child of the tree.
 
   \item[\textbf{insert\_avl}] \\
@@ -263,6 +613,46 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
       balanceR k kv l (insert_avl x v r)
   \end{verbatim}
 
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3.5cm, minimum height=1cm, text centered, aspect=2, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm]
+
+% Nodes
+\node (start) [startstop] {Start};
+\node (checktip) [decision, below of=start] {Is the node Tip?};
+\node (singleton) [process, right of=checktip, xshift=3.5cm] {Insert as singleton};
+\node (checkequal) [decision, below of=checktip] {x = k?};
+\node (returnsame) [process, right of=checkequal, xshift=3.5cm] {Return same node};
+\node (checkleft) [decision, below of=checkequal] {x < k?};
+\node (insertleft) [process, left of=checkleft, xshift=-3.5cm] {Insert into left subtree};
+\node (insertright) [process, right of=checkleft, xshift=3.5cm] {Insert into right subtree};
+\node (balanceL) [process, below of=insertleft] {Balance using balanceL};
+\node (balanceR) [process, below of=insertright] {Balance using balanceR};
+\node (end) [startstop, below of=checkleft, yshift=-3cm] {End};
+
+% Arrows
+\draw [arrow] (start) -- (checktip);
+\draw [arrow] (checktip) -- node[anchor=south] {Yes} (singleton);
+\draw [arrow] (checktip) -- node[anchor=west] {No} (checkequal);
+\draw [arrow] (checkequal) -- node[anchor=south] {Yes} (returnsame);
+\draw [arrow] (checkequal) -- node[anchor=west] {No} (checkleft);
+\draw [arrow] (checkleft) -- node[anchor=south] {x>k} (insertleft);
+\draw [arrow] (checkleft) -- node[anchor=south] {k>x} (insertright);
+\draw [arrow] (insertleft) -- (balanceL);
+\draw [arrow] (insertright) -- (balanceR);
+\draw [arrow] (balanceL) -- (end);
+\draw [arrow] (balanceR) -- (end);
+\draw [arrow] (singleton) |- (end);
+\draw [arrow] (returnsame) |- (end);
+
+\end{tikzpicture}
+\end{center}
+
   In the \texttt{insert\_avl} function, the key-value pair \( (x, v) \) is inserted into the correct position in the tree according to the binary search tree property. If \( x \) is smaller than the current key \( k \), the insertion proceeds in the left subtree. If \( x \) is larger than \( k \), the insertion proceeds in the right subtree. After the insertion, the balance of the tree is checked. If the tree becomes imbalanced, either \texttt{balanceL} or \texttt{balanceR} is applied to restore balance.
 
   The key feature of the \texttt{insert\_avl} function is that it ensures the AVL property is maintained at all levels of the tree. By performing rebalancing operations as needed, the function guarantees that the height of the tree remains logarithmic with respect to the number of nodes. This is crucial for ensuring that search, insertion, and deletion operations can be performed efficiently in \( O(\log n) \) time.
@@ -272,122 +662,260 @@ In this section, we define two core balancing operations, \texttt{balanceL} and 
 The \texttt{balanceL} and \texttt{balanceR} operations are vital for maintaining the AVL property after modifications to the tree. Without these operations, the tree could become unbalanced, leading to poor performance in subsequent operations. The \texttt{insert\_avl} function ensures that new elements can be added to the tree while keeping it balanced. The careful handling of rotations in both the left and right subtrees allows AVL trees to maintain their optimal height and performance.
 
 
-\subsection{Key Theorems for Insertion}
+\subsection{Key Theorems for Balancing and Insertion}
 
 The insertion of elements into an AVL tree must maintain the AVL property, the binary search tree property, and ensure that the keys are updated correctly. The following theorems formally prove the correctness of the insertion algorithm in HOL4. Each theorem plays a critical role in verifying that after an element is inserted, the resulting tree remains balanced, its height is properly adjusted, and the set of keys is correctly updated. These proofs are essential for demonstrating that AVL trees continue to function optimally after an insertion operation.
 
 \begin{itemize}
 
-  \item \textbf{Theorem: keys\_insert} \\
-  This theorem proves that after inserting a key \( x \) into an AVL tree \( t \), the set of keys in the resulting tree is the union of the set of keys in \( t \) and the singleton set \( \{x\} \). The formal statement of the theorem is:
-  \begin{verbatim}
-  ∀ x v t. keys(insert_avl x v t) = (keys t ∪ {x})
-  \end{verbatim}
-  This theorem demonstrates that the insertion of a key into an AVL tree correctly updates the set of keys stored in the tree. Specifically, if \( x \) is inserted into the tree \( t \), the resulting set of keys will be the same as the set of keys in \( t \), with the addition of \( x \). The proof proceeds by structural induction on the tree, verifying that the insertion preserves the binary search tree property (i.e., that keys are correctly placed in the left or right subtrees according to their values) and that no duplicate keys are introduced.
+\item \textbf{Theorem: keys\_balanceL} \\
+  This theorem states that the set of keys in the tree is preserved when the left balancing operation (\texttt{balanceL}) is performed. The formal statement of the theorem is:
+  \[
+  \forall k \, v \, t1 \, t2. \, \text{keys}(\text{balanceL}(k, v, t1, t2)) = \{k\} \cup \text{keys}(t1) \cup \text{keys}(t2)
+  \]
+  This theorem proves that performing the left balancing operation does not alter the set of keys in the AVL tree. After the balancing is applied, the resulting tree still contains the same keys as the original tree, including the root key \( k \), and all the keys from the left subtree \( t1 \) and right subtree \( t2 \).
 
-  The correctness of key updates is a fundamental aspect of AVL trees. This ensures that after any insertion operation, the tree continues to function as a valid search tree, allowing for efficient lookup operations. By showing that the set of keys is correctly updated, this theorem guarantees that the AVL tree remains a proper binary search tree after insertion.
+  The proof proceeds by case analysis on the structure of the left subtree. Depending on whether the tree requires a single or double rotation, the set of keys remains unchanged as the nodes are simply rearranged without any keys being added or removed. The correctness of this theorem guarantees that the balancing operation preserves the AVL tree's key set and structure.
 
-  \item \textbf{Theorem: height\_insert\_avl} \\
-  This theorem ensures that after inserting a key \( x \) into an AVL tree, the height of the tree is either preserved or increased by one. The formal statement is:
-  \begin{verbatim}
-  ∀ k v t. height(insert_avl k v t) = height t ∨ height(insert_avl k v t) = height t + 1
-  \end{verbatim}
-  The significance of this theorem lies in its guarantee that the height of an AVL tree is maintained within strict bounds after an insertion operation. If the tree remains balanced after the insertion, its height will not change. However, if the insertion causes the tree to become imbalanced, a rotation (as handled by the \texttt{balanceL} or \texttt{balanceR} functions) will restore the balance, possibly increasing the height by at most one.
+\item \textbf{Theorem: keys\_balanceR} \\
+  This theorem is analogous to the previous one, but applies to the right balancing operation (\texttt{balanceR}). The formal statement is:
+  \[
+  \forall k \, v \, t1 \, t2. \, \text{keys}(\text{balanceR}(k, v, t1, t2)) = \{k\} \cup \text{keys}(t1) \cup \text{keys}(t2)
+  \]
+  This theorem proves that after performing a right balancing operation, the set of keys in the AVL tree remains unchanged. The key set after balancing still consists of the root key \( k \), along with all the keys from the left subtree \( t1 \) and right subtree \( t2 \).
 
-  This theorem is crucial for ensuring that the AVL tree continues to exhibit logarithmic height relative to the number of nodes, which is key to maintaining efficient search, insertion, and deletion operations.
+  As with \texttt{keys\_balanceL}, the proof is done by case analysis on the structure of the right subtree. Regardless of the type of rotation (single or double), no keys are removed or added; the nodes are simply rearranged to maintain the tree’s balance. This ensures that the AVL tree remains consistent and its key set is preserved after balancing.
 
-  \item \textbf{Theorem: avl\_insert\_avl} \\
-  This theorem proves that the AVL property is preserved after the insertion of a new element into the tree. Specifically, it shows that if the tree satisfies the AVL property before insertion, it will continue to satisfy this property after the insertion. The formal statement is:
-  \begin{verbatim}
-  ∀ k v t. avl t ⇒ avl(insert_avl k v t)
-  \end{verbatim}
-  The proof of this theorem involves showing that after inserting a new element into the tree, the balance factor at each node is either maintained or adjusted correctly through the balancing operations. The \texttt{balanceL} and \texttt{balanceR} functions ensure that any imbalance is resolved, restoring the AVL property to the tree.
+\item \textbf{Theorem: keys\_insert} \\
+  This theorem proves that after inserting a key \( x \) into an AVL tree \( t \), the resulting set of keys is the union of the set of keys in \( t \) and the singleton set \( \{x\} \). Formally, the theorem is:
+  \[
+  \forall x \, v \, t. \, \text{keys}(\text{insert\_avl}(x, v, t)) = \text{keys}(t) \cup \{x\}
+  \]
+  The proof proceeds by structural induction on the AVL tree \( t \), ensuring that the insertion operation correctly places the key \( x \) in either the left or right subtree, depending on its value, while maintaining the binary search tree property. The result confirms that the set of keys is updated correctly after insertion, with no duplicates introduced, thereby preserving the AVL tree's correctness.
 
-  This theorem is fundamental for proving the correctness of the insertion operation in AVL trees. It guarantees that after an insertion, the tree remains balanced, which is essential for ensuring that the height of the tree remains logarithmic with respect to the number of nodes. Without this guarantee, the tree could become unbalanced, leading to degraded performance in subsequent operations.
+\item \textbf{Theorem: height\_balL} \\
+  This theorem describes the height of an AVL tree after performing a left balancing operation (\texttt{balanceL}). If the left subtree \( l \) has a height that is 2 greater than the right subtree \( r \), then the height of the tree after balancing will be either \( \text{height}(r) + 2 \) or \( \text{height}(r) + 3 \). Formally:
+  \[
+  \forall k \, v \, l \, r. \, \text{height}(l) = \text{height}(r) + 2 \land \text{avl}(l) \land \text{avl}(r) \Rightarrow \text{height}(\text{balanceL}(k, v, l, r)) = \text{height}(r) + 2 \lor \text{height}(r) + 3
+  \]
+  This theorem proves that the height of the tree after left balancing is within a bounded range, ensuring that the AVL tree remains balanced. The proof proceeds by case analysis on the left subtree and shows that balancing adjusts the tree height while maintaining the AVL properties.
 
-  \item \textbf{Theorem: avl\_tree\_preserves\_avl} \\
-  This theorem establishes that the insertion of a new node into an AVL tree preserves the AVL property at all levels of the tree. It is formally stated as:
-  \begin{verbatim}
-  ∀ l r k v. avl l ∧ avl r ∧ (height l = height r ∨ height l = height r+1 ∨ height r = height l+1)
-              ⇒ avl (tree k v l r)
-  \end{verbatim}
-  This theorem is a more general form of the previous theorem, which ensures that the AVL property is preserved not just at the root of the tree, but at every node where balancing occurs. The condition on the heights of the left and right subtrees ensures that the balance factor is within the allowed range of \([-1, 1]\), maintaining the AVL property throughout the entire tree.
+\item \textbf{Theorem: height\_balR} \\
+  This theorem is the symmetric case of \texttt{height\_balL}, describing the height of an AVL tree after performing a right balancing operation (\texttt{balanceR}). If the right subtree \( r \) has a height that is 2 greater than the left subtree \( l \), then the height of the tree after balancing will be either \( \text{height}(l) + 2 \) or \( \text{height}(l) + 3 \). Formally:
+  \[
+  \forall k \, v \, l \, r. \, \text{height}(r) = \text{height}(l) + 2 \land \text{avl}(l) \land \text{avl}(r) \Rightarrow \text{height}(\text{balanceR}(k, v, l, r)) = \text{height}(l) + 2 \lor \text{height}(l) + 3
+  \]
+  This theorem ensures that after right balancing, the tree's height is adjusted within a specific range, maintaining the balanced structure of the AVL tree.
 
-  The importance of this theorem lies in its guarantee that the AVL tree remains balanced after any insertion, deletion, or rebalancing operation. By proving that the AVL property is preserved at all levels, this theorem ensures that AVL trees maintain their logarithmic height and efficient performance characteristics.
+\item \textbf{Theorem: height\_balL2} \\
+  This theorem deals with the height of an AVL tree after a left balancing operation when the height difference between the left and right subtrees is not 2. It states that in such cases, the height of the resulting tree is simply the maximum height of the left and right subtrees, plus 1:
+  \[
+  \forall k \, v \, l \, r. \, \text{avl}(l) \land \text{avl}(r) \land \text{height}(l) \neq \text{height}(r) + 2 \Rightarrow \text{height}(\text{balanceL}(k, v, l, r)) = 1 + \max(\text{height}(l), \text{height}(r))
+  \]
+  This theorem ensures that left balancing adjusts the tree height correctly when there is no significant imbalance between the left and right subtrees.
+
+\item \textbf{Theorem: height\_balR2} \\
+  This theorem is the symmetric counterpart of \texttt{height\_balL2}, applying to the right balancing operation. It states that when the height difference between the right and left subtrees is not 2, the height of the resulting tree after balancing is the maximum height of the left and right subtrees, plus 1:
+  \[
+  \forall k \, v \, l \, r. \, \text{avl}(l) \land \text{avl}(r) \land \text{height}(r) \neq \text{height}(l) + 2 \Rightarrow \text{height}(\text{balanceR}(k, v, l, r)) = 1 + \max(\text{height}(l), \text{height}(r))
+  \]
+
+\item \textbf{Theorem: avl\_balL} \\
+  This theorem proves that performing a left balancing operation on an AVL tree preserves the AVL property, provided that the heights of the left and right subtrees are either equal or differ by 1 or 2:
+  \[
+  \forall k \, v \, l \, r. \, \text{avl}(l) \land \text{avl}(r) \land (\text{height}(l) = \text{height}(r) \lor \text{height}(l) = \text{height}(r) + 1 \lor \text{height}(r) = \text{height}(l) + 1 \lor \text{height}(l) = \text{height}(r) + 2) \Rightarrow \text{avl}(\text{balanceL}(k, v, l, r))
+  \]
+  This ensures that the AVL property is maintained after balancing, keeping the tree correctly balanced.
+
+\item \textbf{Theorem: avl\_balR} \\
+  This theorem is the symmetric case of \texttt{avl\_balL}. It proves that performing a right balancing operation preserves the AVL property, provided the heights of the subtrees are either equal or differ by 1 or 2:
+  \[
+  \forall k \, v \, l \, r. \, \text{avl}(l) \land \text{avl}(r) \land (\text{height}(r) = \text{height}(l) \lor \text{height}(r) = \text{height}(l) + 1 \lor \text{height}(l) = \text{height}(r) + 1 \lor \text{height}(r) = \text{height}(l) + 2) \Rightarrow \text{avl}(\text{balanceR}(k, v, l, r))
+  \]
+  This ensures that the AVL tree remains balanced after the right balancing operation.
+
+\item \textbf{Theorem: avl\_tree\_preserves\_avl} \\
+  This theorem guarantees that the AVL property is preserved when constructing a binary tree using the \texttt{tree} function, as long as both left and right subtrees are AVL trees and their heights are either equal or differ by at most 1:
+  \[
+  \forall l \, r \, k \, v. \, \text{avl}(l) \land \text{avl}(r) \land (\text{height}(l) = \text{height}(r) \lor \text{height}(l) = \text{height}(r) + 1 \lor \text{height}(r) = \text{height}(l) + 1) \Rightarrow \text{avl}(\text{tree}(k, v, l, r))
+  \]
+  This theorem ensures that the AVL tree property is preserved whenever a tree is constructed from balanced subtrees.
+
+\item \textbf{Theorem: avl\_insert\_aux} \\
+  This theorem proves that inserting a new key \( k \) and value \( v \) into an AVL tree preserves the AVL property. It also states that the height of the tree will either remain the same or increase by 1:
+  \[
+  \forall k \, v \, t. \, \text{avl}(t) \Rightarrow \text{avl}(\text{insert\_avl}(k, v, t)) \land (\text{height}(\text{insert\_avl}(k, v, t)) = \text{height}(t) \lor \text{height}(\text{insert\_avl}(k, v, t)) = \text{height}(t) + 1)
+  \]
+  This theorem guarantees that the insertion of a new key preserves both the AVL tree’s balance and its height properties.
 
 \end{itemize}
 
 The proofs of these theorems collectively demonstrate that the insertion operation in AVL trees is both correct and efficient. By ensuring that the AVL property is preserved, the height is properly adjusted, and the set of keys is correctly updated, these theorems guarantee that AVL trees continue to function optimally after insertion. Furthermore, the balancing operations (handled by \texttt{balanceL} and \texttt{balanceR}) ensure that any imbalance introduced by the insertion is corrected, preserving the logarithmic height of the tree and ensuring efficient search and insertion times.
 
+\section*{Deletion in AVL Trees}
 
+Deleting a node from an AVL tree is a more complex operation than insertion because we not only need to remove the node but also ensure that the tree remains balanced afterward. AVL trees maintain their efficiency by guaranteeing that the height difference between the left and right subtrees of any node is at most one. To preserve this property, deletion operations in AVL trees are often followed by one or more rebalancing steps.
 
-\section{Recursive Relationship Between Nodes and Fibonacci Sequence}
+This section introduces two key definitions used in the deletion process: \texttt{remove\_max}, which handles finding and removing the maximum element in a subtree, and \texttt{delete\_avl}, the main function for deleting a node from an AVL tree while maintaining the AVL property.
 
-In this section, we explore the deep connection between AVL trees and the Fibonacci sequence, a well-known sequence that plays a crucial role in ensuring the optimal structure of AVL trees. AVL trees are designed to maintain a balanced height relative to the number of nodes they contain, and this balance can be directly tied to the growth pattern of the Fibonacci sequence. Specifically, the number of nodes in an AVL tree of height \( k \) is closely related to the \( (k+2) \)-th Fibonacci number. This relationship ensures that the height of an AVL tree grows logarithmically with respect to the number of nodes, making AVL trees highly efficient for operations such as search, insertion, and deletion.
+\subsection*{Definition: remove\_max}
 
-The recursive nature of the Fibonacci sequence mirrors the recursive structure of AVL trees, where each node is balanced based on the heights of its left and right subtrees. The Fibonacci sequence thus provides a mathematical framework for understanding the growth and balance properties of AVL trees. In this section, we formalize the Fibonacci sequence in HOL4 and demonstrate how it is used to prove important properties of AVL trees.
+The \texttt{remove\_max} function is designed to find and remove the maximum element from a given subtree. This operation is particularly important when deleting a node with two children, as we often replace the deleted node with its predecessor—the maximum node from the left subtree. The formal definition of \texttt{remove\_max} is as follows:
 
-\subsection{Formalization of Fibonacci Sequence}
-
-The Fibonacci sequence is a recursive sequence where each term is the sum of the two preceding ones, starting from 0 and 1. The Fibonacci sequence is formally defined as:
 \[
-F(0) = 0, \quad F(1) = 1, \quad F(n) = F(n-1) + F(n-2) \text{ for } n \geq 2
+\text{remove\_max}(\text{Bin} \, bf \, k \, v \, l \, \text{Tip}) = (k, v, l)
 \]
-This recursive structure of the Fibonacci sequence mirrors the recursive nature of balanced binary trees, making it a natural fit for analyzing the properties of AVL trees.
+\[
+\text{remove\_max}(\text{Bin} \, bf \, k \, v \, l \, r) = 
+\text{let} \, (max\_k, max\_v, r') = \text{remove\_max}(r) \, \text{in} \, (max\_k, max\_v, \text{balanceL}(k, v, l, r'))
+\]
 
-In HOL4, the Fibonacci sequence is formalized as follows:
-\begin{verbatim}
-Definition Fibonacci_def :
-    Fibonacci (n :num) =
-       if n = 0 then (0:num) else
-         if n = 1 then (1:num) else
-          Fibonacci (n - 1) + Fibonacci (n - 2)
-End
-\end{verbatim}
-
-This definition of the Fibonacci sequence allows us to compute Fibonacci numbers recursively. Starting with the base cases \( F(0) = 0 \) and \( F(1) = 1 \), the function recursively computes each subsequent Fibonacci number by summing the previous two values. This recursive definition plays a pivotal role in establishing the relationship between the height of an AVL tree and the number of nodes it contains.
-
-\subsection{Relationship Between Fibonacci Sequence and AVL Trees}
-
-The relationship between the Fibonacci sequence and AVL trees is rooted in the fact that minimal AVL trees (i.e., AVL trees with the smallest number of nodes for a given height) exhibit a structure similar to that of Fibonacci trees. Minimal AVL trees grow in a pattern that can be described by Fibonacci numbers, which means that the number of nodes in a minimal AVL tree of height \( k \) is closely related to the \( (k+2) \)-th Fibonacci number.
-
-The following theorem formally establishes this relationship in HOL4:
-
+\texttt{remove\_max} works as follows:
 \begin{itemize}
-  \item \textbf{Theorem: N\_fibonacci\_relation} \\
-  This theorem proves that the number of nodes in a minimal AVL tree of height \( k \) is given by \( F(k+2) - 1 \), where \( F \) represents the Fibonacci sequence. The formal statement of the theorem is:
-  \begin{verbatim}
-  ∀k. N k = Fibonacci (k+2) - 1
-  \end{verbatim}
-  
-  The proof of this theorem involves showing that the recursive structure of minimal AVL trees corresponds exactly to the recursive structure of the Fibonacci sequence. Specifically, the number of nodes in a minimal AVL tree of height \( k \) is the sum of the number of nodes in the left and right subtrees (which are minimal AVL trees of smaller heights), plus one for the root node. This recursive structure aligns perfectly with the Fibonacci sequence, where each term is the sum of the two preceding terms.
-
-  This theorem is significant because it demonstrates that the height of a minimal AVL tree grows logarithmically with respect to the number of nodes. The Fibonacci sequence grows exponentially, meaning that the height of the tree increases slowly as the number of nodes increases. This property is what allows AVL trees to maintain efficient operations, as the logarithmic height ensures that search, insertion, and deletion operations can be performed in \( O(\log n) \) time.
-
+    \item If the right subtree of a node is empty (represented by \texttt{Tip}), the node itself is the maximum node, and the left subtree becomes the new subtree after the removal of the maximum node.
+    \item If the right subtree is not empty, the function recursively calls itself on the right subtree to find the maximum node, and then it rebalances the resulting tree using the \texttt{balanceL} function. This ensures that the AVL property is preserved after the maximum node is removed.
 \end{itemize}
 
-\subsection{Theorem: Fibonacci Recursive Properties}
+This function is crucial in maintaining the AVL tree structure, particularly when we need to replace a node with its predecessor during deletion.
 
-Another important result in the formalization of AVL trees is the recursive nature of the Fibonacci sequence itself. This recursive property plays a critical role in the inductive proofs used to establish the correctness of the AVL tree algorithms. The following theorem captures the recursive definition of the Fibonacci sequence:
+\subsection*{Definition: delete\_avl}
 
+The main operation for deleting a node from an AVL tree is defined by the \texttt{delete\_avl} function. This function removes the key \( x \) from the tree while preserving the AVL property by balancing the tree when necessary. The formal definition is:
+
+\[
+\text{delete\_avl}(x, \text{Tip}) = \text{Tip}
+\]
+\[
+\text{delete\_avl}(x, \text{Bin} \, bf \, k \, kv \, l \, r) =
+\begin{cases}
+    x = k \Rightarrow \text{case} \, (l, r) \, \text{of} \\
+    \quad (\text{Tip}, \text{Tip}) \Rightarrow \text{Tip}, \\
+    \quad (\text{Tip}, \_) \Rightarrow r, \\
+    \quad (\_, \text{Tip}) \Rightarrow l, \\
+    \quad (\_, \_) \Rightarrow \text{let} \, (pred\_k, pred\_v, l') = \text{remove\_max}(l) \, \text{in} \, \text{balanceR}(pred\_k, pred\_v, l', r)
+\end{cases}
+\]
+\[
+x < k \Rightarrow \text{balanceR}(k, kv, \text{delete\_avl}(x, l), r)
+\]
+\[
+x > k \Rightarrow \text{balanceL}(k, kv, l, \text{delete\_avl}(x, r))
+\]
+
+The \texttt{delete\_avl} function works in the following way:
 \begin{itemize}
-  \item \textbf{Theorem: Fibonacci\_thm} \\
-  This theorem states that the Fibonacci sequence satisfies the following recursive relationship:
-  \begin{verbatim}
-  ∀k. Fibonacci (k + 2) = Fibonacci (k + 1) + Fibonacci k
-  \end{verbatim}
-  
-  The proof of this theorem follows directly from the definition of the Fibonacci sequence. This recursive relationship is central to many of the inductive proofs involving AVL trees, as it provides a framework for reasoning about the growth of the tree as nodes are added or removed. By leveraging the recursive nature of the Fibonacci sequence, we can prove that AVL trees maintain their logarithmic height across all operations.
-
+    \item If the tree is empty (i.e., \texttt{Tip}), there is nothing to delete, and the function simply returns \texttt{Tip}.
+    \item If the key \( x \) matches the root key \( k \), then the function must delete this node. There are four cases to handle:
+    \begin{itemize}
+        \item If both the left and right subtrees are empty (\texttt{Tip}), the result is \texttt{Tip}, indicating that the tree is now empty.
+        \item If only the left subtree is empty, the right subtree replaces the current node.
+        \item If only the right subtree is empty, the left subtree replaces the current node.
+        \item If both subtrees are non-empty, the function finds the maximum node from the left subtree using \texttt{remove\_max}, and replaces the current node with this maximum node. Afterward, the tree is rebalanced using the \texttt{balanceR} function to ensure that the AVL property is maintained.
+    \end{itemize}
+    \item If the key \( x \) is less than the root key \( k \), the function recursively deletes \( x \) from the left subtree, and then rebalances the resulting tree using \texttt{balanceR}.
+    \item If the key \( x \) is greater than the root key \( k \), the function recursively deletes \( x \) from the right subtree, and then rebalances the resulting tree using \texttt{balanceL}.
 \end{itemize}
 
-\subsection{The Importance of Fibonacci Sequence in AVL Trees}
+This function ensures that the AVL tree remains balanced after a deletion by applying the appropriate rebalancing operation, either \texttt{balanceL} or \texttt{balanceR}, depending on which subtree was modified.
 
-The recursive relationship between the number of nodes in an AVL tree and the Fibonacci sequence is fundamental to understanding the efficiency of AVL trees. Since the Fibonacci sequence grows exponentially, while the height of an AVL tree grows logarithmically with respect to the number of nodes, this ensures that AVL trees are highly efficient in terms of both time and space complexity.
+\subsection*{Balancing After Deletion}
 
-The Fibonacci sequence helps to establish that minimal AVL trees are optimally balanced, with the smallest possible number of nodes for a given height. This balance is what allows AVL trees to maintain their logarithmic height, ensuring that operations such as search, insertion, and deletion can be performed in \( O(\log n) \) time. By formally proving the relationship between the Fibonacci sequence and AVL trees in HOL4, we can guarantee the correctness and efficiency of AVL tree algorithms.
+After a node is deleted from an AVL tree, the tree may become unbalanced. To restore balance, AVL trees use two main types of balancing operations:
+\begin{itemize}
+    \item \textbf{Left Balancing (\texttt{balanceL})}: This is used when the right subtree becomes taller than the left subtree. Left balancing involves single or double rotations to redistribute the height and restore the AVL property.
+    \item \textbf{Right Balancing (\texttt{balanceR})}: This is used when the left subtree becomes taller than the right subtree. Right balancing, similar to left balancing, involves rotations that adjust the tree's height to ensure balance.
+\end{itemize}
 
-\end{description}
+These balancing operations guarantee that the AVL tree remains balanced after any deletion. Without rebalancing, the tree could degrade into an unbalanced binary search tree, losing the logarithmic height that makes AVL trees efficient for operations such as search, insertion, and deletion.
+
+\subsection*{Handling the Deletion of Nodes with Two Children}
+
+The most complex case occurs when the node to be deleted has two children. In this situation, AVL trees follow a common strategy in binary search trees: replacing the node with either its predecessor (the maximum node from the left subtree) or its successor (the minimum node from the right subtree). This ensures that the binary search tree property is maintained.
+
+In the \texttt{delete\_avl} function, we use the predecessor (maximum node from the left subtree). Once the predecessor is removed from the left subtree using \texttt{remove\_max}, the tree is rebalanced using \texttt{balanceR} to restore the AVL property.
+
+Deletion in AVL trees involves several steps: finding the node to be deleted, removing it while preserving the structure of the tree, and rebalancing the tree as necessary to ensure that the AVL property is maintained. Whether the node is a leaf, has one child, or has two children, the function carefully handles each case and uses the \texttt{balanceL} and \texttt{balanceR} operations to maintain the balance of the tree.
+
+The result is an AVL tree that remains efficient for all operations, with logarithmic height in the number of nodes, ensuring optimal performance even after deletions.
+
+
+\begin{tikzpicture}[node distance=2cm]
+
+\node (start) [startstop] {Start Deletion};
+\node (checktip) [decision, below of=start] {Is the tree empty (Tip)?};
+\node (checkkey) [decision, below of=checktip, yshift=-1cm] {x = k?};
+\node (leafcase) [process, right of=checkkey, xshift=4cm] {Delete and return Tip};
+\node (onechild) [decision, below of=checkkey, yshift=-1cm] {Has one child?};
+\node (replaceleft) [process, left of=onechild, xshift=-4cm] {Return left child};
+\node (replaceright) [process, right of=onechild, xshift=4cm] {Return right child};
+\node (twosubtrees) [process, below of=onechild, yshift=-1cm] {Replace with predecessor (max from left subtree)};
+\node (removeandbalance) [process, below of=twosubtrees, yshift=-1cm] {Balance using balanceR};
+\node (recursionleft) [process, left of=checkkey, xshift=-4cm] {Delete from left subtree, balance using balanceR};
+\node (recursionright) [process, right of=checkkey, xshift=4cm] {Delete from right subtree, balance using balanceL};
+\node (end) [startstop, below of=removeandbalance, yshift=-1cm] {End};
+
+\draw [arrow] (start) -- (checktip);
+\draw [arrow] (checktip) -- node[anchor=east] {Yes} (leafcase);
+\draw [arrow] (checktip) -- node[anchor=west] {No} (checkkey);
+\draw [arrow] (checkkey) -- node[anchor=south] {Yes} (onechild);
+\draw [arrow] (onechild) -- node[anchor=south] {Yes, left child} (replaceleft);
+\draw [arrow] (onechild) -- node[anchor=south] {Yes, right child} (replaceright);
+\draw [arrow] (onechild) -- node[anchor=west] {No, two subtrees} (twosubtrees);
+\draw [arrow] (twosubtrees) -- (removeandbalance);
+\draw [arrow] (checkkey) -- node[anchor=south] {No, x < k} (recursionleft);
+\draw [arrow] (checkkey) -- node[anchor=south] {No, x > k} (recursionright);
+\draw [arrow] (removeandbalance) -- (end);
+\draw [arrow] (leafcase) -- (end);
+\draw [arrow] (replaceleft) -- (end);
+\draw [arrow] (replaceright) -- (end);
+\draw [arrow] (recursionleft) -- (end);
+\draw [arrow] (recursionright) -- (end);
+
+\end{tikzpicture}
+
+\section*{Lookup in AVL Trees}
+
+The lookup operation in an AVL tree is used to find the value associated with a given key. AVL trees, being a form of binary search tree, support efficient lookup operations with a time complexity of \( O(\log n) \), where \( n \) is the number of nodes in the tree. The lookup function follows the structure of a binary search, comparing the target key with the keys in the tree and recursively traversing the left or right subtree until the key is found or a leaf node is reached.
+
+The formal definition of the \texttt{lookup\_avl} function is as follows:
+
+\subsection*{Definition: lookup\_avl}
+
+\[
+\text{lookup\_avl}(x, \text{Tip}) = \text{NONE}
+\]
+\[
+\text{lookup\_avl}(x, \text{Bin} \, bf \, k \, kv \, l \, r) =
+\begin{cases}
+    x = k \Rightarrow \text{SOME} \, kv \\
+    x < k \Rightarrow \text{lookup\_avl}(x, l) \\
+    x > k \Rightarrow \text{lookup\_avl}(x, r)
+\end{cases}
+\]
+
+The lookup operation works as follows:
+\begin{itemize}
+    \item If the tree is empty (represented by \texttt{Tip}), the function returns \texttt{NONE}, indicating that the key does not exist in the tree.
+    \item If the key \( x \) matches the root key \( k \), the function returns \texttt{SOME kv}, where \( kv \) is the value associated with the key \( k \).
+    \item If the key \( x \) is less than \( k \), the function recursively searches the left subtree.
+    \item If the key \( x \) is greater than \( k \), the function recursively searches the right subtree.
+\end{itemize}
+
+\subsection*{Binary Search Property}
+
+The \texttt{lookup\_avl} function takes advantage of the binary search property of AVL trees. Since the tree is ordered, we can compare the target key \( x \) with the root key \( k \) to determine whether to search the left or right subtree. This reduces the number of nodes that need to be examined, ensuring that the lookup operation has logarithmic time complexity.
+
+If the target key \( x \) is found, the function returns the value associated with the key. Otherwise, if the search reaches an empty subtree (\texttt{Tip}), the function returns \texttt{NONE}, indicating that the key is not present in the tree.
+
+\subsection*{Efficiency of Lookup in AVL Trees}
+
+One of the key advantages of AVL trees is that they maintain balance, which guarantees that the tree's height remains logarithmic in relation to the number of nodes. This balance ensures that lookup operations are efficient, even in the worst case. Without balancing, a binary search tree could degenerate into a linked list, resulting in linear time complexity for lookups. However, AVL trees avoid this worst-case scenario by enforcing the height balance property.
+
+The \texttt{lookup\_avl} function operates in \( O(\log n) \) time because the height of the tree is always proportional to \( \log n \), where \( n \) is the number of nodes in the tree. This makes AVL trees an excellent choice for applications that require frequent lookups and need to maintain optimal performance.
+
+The lookup operation in AVL trees is a simple, recursive process that leverages the tree's binary search structure to efficiently locate a key. If the key is present, the value associated with it is returned. If the key is not found, the function returns \texttt{NONE}. The balance property of AVL trees ensures that lookup operations are performed in logarithmic time, making AVL trees highly efficient for search operations in both average and worst-case scenarios.
+
+
 
 \section{Design and Integration in HOL4}
 
@@ -632,6 +1160,74 @@ The proof strategies employed in HOL4 leverage its modularity and tactics such a
 
 \subsubsection{Summary of Differences}
 In summary, HOL4’s \texttt{balanced\_bst} formalization maintains the traditional AVL tree structure by dynamically calculating heights and focusing on balance factors. This contrasts with Isabelle’s more explicit approach, where the height is stored within each node, allowing for faster height lookups but requiring more complex maintenance of tree properties. HOL4’s design favors modularity, flexibility, and dynamic height computation, whereas Isabelle’s approach favors efficiency in height lookups and monolithic integration.
+
+\section*{Future Work}
+
+While significant progress has been made in formalizing AVL trees, there are still several open problems and extensions that deserve further exploration. In this section, we outline some of the key areas that can be addressed in future work, with a particular focus on the relationship between Fibonacci sequences and AVL tree properties, as well as the formal proof of tree depth and node count relations.
+
+\subsection*{Fibonacci Sequence to logarithmic nature}
+
+The Fibonacci sequence \( 0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \) is defined by the following recurrence relation:
+
+\[
+F(0) = 0, \quad F(1) = 1, \quad F(i) = F(i - 1) + F(i - 2) \quad \text{for } i \geq 2
+\]
+
+This sequence has been studied for centuries, and it exhibits fascinating mathematical properties. The elements of the Fibonacci sequence can be expressed as linear combinations with fixed coefficients of the powers of the roots of the polynomial \( x^2 - x - 1 \), whose roots are given by:
+
+\[
+\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618 \quad \text{and} \quad \hat{\phi} = \frac{1 - \sqrt{5}}{2} \approx -0.618
+\]
+
+Here, \( \phi \) is known as the golden ratio. The Fibonacci sequence is then approximated as follows:
+
+\[
+F(i) = \frac{1}{\sqrt{5}} \left( \phi^i - \hat{\phi}^i \right) \quad \text{for } i \geq 0
+\]
+
+Since the absolute value of \( \hat{\phi} \) is smaller than 1, the term \( \hat{\phi}^i \) quickly becomes negligible as \( i \) increases, allowing for a good approximation of \( F(i) \) using just the first term:
+
+\[
+F(i) \approx \frac{1}{\sqrt{5}} \phi^i
+\]
+
+This approximation is especially relevant for studying AVL trees, as the number of nodes \( n \) in an AVL tree of depth \( k \) is bounded by a relationship involving Fibonacci numbers. Specifically, the number of nodes satisfies:
+
+\[
+n \geq N(k) = F(k + 3) - 1 \approx \frac{1}{\sqrt{5}} \phi^{k+3} - 1
+\]
+
+This relationship provides an exponential bound on the number of nodes in terms of the tree’s depth, which is crucial for understanding the efficiency and scalability of AVL trees.
+
+\subsection*{Current Achievements and Future Directions}
+
+In this work, we have successfully proved the relationship between the Fibonacci sequence and the node count of AVL trees. Specifically, we demonstrated that the minimum number of nodes \( N(k) \) in an AVL tree of depth \( k \) is related to Fibonacci numbers. This result is important as it shows that the structure of AVL trees is nearly optimal in terms of space efficiency, with the height growing logarithmically with the number of nodes.
+
+However, proving deeper relations between Fibonacci numbers and AVL trees remains an open problem. For example, while we have established the relation between node count and Fibonacci numbers, we have yet to fully prove the relationship between Fibonacci numbers and tree depth. According to **Theorem 5.1**, the number of nodes \( n \) in an AVL tree of depth \( k \) is at least exponential in \( k \), meaning \( n \geq a^k \) for some constant \( a > 1 \). This exponential bound still needs to be formalized rigorously within the context of the Fibonacci sequence.
+
+The bounds on the depth \( k \) of AVL trees are also connected to the logarithmic nature of Fibonacci numbers. Specifically, we know that:
+
+\[
+\log_\phi \left( \sqrt{5}(n + 1) \right) \geq k + 3
+\]
+
+This provides a bound on the depth of AVL trees, even in the worst-case scenario, where the depth is at most 44\% larger than in the best-case scenario. Additionally, the average depth can be shown to be approximately \( 1.04 \log_2 n \), indicating that AVL trees offer highly efficient access and search operations.
+
+Future work will focus on rigorously proving these bounds, using Fibonacci-based recurrence relations to formalize the relationships between node count and depth in AVL trees. Specifically, proving the relationship expressed in Theorem 5.1 in its full generality remains an open challenge, as it requires careful analysis of the recursive nature of AVL trees and their relationship to Fibonacci numbers.
+
+
+\subsection*{Proving Properties of Deletion and Lookup for Trees}
+
+While this work has formalized many aspects of AVL trees, including insertion, balancing, and the relationship between node count and Fibonacci numbers, proving properties related to deletion and lookup operations remains an open problem for future research.
+
+\textbf{Deletion}: The deletion operation in AVL trees is more complex than insertion, as it involves removing a node while ensuring that the tree remains balanced. Although we have defined the \texttt{delete\_avl} function and explored its behavior in various cases (e.g., nodes with zero, one, or two children), a formal proof of its correctness, specifically regarding maintaining the AVL property, has yet to be completed. Proving that the tree remains balanced after every deletion operation, and that the height of the tree either remains the same or decreases by one, is critical for ensuring the efficiency of the deletion process.
+
+\textbf{Lookup}: Similarly, the lookup operation, defined by the \texttt{lookup\_avl} function, has not been formally verified. The lookup function searches for a key in the tree by recursively traversing the left or right subtree based on the comparison with the root key. While the function’s behavior appears correct, a formal proof that the operation maintains the binary search tree property and that the time complexity is \( O(\log n) \) in the worst case is still required.
+
+Both deletion and lookup operations are fundamental to the practical use of AVL trees, and formal verification of these operations will ensure that AVL trees remain efficient for all operations. Future work will focus on developing formal proofs for these operations, demonstrating that they preserve the key properties of AVL trees, such as balance and logarithmic height.
+
+By completing the proofs for deletion and lookup, we can provide a fully verified framework for AVL trees, ensuring that all tree operations are both correct and efficient.
+
 
 
 \section{Conclusion}
