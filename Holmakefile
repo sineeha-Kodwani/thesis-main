@@ -29,9 +29,6 @@ endif
 $(MUNGE): $(patsubst %,%.uo,$(MUNGE_DEPS))
 	$(HOLDIR)/bin/mkmunge.exe $(MUNGE_DEPS)
 
-thesis.tex: $(MUNGE) main.tex
-	$(MUNGE) < main.tex > thesis.tex
-
 3-final.tex: $(MUNGE) 3-relatedWork.tex
 	$(MUNGE) < 3-relatedWork.tex > 3-final.tex
 
