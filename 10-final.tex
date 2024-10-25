@@ -1,0 +1,79 @@
+\chapter{Design Integration in HOL4}\label{chap:LaTeXAdvice}
+
+The formal verification of data structures in HOL4 requires not only defining the structure and properties of the data structure but also ensuring that it integrates seamlessly with the theorem prover's existing framework. In this section, we focus on the design considerations, adaptations, and extensions made to formalize AVL trees within HOL4, a higher-order logic theorem prover. These adaptations were necessary to ensure that the formalization of AVL trees fits into HOL4’s framework, allowing future developers to build upon this work easily and enabling the reuse of existing libraries within HOL4.
+
+\subsection{Adapting the AVL Formalization to HOL4’s Framework}
+
+The HOL4 theorem prover has a robust framework for formalizing mathematical structures and reasoning about their properties. However, any new formalization must be carefully integrated into this existing ecosystem. In the case of AVL trees, several key design decisions were made to ensure that the formalization fits smoothly into HOL4’s libraries and adheres to its conventions. Below, we discuss the key design adaptations and the rationale behind them.
+
+
+\subsection{Choosing the Appropriate Datatype Representation}
+
+HOL4 provides a rich environment for defining custom datatypes, which is essential for formalizing data structures like AVL trees. The choice of datatype representation is crucial because it affects how the formalization interacts with existing tools and libraries within HOL4. AVL trees, as a recursive data structure, are defined in HOL4 using the following datatype:
+
+\[
+\texttt{avl\_tree} = \texttt{Tip} \, | \, \texttt{Bin} \, \texttt{int} \, \texttt{num} \, 'a \, \texttt{avl\_tree} \, \texttt{avl\_tree}
+\]
+
+This representation captures the essential structure of AVL trees:
+\begin{itemize}
+    \item \texttt{Tip}: Represents an empty tree.
+    \item \texttt{Bin}: Represents a node in the tree, containing:
+        \begin{itemize}
+            \item \textbf{int}: The balance factor, which stores the difference in height between the left and right subtrees.
+            \item \textbf{num}: The key associated with the node.
+            \item \textbf{'a avl\_tree}: The left subtree.
+            \item \textbf{'a avl\_tree}: The right subtree.
+        \end{itemize}
+\end{itemize}
+
+This datatype was chosen because it allows easy integration with HOL4’s built-in tools for recursive data structures and pattern matching. By using a recursive datatype, we ensure that the formalization is compatible with HOL4's proof automation tools, such as  \( Induct_on \), which are commonly used for reasoning about recursive functions and data structures.
+
+\subsection{Seamless Integration with HOL4’s Existing Libraries}
+
+A key design consideration was ensuring that the AVL tree formalization could reuse existing libraries within HOL4, such as the arithmetic, list, and set theory libraries. Reusing these libraries reduces redundancy, simplifies the formalization process, and enables more robust proof automation.
+
+For example, the existing list and set libraries in HOL4 were leveraged for defining and proving properties about the keys in an AVL tree. The `keys` function, which retrieves the set of keys in an AVL tree, is integrated with HOL4’s existing set theory library:
+
+\begin{alltt}
+	[keys_def]
+	\HOLConst{keys} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLSymConst{\HOLTokenEmpty{}}
+\HOLConst{keys} (\HOLConst{Bin} \ensuremath{\HOLFreeVar{v}\sb{\mathrm{0}}} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{} \HOLTokenLeftbrace{}\HOLFreeVar{k}\HOLTokenRightbrace{} \HOLSymConst{\HOLTokenUnion{}} \HOLConst{keys} \HOLFreeVar{l} \HOLSymConst{\HOLTokenUnion{}} \HOLConst{keys} \HOLFreeVar{r}
+\end{alltt}
+
+
+This integration allows us to make use of HOL4’s extensive set-theoretic reasoning capabilities, enabling efficient proofs about the contents of the tree, such as proving that a key exists in the tree after an insertion \(keys_insert\) or that the set of keys is updated correctly after an operation.
+
+By designing the formalization to interface with HOL4’s existing libraries, we ensure that future work can build upon this foundation without needing to reimplement basic functionality. This modularity and reusability are key strengths of the HOL4 framework, and they were critical design considerations during the development of the AVL tree formalization.
+
+\subsection{Handling Recursive Functions and Theorem}
+
+Recursive functions are essential for formalizing AVL tree operations, such as height calculation, insertion, and balancing. In HOL4, recursive functions must be carefully defined to ensure that they terminate and are well-formed. The formalization of AVL trees makes extensive use of recursion to define operations like \(insert_avl\), \(balanceL\), and \(balanceR\).
+
+For example, the function \(insert_avl\) is defined recursively to ensure that it can insert a new element into an AVL tree while preserving the AVL property. This function must handle both the base case (inserting into an empty tree) and the recursive case (inserting into a non-empty tree). To integrate this recursive function with HOL4’s framework, termination must be guaranteed:
+
+\begin{alltt}
+	[insert_avl_def]
+	\HOLTokenTurnstile{} (\HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \HOLBoundVar{v}. \HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLConst{Tip} \HOLSymConst{=} \HOLConst{singleton_avl} \HOLBoundVar{x} \HOLBoundVar{v}) \HOLSymConst{\HOLTokenConj{}}
+   \HOLSymConst{\HOLTokenForall{}}\HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}.
+     \HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} (\HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}) \HOLSymConst{=}
+     \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{=} \HOLBoundVar{k} \HOLKeyword{then} \HOLConst{Bin} \HOLBoundVar{bf} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} \HOLBoundVar{r}
+     \HOLKeyword{else} \HOLKeyword{if} \HOLBoundVar{x} \HOLSymConst{\HOLTokenLt{}} \HOLBoundVar{k} \HOLKeyword{then} \HOLConst{balanceL} \HOLBoundVar{k} \HOLBoundVar{kv} (\HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{l}) \HOLBoundVar{r}
+     \HOLKeyword{else} \HOLConst{balanceR} \HOLBoundVar{k} \HOLBoundVar{kv} \HOLBoundVar{l} (\HOLConst{insert_avl} \HOLBoundVar{x} \HOLBoundVar{v} \HOLBoundVar{r})
+\end{alltt}
+
+In this recursive definition, the height of the tree decreases with each recursive call, which ensures that the recursion terminates. HOL4’s support for reasoning about recursive functions allows us to prove that \(insert avl\) correctly maintains the AVL property and terminates for all inputs. This recursive approach is also extended to other operations, such as \(balanceL\) and \(balanceR\), which are used to restore the AVL property after an insertion.
+
+\subsection{Designing Efficient Proof Strategies}
+
+To verify the correctness of the AVL tree formalization, a series of theorems must be proven about the properties of AVL trees, such as their height, balance, and the set of keys. HOL4 provides various proof strategies, such as induction, case analysis, and automated tactics, to facilitate the proof process.
+
+One of the key challenges in designing the formalization was choosing efficient proof strategies that could handle the complexity of recursive functions and the AVL property. For example, proving that the height of the tree is logarithmic with respect to the number of nodes requires an inductive proof that leverages the recursive structure of the AVL tree and its relationship with the Fibonacci sequence.
+
+Another challenge was proving that the \(balanceL\) and \(balanceR\) functions correctly restore the AVL property after an insertion. These proofs require reasoning about the height of the subtrees and ensuring that the balance factor remains within the allowed range. The use of HOL4’s automated proof tactics, such as \(REWRITE TAC\) and \(INDUCT TAC\), allowed these proofs to be constructed efficiently.
+
+\subsection{Exporting the Formalization}
+
+Once the formalization was completed, it was exported as part of HOL4’s growing library of verified data structures. The export process ensures that the formalization can be easily reused and extended by other developers working within the HOL4 framework. By integrating the AVL tree formalization into HOL4’s existing libraries, we ensure that future work can build upon this foundation, whether for educational purposes, research, or practical applications involving verified data structures.
+
+In summary, the formalization of AVL trees in HOL4 required several key design adaptations to fit seamlessly into HOL4’s existing framework. These adaptations included choosing a suitable recursive datatype representation, integrating with existing HOL4 libraries, designing recursive functions with termination in mind, and employing efficient proof strategies to verify the correctness of AVL tree operations. By making these design choices, we ensure that the AVL tree formalization is both robust and reusable, providing a solid foundation for future work in HOL4.

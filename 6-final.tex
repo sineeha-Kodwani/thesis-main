@@ -1,0 +1,241 @@
+\chapter{Insertion and Balancing Operations}\label{chap:LaTeXAdvice}
+
+One of the key properties of AVL trees is their ability to maintain balance after insertions. After adding a new element to the tree, the balance factor (the difference between the heights of the left and right subtrees) may exceed the allowed limit of 1. When this happens, the tree must be rebalanced to restore the AVL property. The balancing operations ensure that the tree maintains its logarithmic height, which is essential for efficient searching, insertion, and deletion operations.
+
+In this section, we define two core balancing operations, \texttt{balanceL} and \texttt{balanceR}, which handle cases where the left or right subtree becomes too tall, respectively. We also describe the \texttt{insert\_avl} function, which is responsible for inserting elements into the tree while ensuring that the AVL property is preserved through rebalancing.
+
+
+
+\begin{defn}{balanceL}
+
+The function \texttt{balanceL} is responsible for rebalancing the tree when the left subtree is taller than the right subtree by more than one level. This situation can occur after an insertion into the left subtree. If the left subtree becomes imbalanced, \texttt{balanceL} performs a rotation to restore balance. The formal definition in HOL4 is:
+
+\begin{alltt}
+	[balanceL_def]
+	\HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r} \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLKeyword{then}
+    \HOLKeyword{case} \HOLFreeVar{l} \HOLKeyword{of}
+      \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
+    \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} \HOLBoundVar{lr} \HOLTokenImp{}
+      \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{ll} \HOLSymConst{\HOLTokenLt{}} \HOLConst{height} \HOLBoundVar{lr} \HOLKeyword{then}
+        \HOLKeyword{case} \HOLBoundVar{lr} \HOLKeyword{of}
+          \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLBoundVar{lr} \HOLFreeVar{r})
+        \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{6}}} \HOLBoundVar{lrn} \HOLBoundVar{lrv} \HOLBoundVar{lrl} \HOLBoundVar{lrr} \HOLTokenImp{}
+          \HOLConst{tree} \HOLBoundVar{lrn} \HOLBoundVar{lrv} (\HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} \HOLBoundVar{lrl}) (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLBoundVar{lrr} \HOLFreeVar{r})
+      \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{lk} \HOLBoundVar{lv} \HOLBoundVar{ll} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLBoundVar{lr} \HOLFreeVar{r})
+  \HOLKeyword{else} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
+\end{alltt}
+
+
+If the left subtree becomes imbalanced, this function performs the necessary rotation to ensure the tree remains balanced, restoring the AVL property.
+\end{defn}
+
+\textbf{Left-Left Imbalance (Single Right Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, sibling distance=2cm, level distance=1.5cm]
+  % Initial Tree
+  \node (k) {k}
+    child {
+      node (lk) {lk}
+      child {node {ll}}
+      child {node {lr}}
+    }
+    child {node {r}};
+
+  % Arrow for Rotation
+  \draw[->, thick] (2,-1) -- (4,-1);  % Simple right arrow for rotation
+
+  % After Rotation
+  \node[right=5cm of k] (lk2) {lk}
+    child {
+      node {ll}
+    }
+    child {
+      node (k2) {k}
+      child {node {lr}}
+      child {node {r2}}
+    };
+\end{tikzpicture}
+\end{center}
+
+\textbf{Left-Right Imbalance (Left-Right Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, sibling distance=2 cm, level distance=1.5cm]
+  % Initial Tree
+  \node (k3) {k}
+    child {
+      node (lk3) {lk}
+      child {node {ll3}}
+      child {
+        node (lr) {lr}
+        child {node {lrl}}
+        child {node {lrr}}
+      }
+    }
+    child {node {r3}};
+
+  % Arrow for Rotation
+  \draw[->, thick] (2,-2) -- (4,-2);  % Simple left-right arrow for rotation
+
+  % After Rotation
+  \node[right=8cm of k3] (lr2) {lr}
+    child[sibling distance=3cm] {
+      node (lk4) {lk}
+      child[sibling distance=2.5cm] {node {ll4}}
+      child[sibling distance=2.5cm] {node {lrl2}}
+    }
+    child[sibling distance=3cm] {
+      node (k4) {k}
+      child[sibling distance=1cm] {node {lrr2}}
+      child[sibling distance=1cm] {node {r4}}
+    };
+\end{tikzpicture}
+\end{center}
+  
+  This operation works by comparing the heights of the left and right subtrees of the current node. If the left subtree is too tall (i.e., the height difference is greater than one), a rotation is performed. The precise rotation depends on whether the imbalance is caused by the left or right child of the left subtree. The function handles both single and double rotations to restore balance. The balancing of the left subtree is critical for maintaining the AVL property and ensuring that the tree remains balanced after an insertion on the left side.
+
+\begin{defn}{balanceR}
+
+The \texttt{balanceR} function rebalances the tree when the right subtree becomes too tall compared to the left subtree. This can occur after an insertion into the right subtree. If the right subtree becomes imbalanced, \texttt{balanceR} restores balance by performing a rotation. The formal definition in HOL4 is:
+\begin{alltt}
+	[balanceR_def]
+	\HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r} \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2} \HOLKeyword{then}
+    \HOLKeyword{case} \HOLFreeVar{r} \HOLKeyword{of}
+      \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
+    \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{1}}} \HOLBoundVar{rk} \HOLBoundVar{rv} \HOLBoundVar{rl} \HOLBoundVar{rr} \HOLTokenImp{}
+      \HOLKeyword{if} \HOLConst{height} \HOLBoundVar{rl} \HOLSymConst{\HOLTokenGt{}} \HOLConst{height} \HOLBoundVar{rr} \HOLKeyword{then}
+        \HOLKeyword{case} \HOLBoundVar{rl} \HOLKeyword{of}
+          \HOLConst{Tip} \HOLTokenImp{} \HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLBoundVar{rl}) \HOLBoundVar{rr}
+        \HOLTokenBar{} \HOLConst{Bin} \ensuremath{\HOLBoundVar{v}\sb{\mathrm{6}}} \HOLBoundVar{rln} \HOLBoundVar{rlv} \HOLBoundVar{rll} \HOLBoundVar{rlr} \HOLTokenImp{}
+          \HOLConst{tree} \HOLBoundVar{rln} \HOLBoundVar{rlv} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLBoundVar{rll}) (\HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} \HOLBoundVar{rlr} \HOLBoundVar{rr})
+      \HOLKeyword{else} \HOLConst{tree} \HOLBoundVar{rk} \HOLBoundVar{rv} (\HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLBoundVar{rl}) \HOLBoundVar{rr}
+  \HOLKeyword{else} \HOLConst{tree} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}
+\end{alltt}
+
+If the right subtree becomes imbalanced, this function performs the necessary rotation to restore the AVL property and ensure the tree remains balanced.
+\end{defn}
+
+\textbf{Right-Right Imbalance (Single Left Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, level distance=2cm]
+  % Initial Tree
+  \node (k) {k}
+    child[sibling distance=2cm] {node {l}}
+    child {
+      node (rk) {rk}
+      child[sibling distance=2cm] {node {rl}}
+      child[sibling distance=2cm] {node {rr}}
+    };
+
+  % Arrow for Rotation
+  \draw[->, thick] (3,-1) -- (5,-1);  % Simple left arrow for rotation
+
+  % After Rotation
+  \node[right=6cm of k] (rk2) {rk}
+    child[sibling distance=2cm] {
+      node (k2) {k}
+      child[sibling distance=2cm] {node {l}}
+      child[sibling distance=2cm] {node {rl}}
+    }
+    child[sibling distance=2cm] {node {rr2}};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Right-Left Imbalance (Right-Left Rotation)}
+\begin{center}
+\begin{tikzpicture}[every node/.style={circle, draw, minimum size=1cm}, sibling distance=3cm, level distance=1.5cm]
+  % Initial Tree
+  \node (k3) {k}
+    child[sibling distance=3cm] {node {l3}}
+    child {
+      node (rk3) {rk}
+      child[sibling distance=2.5cm] {
+        node (rl) {rl}
+        child[sibling distance=2.5cm] {node {rll}}
+        child[sibling distance=2.5cm] {node {rlr}}
+      }
+      child[sibling distance=2.5cm] {node {rr3}}
+    };
+
+  % Arrow for Rotation
+  \draw[->, thick] (3,-2) -- (6,-2);  % Simple right-left arrow for rotation
+
+  % After Rotation
+  \node[right=8cm of k3] (rl2) {rl}
+    child[sibling distance=2cm] {
+      node (k4) {k}
+      child[sibling distance=2.5cm] {node {l4}}
+      child[sibling distance=1cm] {node {rll2}}
+    }
+    child[sibling distance=2cm] {
+      node (rk4) {rk}
+      child[sibling distance=0.5cm] {node {rlr2}}
+      child[sibling distance=2.5cm] {node {rr4}}
+    };
+\end{tikzpicture}
+\end{center}
+  The logic for \texttt{balanceR} is analogous to \texttt{balanceL}, but it handles the case where the right subtree is imbalanced. Similar to \texttt{balanceL}, this function performs either a single or double rotation depending on the structure of the right subtree. Rebalancing the right subtree is essential for maintaining the AVL property after an insertion into the right child of the tree.
+
+\begin{defn}{insert\_avl}
+
+The function \texttt{insert\_avl} is responsible for inserting a new key-value pair into an AVL tree while preserving the AVL property. After inserting the new element, the tree may become unbalanced, so rebalancing operations such as \texttt{balanceL} or \texttt{balanceR} are invoked as necessary. The formal definition in HOL4 is:
+
+\begin{alltt}
+	[insert_avl_def]
+	\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLConst{singleton_avl} \HOLFreeVar{x} \HOLFreeVar{v}
+\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{kv} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLFreeVar{x} \HOLSymConst{=} \HOLFreeVar{k} \HOLKeyword{then} \HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{kv} \HOLFreeVar{l} \HOLFreeVar{r}
+  \HOLKeyword{else} \HOLKeyword{if} \HOLFreeVar{x} \HOLSymConst{\HOLTokenLt{}} \HOLFreeVar{k} \HOLKeyword{then} \HOLConst{balanceL} \HOLFreeVar{k} \HOLFreeVar{kv} (\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} \HOLFreeVar{l}) \HOLFreeVar{r}
+  \HOLKeyword{else} \HOLConst{balanceR} \HOLFreeVar{k} \HOLFreeVar{kv} \HOLFreeVar{l} (\HOLConst{insert_avl} \HOLFreeVar{x} \HOLFreeVar{v} \HOLFreeVar{r})
+\end{alltt}
+
+
+This function ensures that, after inserting a new key-value pair, the AVL property is maintained by invoking the appropriate rebalancing functions (\texttt{balanceL} or \texttt{balanceR}) when necessary.
+\end{defn}
+
+In the \texttt{insert\_avl} function, the key-value pair \( (x, v) \) is inserted into the correct position in the tree according to the binary search tree property. If \( x \) is smaller than the current key \( k \), the insertion proceeds in the left subtree. If \( x \) is larger than \( k \), the insertion proceeds in the right subtree. After the insertion, the balance of the tree is checked. If the tree becomes imbalanced, either \texttt{balanceL} or \texttt{balanceR} is applied to restore balance.
+
+The key feature of the \texttt{insert\_avl} function is that it ensures the AVL property is maintained at all levels of the tree. By performing rebalancing operations as needed, the function guarantees that the height of the tree remains logarithmic with respect to the number of nodes. This is crucial for ensuring that search, insertion, and deletion operations can be performed efficiently in \( O(\log n) \) time.
+
+The \texttt{balanceL} and \texttt{balanceR} operations are vital for maintaining the AVL property after modifications to the tree. Without these operations, the tree could become unbalanced, leading to poor performance in subsequent operations. The \texttt{insert\_avl} function ensures that new elements can be added to the tree while keeping it balanced. The careful handling of rotations in both the left and right subtrees allows AVL trees to maintain their optimal height and performance.
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3.5cm, minimum height=1cm, text centered, aspect=2, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+
+\begin{center}
+	\begin{tikzpicture}[node distance=2.5cm]
+		
+		% Nodes
+		\node (start) [startstop] {Start};
+		\node (checktip) [decision, below of=start] {Is the node Tip?};
+		\node (singleton) [process, right of=checktip, xshift=3.5cm] {Insert as singleton};
+		\node (checkequal) [decision, below of=checktip] {x = k?};
+		\node (returnsame) [process, right of=checkequal, xshift=3.5cm] {Return same node};
+		\node (checkleft) [decision, below of=checkequal] {x ! k?}; % Fixed less-than symbol
+		\node (insertleft) [process, left of=checkleft, xshift=-3.5cm] {Insert into left subtree};
+		\node (insertright) [process, right of=checkleft, xshift=3.5cm] {Insert into right subtree};
+		\node (balanceL) [process, below of=insertleft] {Balance using balanceL};
+		\node (balanceR) [process, below of=insertright] {Balance using balanceR};
+		\node (end) [startstop, below of=checkleft, yshift=-3cm] {End};
+		
+		% Arrows
+		\draw [arrow] (start) -- (checktip);
+		\draw [arrow] (checktip) -- node[anchor=south] {Yes} (singleton);
+		\draw [arrow] (checktip) -- node[anchor=west] {No} (checkequal);
+		\draw [arrow] (checkequal) -- node[anchor=south] {Yes} (returnsame);
+		\draw [arrow] (checkequal) -- node[anchor=west] {No} (checkleft);
+		\draw [arrow] (checkleft) -- node[anchor=south] {k \textgreater\ x} (insertleft); % Fixed greater-than symbol
+		\draw [arrow] (checkleft) -- node[anchor=south] {x \textgreater\ k} (insertright); % Fixed greater-than symbol
+		\draw [arrow] (insertleft) -- (balanceL);
+		\draw [arrow] (insertright) -- (balanceR);
+		\draw [arrow] (balanceL) -- (end);
+		\draw [arrow] (balanceR) -- (end);
+		\draw [arrow] (singleton) |- (end);
+		\draw [arrow] (returnsame) |- (end);
+		
+	\end{tikzpicture}
+\end{center}

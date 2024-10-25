@@ -1,0 +1,44 @@
+\chapter{Lookup in AVL Trees}\label{chap:LaTeXAdvice}
+
+The lookup operation in an AVL tree is used to find the value associated with a given key. AVL trees, being a form of binary search tree, support efficient lookup operations with a time complexity of \( O(\log n) \), where \( n \) is the number of nodes in the tree. The lookup function follows the structure of a binary search, comparing the target key with the keys in the tree and recursively traversing the left or right subtree until the key is found or a leaf node is reached.
+
+The formal definition of the \texttt{lookup\_avl} function is as follows:
+
+\begin{defn}{lookup\_avl}
+
+The \texttt{lookup\_avl} function searches for a key \( x \) in an AVL tree. It returns the corresponding value if the key is found, otherwise, it returns \texttt{NONE}. The formal definition of \texttt{lookup\_avl} is:
+
+
+\begin{alltt}
+	[lookup_avl_def]
+	\HOLConst{lookup_avl} \HOLFreeVar{x} \HOLConst{Tip} \HOLTokenDefEquality{} \HOLConst{NONE}
+\HOLConst{lookup_avl} \HOLFreeVar{x} (\HOLConst{Bin} \ensuremath{\HOLFreeVar{v}\sb{\mathrm{0}}} \HOLFreeVar{k} \HOLFreeVar{kv} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLFreeVar{x} \HOLSymConst{=} \HOLFreeVar{k} \HOLKeyword{then} \HOLConst{SOME} \HOLFreeVar{kv}
+  \HOLKeyword{else} \HOLKeyword{if} \HOLFreeVar{x} \HOLSymConst{\HOLTokenLt{}} \HOLFreeVar{k} \HOLKeyword{then} \HOLConst{lookup_avl} \HOLFreeVar{x} \HOLFreeVar{l}
+  \HOLKeyword{else} \HOLConst{lookup_avl} \HOLFreeVar{x} \HOLFreeVar{r}
+\end{alltt}
+
+\end{defn}
+
+
+The lookup operation works as follows:
+\begin{itemize}
+    \item If the tree is empty (represented by \texttt{Tip}), the function returns \texttt{NONE}, indicating that the key does not exist in the tree.
+    \item If the key \( x \) matches the root key \( k \), the function returns \texttt{SOME kv}, where \( kv \) is the value associated with the key \( k \).
+    \item If the key \( x \) is less than \( k \), the function recursively searches the left subtree.
+    \item If the key \( x \) is greater than \( k \), the function recursively searches the right subtree.
+\end{itemize}
+
+\subsubsection{Binary Search Property}
+
+The \texttt{lookup\_avl} function takes advantage of the binary search property of AVL trees. Since the tree is ordered, we can compare the target key \( x \) with the root key \( k \) to determine whether to search the left or right subtree. This reduces the number of nodes that need to be examined, ensuring that the lookup operation has logarithmic time complexity.
+
+If the target key \( x \) is found, the function returns the value associated with the key. Otherwise, if the search reaches an empty subtree (\texttt{Tip}), the function returns \texttt{NONE}, indicating that the key is not present in the tree.
+
+\subsubsection{Efficiency of Lookup in AVL Trees}
+
+One of the key advantages of AVL trees is that they maintain balance, which guarantees that the tree's height remains logarithmic in relation to the number of nodes. This balance ensures that lookup operations are efficient, even in the worst case. Without balancing, a binary search tree could degenerate into a linked list, resulting in linear time complexity for lookups. However, AVL trees avoid this worst-case scenario by enforcing the height balance property.
+
+The \texttt{lookup\_avl} function operates in \( O(\log n) \) time because the height of the tree is always proportional to \( \log n \), where \( n \) is the number of nodes in the tree. This makes AVL trees an excellent choice for applications that require frequent lookups and need to maintain optimal performance.
+
+The lookup operation in AVL trees is a simple, recursive process that leverages the tree's binary search structure to efficiently locate a key. If the key is present, the value associated with it is returned. If the key is not found, the function returns \texttt{NONE}. The balance property of AVL trees ensures that lookup operations are performed in logarithmic time, making AVL trees highly efficient for search operations in both average and worst-case scenarios.

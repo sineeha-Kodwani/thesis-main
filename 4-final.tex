@@ -1,0 +1,125 @@
+\chapter{Theorems on AVL Trees}\label{chap:content}
+
+
+\subsection{Theorems on AVL Trees}
+
+The formal verification of key properties of AVL trees is essential to ensuring that operations such as insertion, deletion, and rotation maintain the necessary balance constraints and achieve optimal performance. The following theorems have been rigorously proven within the HOL4 framework, focusing on core properties such as height, balance factors, node counts, and recursive relationships between these properties. These theorems are fundamental to proving the correctness of AVL trees and ensuring that they exhibit the desired logarithmic time complexity for operations.
+
+The proof of these theorems within HOL4 serves as a guarantee that AVL trees behave optimally and maintain their essential balancing properties across various operations. Each theorem is accompanied by a description of its significance in the context of AVL trees.
+
+	
+	\begin{thm}{Height eq 0}
+
+    This theorem asserts that the height of a tree is zero if and only if the tree is empty, represented by a \texttt{Tip}. The formal statement of the theorem is:
+
+    \begin{alltt}
+    	[Height equals 0]
+    	\HOLTokenTurnstile{} (\HOLConst{height} \HOLFreeVar{t} \HOLSymConst{=} \HOLNumLit{0} \HOLSymConst{\HOLTokenEquiv{}} \HOLFreeVar{t} \HOLSymConst{=} \HOLConst{Tip}) \HOLSymConst{\HOLTokenConj{}} (\HOLNumLit{0} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{\HOLTokenEquiv{}} \HOLFreeVar{t} \HOLSymConst{=} \HOLConst{Tip})
+    \end{alltt}
+    
+    
+    \end{thm}
+
+    This theorem ensures that for any AVL tree \(t\), if the height of \(t\) is zero, it must be an empty tree. This result is foundational for verifying AVL tree operations, as many structural properties depend on correctly identifying the base case of an empty tree. It also plays a critical role in inductive proofs where the height of a tree is reduced step-by-step. This result is crucial as it establishes the base case for many proofs involving AVL trees, particularly those related to height and balance.
+
+	
+	\begin{thm}{avl\_complete\_avl}
+
+    This theorem proves that a complete AVL tree satisfies the AVL property. A complete AVL tree is a tree where all levels are fully filled except possibly the last, which is filled from left to right. This structure guarantees that the tree is balanced. The formal statement of the theorem is:
+    
+    \begin{alltt}
+    	[avl_complete_avl]
+    	\HOLTokenTurnstile{} \HOLConst{avl} (\HOLConst{complete_avl} \HOLFreeVar{k}) \HOLSymConst{\HOLTokenEquiv{}} \HOLConst{T}
+    \end{alltt}
+    
+    
+    
+    \end{thm}
+
+	This theorem is significant as it confirms that the construction of a complete AVL tree results in a valid AVL tree. Complete AVL trees are commonly used as examples of balanced trees and serve as a useful model for understanding how the AVL property is maintained as trees grow in height.
+	
+	\begin{thm}{height\_complete\_avl}
+
+    This theorem states that the height of a complete AVL tree of height \( n \) is indeed \( n \). The formal definition ensures that the structure of the tree follows the expected pattern for a balanced binary tree. The formal statement of the theorem is:
+    
+    \begin{alltt}
+    	[height complete avl]
+    	\HOLTokenTurnstile{} \HOLConst{height} (\HOLConst{complete_avl} \HOLFreeVar{n}) \HOLSymConst{=} \HOLFreeVar{n}
+    \end{alltt}
+    
+    
+    \end{thm}
+
+	This theorem is significant because it guarantees that the height of a complete AVL tree is correctly calculated, which plays a crucial role in operations such as insertion and balancing. Knowing the height of a tree is necessary for maintaining the balance condition after modifications.
+	
+	\begin{thm}{minimal\_avl\_exists}
+
+    This theorem establishes the existence of minimal AVL trees for any given height. A minimal AVL tree is defined as the tree that satisfies the AVL property while containing the smallest possible number of nodes for that height. The formal statement is:
+    
+    \begin{alltt}
+    	[minimal_avl_exists]
+    	\HOLTokenTurnstile{} \HOLSymConst{\HOLTokenExists{}}\HOLBoundVar{t}. \HOLConst{minimal_avl} \HOLBoundVar{t} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLBoundVar{t} \HOLSymConst{=} \HOLFreeVar{k}
+    \end{alltt}
+    
+    
+    \end{thm}
+    The significance of this theorem lies in its demonstration that AVL trees can be constructed in an optimal manner with respect to node count. Minimal AVL trees are important because they represent the most compact tree structure that still satisfies the AVL property. This guarantees that AVL trees can be kept as small as possible, improving space efficiency while maintaining balance and performance.
+    
+
+    \begin{thm}{minimal\_avl\_node\_count}
+
+    This theorem relates the node count of a minimal AVL tree to the Fibonacci sequence, establishing a deep connection between AVL tree structure and the Fibonacci series. Specifically, it states that the number of nodes in a minimal AVL tree of height \( k \) is equal to \( N(k) \), where \( N(k) \) is the number of nodes in a Fibonacci tree of height \( k \). The formal statement is:
+    
+    \begin{alltt}
+    	[minimal_avl_node_count]
+    	\HOLTokenTurnstile{} \HOLConst{minimal_avl} \HOLFreeVar{t} \HOLSymConst{\HOLTokenConj{}} \HOLConst{height} \HOLFreeVar{t} \HOLSymConst{=} \HOLFreeVar{k} \HOLSymConst{\HOLTokenImp{}} \HOLConst{node_count} \HOLFreeVar{t} \HOLSymConst{=} \HOLConst{N} \HOLFreeVar{k}
+    \end{alltt}
+    
+    
+    \end{thm}
+    This theorem formalizes the connection between minimal AVL trees and the Fibonacci sequence-based \( N(k) \), proving that minimal AVL trees are the most space-efficient AVL trees for a given height.
+    
+
+    \subsection{Properties of Minimal AVL Trees}
+	
+	\begin{thm}{minimal\_avl\_l\_is\_avl}
+
+    This theorem confirms that if a tree is a minimal AVL tree, then it also satisfies the AVL property, meaning it is balanced. The formal statement is:
+
+    \begin{alltt}
+    	[minimal_avl_is_avl]
+    	\HOLTokenTurnstile{} \HOLConst{minimal_avl} \HOLFreeVar{t} \HOLSymConst{\HOLTokenImp{}} \HOLConst{avl} \HOLFreeVar{t}
+    \end{alltt}
+    
+    \end{thm}
+    This theorem follows from the definition of minimal AVL trees, which inherently requires that the tree satisfies the AVL property while having the minimal node count for its height.
+
+
+    \begin{thm}{height\_of\_minimal\_avl\_diff\_1}
+
+    This theorem characterizes the height difference between the left and right subtrees of a minimal AVL tree. It states that the heights of the left and right subtrees differ by at most one. The formal statement is:
+    
+    \begin{alltt}
+    	[height of minimal avl differ by 1]
+    	\HOLTokenTurnstile{} \HOLConst{minimal_avl} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{\HOLTokenImp{}}
+   \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{Tip} \HOLSymConst{\HOLTokenConj{}} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{Tip} \HOLSymConst{\HOLTokenDisj{}} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1} \HOLSymConst{\HOLTokenDisj{}}
+   \HOLConst{height} \HOLFreeVar{r} \HOLSymConst{=} \HOLConst{height} \HOLFreeVar{l} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+    \end{alltt}
+    
+    
+    \end{thm}
+    This property is critical because it ensures that minimal AVL trees maintain the balance condition at each node, which is fundamental to their efficiency in operations like insertion and deletion.
+
+
+    \begin{thm}{children\_of\_minimal\_avl}
+
+    This theorem states that if a tree is a minimal AVL tree, then its left and right subtrees are also minimal AVL trees. The formal statement is:
+
+    \begin{alltt}
+    	[Children of minimal avl]
+    	\HOLTokenTurnstile{} \HOLConst{minimal_avl} (\HOLConst{Bin} \HOLFreeVar{bf} \HOLFreeVar{k} \HOLFreeVar{v} \HOLFreeVar{l} \HOLFreeVar{r}) \HOLSymConst{\HOLTokenImp{}} \HOLConst{minimal_avl} \HOLFreeVar{l} \HOLSymConst{\HOLTokenConj{}} \HOLConst{minimal_avl} \HOLFreeVar{r}
+    \end{alltt}
+    
+    \end{thm}
+    This result is important for inductive reasoning about AVL trees, as it shows that the minimality property is preserved across all subtrees. Thus, proving properties about minimal AVL trees can be done recursively, ensuring correctness at all levels of the tree.
+

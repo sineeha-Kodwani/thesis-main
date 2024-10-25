@@ -1,0 +1,163 @@
+\chapter{Properties and Relationship of the Function \texorpdfstring{$N(k)$}{N(k)} and Fibonacci }\label{chap:content}
+
+
+In this section, we explore the deep connection between AVL trees and the Fibonacci sequence, a well-known sequence that plays a crucial role in ensuring the optimal structure of AVL trees. AVL trees are designed to maintain a balanced height relative to the number of nodes they contain, and this balance can be directly tied to the growth pattern of the Fibonacci sequence. Specifically, the number of nodes in an AVL tree of height \( k \) is closely related to the \( (k+2) \)-th Fibonacci number. This relationship ensures that the height of an AVL tree grows logarithmically with respect to the number of nodes, making AVL trees highly efficient for operations such as search, insertion, and deletion.
+
+The recursive nature of the Fibonacci sequence mirrors the recursive structure of AVL trees, where each node is balanced based on the heights of its left and right subtrees. The Fibonacci sequence thus provides a mathematical framework for understanding the growth and balance properties of AVL trees. In this section, we formalize the Fibonacci sequence in HOL4 and demonstrate how it is used to prove important properties of AVL trees.
+
+The following theorem formally establishes this relationship in HOL4:
+
+	The node count of a minimal AVL tree of height $k$, denoted as $N(k)$, follows a recurrence relation:
+	\[
+	N(k+2) = N(k+1) + N(k) + 1
+	\]
+	This relation can also be rewritten as:
+	\[
+	N(k) = N(k+2) - N(k+1) - 1
+	\]
+	This recurrence aligns with the Fibonacci sequence, where each term is the sum of the two preceding terms. It can be shown that the minimal number of nodes in an AVL tree of height $k$ is given by:
+	\[
+	N(k) = \text{Fibonacci}(k+2) - 1
+	\]
+
+
+\begin{table}
+	\centering
+	\begin{tabular}{cccccccccccccc}
+		\toprule
+		\textbf{$k$}          & 0   & 1   & 2   & 3   & 4   & 5    & 6    & 7    & 8    & 9    & 10     \\ \midrule
+		\textbf{$N(k)$}       & 0   & 1   & 2   & 4   & 7   & 12   & 20   & 33   & 54   & 88   & 143   \\ \midrule
+		\textbf{$F(k)$}       & 0   & 1   & 1   & 2   & 3   & 5    & 8    & 13   & 21   & 34   & 55    \\ \midrule
+		\textbf{$F(k+2) - 1$} & 0   & 1   & 2   & 4   & 7   & 12   & 20   & 33   & 54   & 88   & 143  \\ 
+		\bottomrule
+	\end{tabular}
+	\caption{Relationship between $N(k)$, $F(k)$, and $F(k+2) - 1$ for $k$ from 0 to 10.}
+\end{table}
+
+These theorems, together, form the foundation of the formal verification of AVL trees in HOL4. They ensure that key properties such as height, balance factors, and node counts are maintained across various operations. The recursive relationship between the number of nodes and the Fibonacci sequence is particularly important, as it highlights the optimality of AVL trees with respect to both time and space efficiency. By proving these theorems, we can guarantee that AVL trees are implemented in a provably correct manner, ensuring their effectiveness in real-world applications. Furthermore, the Fibonacci-based structure ensures that AVL trees can handle a large number of elements while maintaining efficient operations.
+
+\subsection{Formalization of Fibonacci Sequence}
+
+    The Fibonacci sequence is a recursive sequence where each term is the sum of the two preceding ones, starting from 0 and 1. The Fibonacci sequence is formally defined as:
+    \[
+    F(0) = 0, \quad F(1) = 1, \quad F(n) = F(n-1) + F(n-2) \text{ for } n \geq 2
+    \]
+    This recursive structure of the Fibonacci sequence mirrors the recursive nature of balanced binary trees, making it a natural fit for analyzing the properties of AVL trees.
+
+    In HOL4, the Fibonacci sequence is formalized as follows:
+   \begin{defn}{Fibonacci\_def}
+
+    The Fibonacci function is recursively defined as follows:
+
+     \begin{alltt}
+[Fibonacci Definition]
+\HOLConst{Fibonacci} \HOLFreeVar{n} \HOLTokenDefEquality{}
+  \HOLKeyword{if} \HOLFreeVar{n} \HOLSymConst{=} \HOLNumLit{0} \HOLKeyword{then} \HOLNumLit{0}
+  \HOLKeyword{else} \HOLKeyword{if} \HOLFreeVar{n} \HOLSymConst{=} \HOLNumLit{1} \HOLKeyword{then} \HOLNumLit{1}
+  \HOLKeyword{else} \HOLConst{Fibonacci} (\HOLFreeVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}) \HOLSymConst{\ensuremath{+}} \HOLConst{Fibonacci} (\HOLFreeVar{n} \HOLSymConst{\ensuremath{-}} \HOLNumLit{2})
+     \end{alltt}
+     
+
+    This recursive function defines the Fibonacci sequence, where each term is the sum of the two preceding terms, with base cases for \( n = 0 \) and \( n = 1 \).
+    \end{defn}
+
+
+    This definition of the Fibonacci sequence allows us to compute Fibonacci numbers recursively. Starting with the base cases \( F(0) = 0 \) and \( F(1) = 1 \), the function recursively computes each subsequent Fibonacci number by summing the previous two values. This recursive definition plays a pivotal role in establishing the relationship between the height of an AVL tree and the number of nodes it contains.
+
+
+\subsection{The Importance of Fibonacci Sequence in AVL Trees}
+
+    The recursive relationship between the number of nodes in an AVL tree and the Fibonacci sequence is fundamental to understanding the efficiency of AVL trees. Since the Fibonacci sequence grows exponentially, while the height of an AVL tree grows logarithmically with respect to the number of nodes, this ensures that AVL trees are highly efficient in terms of both time and space complexity.
+
+    The Fibonacci sequence helps to establish that minimal AVL trees are optimally balanced, with the smallest possible number of nodes for a given height. This balance is what allows AVL trees to maintain their logarithmic height, ensuring that operations such as search, insertion, and deletion can be performed in \( O(\log n) \) time. By formally proving the relationship between the Fibonacci sequence and AVL trees in HOL4, we can guarantee the correctness and efficiency of AVL tree algorithms.
+
+    \begin{thm}{N\_0}
+
+    This theorem states that the minimal number of nodes in an AVL tree of height 0 is 0, as expected since an empty tree has no nodes. The formal statement is:
+    \begin{alltt}
+    	[N_0]
+    	\HOLTokenTurnstile{} \HOLConst{N} \HOLNumLit{0} \HOLSymConst{=} \HOLNumLit{0}
+    \end{alltt}
+    
+    \end{thm}
+    This theorem is important because it establishes the base case for the recursive definition of \( N(k) \), which represents the minimal number of nodes in an AVL tree of height \( k \).
+
+
+    \begin{thm}{N\_1}
+
+    This theorem asserts that the minimal number of nodes in an AVL tree of height 1 is 1. The proof shows that the set of AVL trees of height 1 contains only a single tree, which is a singleton tree. The formal statement is:
+    \begin{alltt}
+    	[N_1]
+    	\HOLTokenTurnstile{} \HOLConst{N} \HOLNumLit{1} \HOLSymConst{=} \HOLNumLit{1}
+    \end{alltt}
+    
+    \end{thm}
+    This result forms the next base case in the recursive definition of \( N(k) \) and aligns with the structure of AVL trees.
+
+
+    \begin{thm}{N\_k}
+
+    This theorem provides the recurrence relation for the minimal number of nodes in an AVL tree of height \( k+2 \). It states that the number of nodes in a minimal AVL tree of height \( k+2 \) is the sum of the number of nodes in minimal AVL trees of heights \( k+1 \) and \( k \), plus one. The formal statement is:
+
+    
+    \begin{alltt}
+    	[N_k]
+    	\HOLTokenTurnstile{} \HOLConst{N} (\HOLFreeVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{=} \HOLConst{N} (\HOLFreeVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\ensuremath{+}} \HOLConst{N} \HOLFreeVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}
+    \end{alltt}
+    
+    \end{thm}
+    This recurrence relation is fundamental for understanding the structure of AVL trees and links directly to the Fibonacci sequence.
+
+
+    \begin{thm}{Fibonacci\_thm}
+
+    This theorem states that the Fibonacci sequence satisfies the following recursive relationship:
+     \begin{alltt}
+     	[Fibonacci_thm]
+     	\HOLTokenTurnstile{} \HOLConst{Fibonacci} (\HOLFreeVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{=} \HOLConst{Fibonacci} (\HOLFreeVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1}) \HOLSymConst{\ensuremath{+}} \HOLConst{Fibonacci} \HOLFreeVar{k}
+     \end{alltt}
+     
+    \end{thm}
+    The proof of this theorem follows directly from the definition of the Fibonacci sequence. This recursive relationship is central to many of the inductive proofs involving AVL trees, as it provides a framework for reasoning about the growth of the tree as nodes are added or removed.
+
+
+    \begin{thm}{Fibonacci\_mono}
+
+    This theorem proves that the Fibonacci sequence is monotonically increasing. In other words, for any natural number \( n \), the \( n \)-th Fibonacci number is less than or equal to the \( (n+1) \)-th Fibonacci number. The formal statement is:
+
+    \begin{alltt}
+    	[Fibonacci_mono]
+    	\HOLTokenTurnstile{} \HOLConst{Fibonacci} \HOLFreeVar{n} \HOLSymConst{\HOLTokenLeq{}} \HOLConst{Fibonacci} (\HOLFreeVar{n} \HOLSymConst{\ensuremath{+}} \HOLNumLit{1})
+    \end{alltt}
+    
+    \end{thm}
+    This result is useful for reasoning about the Fibonacci sequence in inductive proofs involving AVL trees.
+
+
+    \begin{thm}{Fibonacci\_mono\_transitive}
+
+    This theorem extends the monotonicity property of the Fibonacci sequence, stating that if \( m \leq n \), then \( \text{Fibonacci}(m) \leq \text{Fibonacci}(n) \). The formal statement is:
+    
+    \begin{alltt}
+    	[Fibonacci_mono_transitive]
+    	\HOLTokenTurnstile{} \HOLFreeVar{m} \HOLSymConst{\HOLTokenLeq{}} \HOLFreeVar{n} \HOLSymConst{\HOLTokenImp{}} \HOLConst{Fibonacci} \HOLFreeVar{m} \HOLSymConst{\HOLTokenLeq{}} \HOLConst{Fibonacci} \HOLFreeVar{n}
+    \end{alltt}
+    
+    \end{thm}
+    This transitivity property is important for proving more complex properties of AVL trees and their relation to Fibonacci numbers.
+
+
+    \begin{thm}{N\_fibonacci\_relation}
+
+    This theorem proves that the number of nodes in a minimal AVL tree of height \( k \) is given by \( \text{Fibonacci}(k+2) - 1 \), where \( \text{Fibonacci} \) represents the Fibonacci sequence. The formal statement of the theorem is:
+
+    \begin{alltt}
+    	[N_fibonacci_relation]
+    	\HOLTokenTurnstile{} \HOLConst{N} \HOLFreeVar{k} \HOLSymConst{=} \HOLConst{Fibonacci} (\HOLFreeVar{k} \HOLSymConst{\ensuremath{+}} \HOLNumLit{2}) \HOLSymConst{\ensuremath{-}} \HOLNumLit{1}
+    \end{alltt}
+    
+    \end{thm}
+    The proof of this theorem involves showing that the recursive structure of minimal AVL trees corresponds exactly to the recursive structure of the Fibonacci sequence. Specifically, the number of nodes in a minimal AVL tree of height \( k \) is the sum of the number of nodes in the left and right subtrees (which are minimal AVL trees of smaller heights), plus one for the root node. This recursive structure aligns perfectly with the Fibonacci sequence, where each term is the sum of the two preceding terms.
+
+    This theorem is significant because it demonstrates that the height of a minimal AVL tree grows logarithmically with respect to the number of nodes. The Fibonacci sequence grows exponentially, meaning that the height of the tree increases slowly as the number of nodes increases. This property is what allows AVL trees to maintain efficient operations, as the logarithmic height ensures that search, insertion, and deletion operations can be performed in \( O(\log n) \) time.
+
