@@ -1,5 +1,6 @@
-\chapter{Properties and Relationship of the Function \texorpdfstring{$N(k)$}{N(k)} and Fibonacci }\label{chap:content}
+\chapter{Relationship with Fibonacci Sequence}\label{chap:content}
 
+\section{Properties of the Function \texorpdfstring{$N(k)$}{N(k)}}
 
 In this section, we explore the deep connection between AVL trees and the Fibonacci sequence, a well-known sequence that plays a crucial role in ensuring the optimal structure of AVL trees. AVL trees are designed to maintain a balanced height relative to the number of nodes they contain, and this balance can be directly tied to the growth pattern of the Fibonacci sequence. Specifically, the number of nodes in an AVL tree of height \( k \) is closely related to the \( (k+2) \)-th Fibonacci number. This relationship ensures that the height of an AVL tree grows logarithmically with respect to the number of nodes, making AVL trees highly efficient for operations such as search, insertion, and deletion.
 
@@ -36,7 +37,7 @@ The following theorem formally establishes this relationship in HOL4:
 
 These theorems, together, form the foundation of the formal verification of AVL trees in HOL4. They ensure that key properties such as height, balance factors, and node counts are maintained across various operations. The recursive relationship between the number of nodes and the Fibonacci sequence is particularly important, as it highlights the optimality of AVL trees with respect to both time and space efficiency. By proving these theorems, we can guarantee that AVL trees are implemented in a provably correct manner, ensuring their effectiveness in real-world applications. Furthermore, the Fibonacci-based structure ensures that AVL trees can handle a large number of elements while maintaining efficient operations.
 
-\subsection{Formalization of Fibonacci Sequence}
+\section{A Formalization of Fibonacci Sequence}
 
     The Fibonacci sequence is a recursive sequence where each term is the sum of the two preceding ones, starting from 0 and 1. The Fibonacci sequence is formally defined as:
     \[
@@ -65,7 +66,7 @@ These theorems, together, form the foundation of the formal verification of AVL 
     This definition of the Fibonacci sequence allows us to compute Fibonacci numbers recursively. Starting with the base cases \( F(0) = 0 \) and \( F(1) = 1 \), the function recursively computes each subsequent Fibonacci number by summing the previous two values. This recursive definition plays a pivotal role in establishing the relationship between the height of an AVL tree and the number of nodes it contains.
 
 
-\subsection{The Importance of Fibonacci Sequence in AVL Trees}
+\section{Fibonacci Sequence and AVL Trees}
 
     The recursive relationship between the number of nodes in an AVL tree and the Fibonacci sequence is fundamental to understanding the efficiency of AVL trees. Since the Fibonacci sequence grows exponentially, while the height of an AVL tree grows logarithmically with respect to the number of nodes, this ensures that AVL trees are highly efficient in terms of both time and space complexity.
 

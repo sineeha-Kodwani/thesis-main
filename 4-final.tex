@@ -1,7 +1,7 @@
-\chapter{Theorems on AVL Trees}\label{chap:content}
+\chapter{Properties of AVL Trees}\label{chap:content}
 
 
-\subsection{Theorems on AVL Trees}
+\section{Theorems about AVL Trees}
 
 The formal verification of key properties of AVL trees is essential to ensuring that operations such as insertion, deletion, and rotation maintain the necessary balance constraints and achieve optimal performance. The following theorems have been rigorously proven within the HOL4 framework, focusing on core properties such as height, balance factors, node counts, and recursive relationships between these properties. These theorems are fundamental to proving the correctness of AVL trees and ensuring that they exhibit the desired logarithmic time complexity for operations.
 
@@ -80,7 +80,7 @@ The proof of these theorems within HOL4 serves as a guarantee that AVL trees beh
     This theorem formalizes the connection between minimal AVL trees and the Fibonacci sequence-based \( N(k) \), proving that minimal AVL trees are the most space-efficient AVL trees for a given height.
     
 
-    \subsection{Properties of Minimal AVL Trees}
+\section{Properties of Minimal AVL Trees}
 	
 	\begin{thm}{minimal\_avl\_l\_is\_avl}
 
