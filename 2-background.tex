@@ -1,4 +1,6 @@
-\chapter{Background of AVL Trees}\label{chap:background}
+\chapter{Background}\label{chap:background}
+
+\section{AVL Trees}
 
 AVL trees are a type of self-balancing binary search tree where the difference in height between the left and right subtrees of any node is kept at most 1, ensuring that the tree remains balanced. This property guarantees that the height of the tree is logarithmic to the number of nodes, ensuring efficient search, insertion, and deletion operations. The efficiency of these operations—usually $O(\log n)$—makes AVL trees an ideal choice for dynamic sets of data where a balanced structure must be maintained even with frequent updates.
 
@@ -25,7 +27,7 @@ d(T) \leq 1.4404 \log_2(n + 1) - 1.33
 ensuring logarithmic depth even in the worst case.
 
 
-\subsection{AVL Tree Operations : Insertion and Deletion}
+\section{AVL Tree Operations: Insertion and Deletion}
 Insertions and deletions in AVL trees must maintain the balance property, requiring rebalancing through rotations. When an imbalance occurs after insertion or deletion, the tree is restructured through single or double rotations to restore the balance. These operations ensure that the depth of the tree is adjusted while keeping the balance property intact.
 
 For instance, when inserting a node, the balance factors (the difference between the heights of the left and right subtrees) are updated, and rotations are performed if necessary to correct any imbalance. These rotations are classified as:

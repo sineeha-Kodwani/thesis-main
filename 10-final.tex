@@ -2,12 +2,12 @@
 
 The formal verification of data structures in HOL4 requires not only defining the structure and properties of the data structure but also ensuring that it integrates seamlessly with the theorem prover's existing framework. In this section, we focus on the design considerations, adaptations, and extensions made to formalize AVL trees within HOL4, a higher-order logic theorem prover. These adaptations were necessary to ensure that the formalization of AVL trees fits into HOL4’s framework, allowing future developers to build upon this work easily and enabling the reuse of existing libraries within HOL4.
 
-\subsection{Adapting the AVL Formalization to HOL4’s Framework}
+\section{Adapting the AVL Formalization to HOL4’s Framework}
 
 The HOL4 theorem prover has a robust framework for formalizing mathematical structures and reasoning about their properties. However, any new formalization must be carefully integrated into this existing ecosystem. In the case of AVL trees, several key design decisions were made to ensure that the formalization fits smoothly into HOL4’s libraries and adheres to its conventions. Below, we discuss the key design adaptations and the rationale behind them.
 
 
-\subsection{Choosing the Appropriate Datatype Representation}
+\section{Choosing the Appropriate Datatype Representation}
 
 HOL4 provides a rich environment for defining custom datatypes, which is essential for formalizing data structures like AVL trees. The choice of datatype representation is crucial because it affects how the formalization interacts with existing tools and libraries within HOL4. AVL trees, as a recursive data structure, are defined in HOL4 using the following datatype:
 
@@ -29,7 +29,7 @@ This representation captures the essential structure of AVL trees:
 
 This datatype was chosen because it allows easy integration with HOL4’s built-in tools for recursive data structures and pattern matching. By using a recursive datatype, we ensure that the formalization is compatible with HOL4's proof automation tools, such as  \( Induct_on \), which are commonly used for reasoning about recursive functions and data structures.
 
-\subsection{Seamless Integration with HOL4’s Existing Libraries}
+\section{Seamless Integration with HOL4’s Existing Libraries}
 
 A key design consideration was ensuring that the AVL tree formalization could reuse existing libraries within HOL4, such as the arithmetic, list, and set theory libraries. Reusing these libraries reduces redundancy, simplifies the formalization process, and enables more robust proof automation.
 
@@ -46,7 +46,7 @@ This integration allows us to make use of HOL4’s extensive set-theoretic reaso
 
 By designing the formalization to interface with HOL4’s existing libraries, we ensure that future work can build upon this foundation without needing to reimplement basic functionality. This modularity and reusability are key strengths of the HOL4 framework, and they were critical design considerations during the development of the AVL tree formalization.
 
-\subsection{Handling Recursive Functions and Theorem}
+\section{Handling Recursive Functions and Theorem}
 
 Recursive functions are essential for formalizing AVL tree operations, such as height calculation, insertion, and balancing. In HOL4, recursive functions must be carefully defined to ensure that they terminate and are well-formed. The formalization of AVL trees makes extensive use of recursion to define operations like \(insert_avl\), \(balanceL\), and \(balanceR\).
 
@@ -64,7 +64,7 @@ For example, the function \(insert_avl\) is defined recursively to ensure that i
 
 In this recursive definition, the height of the tree decreases with each recursive call, which ensures that the recursion terminates. HOL4’s support for reasoning about recursive functions allows us to prove that \(insert avl\) correctly maintains the AVL property and terminates for all inputs. This recursive approach is also extended to other operations, such as \(balanceL\) and \(balanceR\), which are used to restore the AVL property after an insertion.
 
-\subsection{Designing Efficient Proof Strategies}
+\section{Designing Efficient Proof Strategies}
 
 To verify the correctness of the AVL tree formalization, a series of theorems must be proven about the properties of AVL trees, such as their height, balance, and the set of keys. HOL4 provides various proof strategies, such as induction, case analysis, and automated tactics, to facilitate the proof process.
 
@@ -72,7 +72,7 @@ One of the key challenges in designing the formalization was choosing efficient 
 
 Another challenge was proving that the \(balanceL\) and \(balanceR\) functions correctly restore the AVL property after an insertion. These proofs require reasoning about the height of the subtrees and ensuring that the balance factor remains within the allowed range. The use of HOL4’s automated proof tactics, such as \(REWRITE TAC\) and \(INDUCT TAC\), allowed these proofs to be constructed efficiently.
 
-\subsection{Exporting the Formalization}
+\section{Exporting the Formalization}
 
 Once the formalization was completed, it was exported as part of HOL4’s growing library of verified data structures. The export process ensures that the formalization can be easily reused and extended by other developers working within the HOL4 framework. By integrating the AVL tree formalization into HOL4’s existing libraries, we ensure that future work can build upon this foundation, whether for educational purposes, research, or practical applications involving verified data structures.
 
